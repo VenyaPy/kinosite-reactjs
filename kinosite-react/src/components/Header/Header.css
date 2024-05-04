@@ -1,0 +1,31 @@
+.header {
+    background-color: #1b1a1a;
+    color: white;
+}
+
+li {
+    list-style-type: none; /* Убираем маркеры */
+   }
+
+.logo {
+    display: flex;
+
+}
+
+.elements-header {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    height: 100%;
+}
+
+.sections {
+    display: flex;
+}
+
+.search {
+}
+
+.section {
+    display: flex;
+}
