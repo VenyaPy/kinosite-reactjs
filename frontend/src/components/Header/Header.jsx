@@ -14,15 +14,9 @@ export default function Header() {
                     <li className="section">Аниме</li>
                 </ul>
             </div>
-                <div className="search-form">
-                <form action="" method="get">
-                    <input className="search-form__txt" placeholder="Поиск..." type="text"/>
-                    <button className="search-form__btn" type="submit"></button>
-                </form>
+            <div className="login">
+                <img className="image" src="https://i.ibb.co/tBHSRDw/icons8-login-64.png" alt="login"/>
             </div>
-                <div className="login">
-                    <img className="image" src="https://i.ibb.co/tBHSRDw/icons8-login-64.png" alt="login"/>
-                </div>
 
             </div>
         </div>

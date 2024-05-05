@@ -1,0 +1,46 @@
+.search-container {
+    position: relative;
+    width: 100%;
+}
+
+.image-container {
+    display: flex;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.image-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: linear-gradient(to bottom, transparent, #252525 100%);
+    pointer-events: none;
+    z-index: 1; /* Устанавливаем z-index для градиента */
+}
+
+.image {
+    width: 100%;
+    display: block;
+    z-index: 0; /* Ниже чем у градиента, чтобы градиент накладывался на изображение */
+}
+
+.popular-films {
+    display: flex;
+    justify-content: center;
+    padding-top: 60px;
+    color: white;
+
+}
+
+.popular-films h2 {
+    animation: fadeIn 2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

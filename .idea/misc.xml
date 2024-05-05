@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.13 (МoviesTogether)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.13 (МoviesTogether)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Poetry (kinosite-react)" project-jdk-type="Python SDK" />
 </project>

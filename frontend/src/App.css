@@ -6,6 +6,7 @@ html {
 
 
 .main-container {
+    padding-top: 70px; /* Размер должен соответствовать высоте .header */
     margin: 0 auto;
     background-color: #252525;
     max-width: 80%;
