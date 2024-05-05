@@ -1,7 +1,8 @@
-import "./Image.css"
+import "./Main.css"
 import Search from "../Search/Search.jsx";
+import Films from "../Films/Films.jsx";
 
-export default function Image() {
+export default function Main() {
 
 
     return (
@@ -13,6 +14,7 @@ export default function Image() {
             <div className="popular-films">
                 <h2>Популярные фильмы за месяц</h2>
             </div>
+            <Films/>
         </div>
     )
 }

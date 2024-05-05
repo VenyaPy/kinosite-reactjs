@@ -1,6 +1,6 @@
 .search-box {
     position: absolute;
-    top: 65%;
+    top: 70%;
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
@@ -17,15 +17,15 @@
     background: #333; /* Темный фон для поля ввода */
     color: #ccc; /* Светлый цвет текста для контраста */
     outline: none;
-    padding: 10px 20px;
+    padding: 15px 20px;
     font-size: 16px;
     border-radius: 30px;
-    width: 250px;
+    width: 300px;
     transition: width 0.4s ease-in-out;
 }
 
 .search-input:focus {
-    width: 400px;
+    width: 450px;
     border-color: #777; /* Светлее цвет рамки при фокусе */
 }
 
