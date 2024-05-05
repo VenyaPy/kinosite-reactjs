@@ -1,38 +1,40 @@
 import './Films.css';
-import { useState, useEffect} from 'react';
-import { Link, Element, Events, animateScroll as scroll } from 'react-scroll';
+import { useState, useEffect, useRef } from 'react';
 
-const CustomScrollLink = ({ to, children }) => (
-  <Link activeClass="active" to={to} spy={true} smooth={true} duration={500} horizontal={true}>
-    {children}
-  </Link>
-);
 
 export default function Films() {
   const [films, setFilms] = useState([]);
+  const scrollContainer = useRef(null);
 
   useEffect(() => {
     fetch('https://ve.po2014.fvds.ru:80/api/v1/main')
       .then(response => response.json())
-      .then(data => setFilms(data.slice(0, 30)))
+      .then(data => setFilms(data.slice(0, 100))) // Загружаем только первые 30 фильмов для улучшения производительности
       .catch(error => console.error('Ошибка при загрузке данных:', error));
   }, []);
 
+  const scrollRight = () => {
+    if (scrollContainer.current) {
+      const containerWidth = scrollContainer.current.offsetWidth;
+      scrollContainer.current.scrollBy({
+        left: containerWidth - 200, // скроллим на ширину контейнера минус 100 пикселей
+        behavior: 'smooth' // плавная прокрутка
+      });
+    }
+  };
+
   return (
     <div className="films-wrapper">
-      {films.map((film, index) => (
-        <Element name={`film-${index}`} key={index} className='film-item'>
-          <img src={film.poster} alt={film.name} />
-          <h3>{film.name}</h3>
-          <p>{film.description || "Описание отсутствует"}</p>
-        </Element>
-      ))}
-      {films.length > 0 && (
-        <>
-          <CustomScrollLink to="film-0">Scroll to Start</CustomScrollLink>
-          <CustomScrollLink to={`film-${films.length - 1}`}>Scroll to End</CustomScrollLink>
-        </>
-      )}
+      <div id="films-container" ref={scrollContainer} className='films-container'>
+        {films.map((film, index) => (
+          <div key={index} className='film-item'>
+            <img src={film.poster} alt={film.name} />
+            <h3>{film.name}</h3>
+            <p>{film.description || "Описание отсутствует"}</p>
+          </div>
+        ))}
+      </div>
+      <button onClick={scrollRight} className="scroll-button"><i className="fa-solid fa-arrow-right"></i></button>
     </div>
   );
 }

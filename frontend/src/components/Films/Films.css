@@ -13,10 +13,10 @@
   padding: 20px;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
-
 }
 
 .films-container::-webkit-scrollbar {
+  scroll-behavior: smooth;
   display: none; /* Chrome, Safari, Opera */
 }
 
