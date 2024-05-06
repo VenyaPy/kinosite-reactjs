@@ -1,0 +1,88 @@
+.films-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.films-container {
+  flex-grow: 1;
+  margin-top: 20px;
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 20px;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.films-container::-webkit-scrollbar {
+  scroll-behavior: smooth;
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.film-item {
+  display: inline-block;
+  width: 200px;
+    height: 360px;
+  margin-right: 10px;
+  flex: 0 0 auto;
+  background: #3e3e3e; /* Фон для улучшения видимости */
+  border-radius: 8px; /* Скругление углов */
+  overflow: hidden; /* Обрезка всего, что выходит за границы */
+}
+
+.film-item img {
+  width: 100%;
+  height: 250px; /* Фиксированная высота для всех изображений */
+  object-fit: cover; /* Обрезка изображения по контейнеру */
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.film-item h3 {
+  color: white;
+  font-size: 16px;
+  margin: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Добавление троеточия, если текст не умещается */
+}
+
+.film-item p {
+  font-size: 14px;
+  margin: 8px;
+  color: #8c8c8c;
+  /* Устанавливаем высоту блока на основе размера шрифта и желаемого количества строк */
+  height: 3.9em; /* примерно для 3 строк текста, учитывая line-height */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* Ограничиваем количество строк до 3 */
+  text-overflow: ellipsis; /* Добавляем троеточие, если текст не умещается */
+}
+
+.scroll-button {
+  display: flex;
+  margin-left: 10px;
+  margin-right: 10px;
+  background: linear-gradient(145deg, #393939, #302b2b);
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  border-radius: 40px;
+  outline: none;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.scroll-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.45);
+}
+
+.scroll-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}

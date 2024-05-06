@@ -4,6 +4,14 @@ html {
     background-color: #1F1F1F;
 }
 
+.main-container {
+    padding-top: 70px; /* Размер должен соответствовать высоте .header */
+    margin: 0 auto;
+    background-color: #252525;
+    max-width: 80%;
+    min-height: calc(100vh - 150px); /* Вычитаем высоту футера, если она известна */
+}
+
 
 .main-container {
     padding-top: 70px; /* Размер должен соответствовать высоте .header */

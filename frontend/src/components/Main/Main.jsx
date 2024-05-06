@@ -1,6 +1,6 @@
 import "./Main.css"
 import Search from "../Search/Search.jsx";
-import Films from "../Films/Films.jsx";
+import Popular from "../Popular/Popular.jsx";
 
 export default function Main() {
 
@@ -14,7 +14,7 @@ export default function Main() {
             <div className="popular-films">
                 <h2>Популярные фильмы за месяц</h2>
             </div>
-            <Films/>
+            <Popular/>
         </div>
     )
 }

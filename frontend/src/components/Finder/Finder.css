@@ -1,10 +1,9 @@
-.search-box {
-    position: absolute;
-    top: 70%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.search-finder {
     display: flex;
-    align-items: center;
+    margin-top: 70px; /* Это поможет футеру оставаться внизу */
+    margin-left: auto; /* Автоматический отступ слева */
+    margin-right: auto; /* Автоматический отступ справа */
+    width: 500px;
     background: rgba(45, 45, 45, 0.9); /* Темный фон с небольшой прозрачностью */
     border-radius: 30px;
     padding: 10px;
@@ -12,7 +11,8 @@
     z-index: 2;
 }
 
-.search-input {
+.search-input-finder {
+    display: flex;
     border: 1px solid #555; /* Светлый цвет рамки, который хорошо виден на темном фоне */
     background: #333; /* Темный фон для поля ввода */
     color: #ccc; /* Светлый цвет текста для контраста */
@@ -20,16 +20,11 @@
     padding: 15px 20px;
     font-size: 16px;
     border-radius: 30px;
-    width: 300px;
+    width: 500px;
     transition: width 0.4s ease-in-out;
 }
 
-.search-input:focus {
-    width: 450px;
-    border-color: #777; /* Светлее цвет рамки при фокусе */
-}
-
-.search-button-finder {
+.search-button {
     padding-left: 10px;
     background: none;
     border: none;
