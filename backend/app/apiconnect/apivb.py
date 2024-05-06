@@ -6,45 +6,30 @@ import aiohttp
 class MovieSearch:
     @classmethod
     async def fetch_movies(cls, query: str):
-        kp_link_match = re.match(r'https?://www\.kinopoisk.ru/(series|film)/(\d+)', query)
-        kp_match = re.match(r'kp(\d+)', query)
-
-        if kp_link_match:
-            kp_id = kp_link_match.group(2)
-        elif kp_match:
-            kp_id = kp_match.group(1)
-        else:
-            kp_id = None
-
-        if kp_id:
-            url = f"https://apivb.info/api/videos.json?id_kp={kp_id}&token={APIConfig.api_hbtv}"
-        else:
-            url = f"https://apivb.info/api/videos.json?title={query}&token={APIConfig.api_hbtv}"
-
+        headers = {
+            "X-API-Key": APIConfig.api_key,
+            "accept": "application/json"
+        }
+        url = f'https://api.kinopoisk.dev/v1.4/movie/search?page=1&limit=10&query={query}/'
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(url) as response:
+                async with session.get(url, headers=headers) as response:
                     if response.status == 200:
-                        movies_data = await response.json(content_type=None)
-                        for movie in movies_data:
-                            movie['watch_url'] = f'http://127.0.0.1:8000/v/player?id={movie["kinopoisk_id"]}'
-                            film = await MovieSearch.kinopoisk_search(id=movie["kinopoisk_id"])
+                        response_data = await response.json(content_type=None)
+                        movies = response_data.get('docs', [])  # Предполагаем, что данные фильмов находятся в ключе 'docs'
+                        for movie in movies:
+                            movie['watch_url'] = f'https://kinodomvideo.ru/player.html?id={movie.get("id")}'
 
-                            genres_str = ', '.join([genre['genre'] for genre in film.get('genres', [])])
-                            countries_str = ', '.join([country['country'] for country in film.get('countries', [])])
-
-                            movie.update({
-                                'rating': film.get('ratingKinopoisk'),
-                                'poster_film': film.get('posterUrl'),
-                                'about': film.get('description', ''),
-                                'genres': genres_str,
-                                'countries': countries_str,
-                                })
-
-                        return movies_data
+                            # Проверка и обработка данных постера
+                            poster = movie.get('poster')
+                            if isinstance(poster, dict):
+                                movie['poster'] = poster.get('url')
+                            else:
+                                movie['poster'] = None
+                        return movies
             return []
         except Exception as e:
-            print(e)
+            print(f"Error fetching movies: {e}")
             return []
 
 

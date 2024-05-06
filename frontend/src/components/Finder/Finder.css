@@ -3,6 +3,7 @@
     margin-top: 70px; /* Это поможет футеру оставаться внизу */
     margin-left: auto; /* Автоматический отступ слева */
     margin-right: auto; /* Автоматический отступ справа */
+    margin-bottom: 70px;
     width: 500px;
     background: rgba(45, 45, 45, 0.9); /* Темный фон с небольшой прозрачностью */
     border-radius: 30px;
@@ -32,4 +33,74 @@
     cursor: pointer;
     color: #ffffff; /* Белый цвет текста на кнопке */
     outline: none;
+}
+
+
+.movies-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+
+.movie-item {
+    display: flex;
+    flex-direction: row; /* Убедитесь, что это значение установлено правильно */
+    align-items: flex-start; /* Выравнивание элементов по верху */
+    width: 70%; /* Процент ширины относительно контейнера фильмов */
+    background-color: #252525;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease;
+}
+
+.movie-item:hover {
+    transform: translateY(-5px);
+}
+
+.movie-item a {
+    text-decoration: none; /* Убрать подчеркивание для всей ссылки */
+    color: inherit; /* Наследовать цвет текста */
+    display: flex;
+    width: 100%;
+}
+
+.movie-item img {
+    width: 200px; /* Фиксированная ширина для изображения */
+    height: auto;
+    border-radius: 5px;
+    margin-right: 20px; /* Отступ между изображением и деталями фильма */
+}
+
+.details {
+    flex-grow: 1; /* Позволяет деталям занимать доступное пространство */
+    display: flex;
+    flex-direction: column; /* Элементы деталей выстраиваются вертикально */
+}
+
+.movie-item h3,
+.movie-item .year,
+.movie-item p {
+    margin: 0;
+    padding: 5px;
+    width: 100%; /* Занимает всю ширину контейнера деталей */
+}
+
+.movie-item h3 {
+    font-size: 24px;
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+.movie-item .year {
+    font-size: 16px;
+    color: #ccc;
+    margin-bottom: 5px;
+}
+
+.movie-item p {
+    font-size: 14px;
+    color: #ccc;
 }

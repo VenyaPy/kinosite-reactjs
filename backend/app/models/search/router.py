@@ -1,13 +1,9 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from typing import List
 
-from fastapi_cache import FastAPICache
-
-from backend.app.exceptions import UserNotAuth
 from backend.app.models.search.schemas import Movie
 from backend.app.apiconnect.apivb import MovieSearch
-from backend.app.models.users.dependencies import get_current_user
-from backend.app.models.users.model import Users
+
 
 
 router_search = APIRouter(

@@ -4,8 +4,7 @@ from sqladmin import Admin
 
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
-from fastapi.staticfiles import StaticFiles
-import os
+from starlette.middleware.cors import CORSMiddleware
 
 from redis import asyncio as aioredis
 
@@ -27,6 +26,13 @@ app = FastAPI(
     root_path="/api/v2"
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Разрешить запросы с любых доменов
+    allow_credentials=True,
+    allow_methods=["*"],  # Разрешить все методы
+    allow_headers=["*"],  # Разрешить все заголовки
+)
 
 admin = Admin(app, engine, authentication_backend=auth_backend)
 
