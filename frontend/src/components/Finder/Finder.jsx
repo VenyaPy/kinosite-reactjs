@@ -14,7 +14,7 @@ export default function Finder() {
             setMovies(filteredMovies);
         } catch (error) {
             console.error('Ошибка при поиске фильмов:', error);
-            setMovies([]); // Очищаем список фильмов в случае ошибки
+            setMovies([]);
         }
     };
 
