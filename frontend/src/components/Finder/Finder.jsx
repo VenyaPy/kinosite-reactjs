@@ -8,13 +8,20 @@ export default function Finder() {
     const [movies, setMovies] = useState([]);
 
     const handleSearch = async () => {
+        if (!query) return; // Проверка на пустой запрос
         try {
             const response = await axios.get(`http://127.0.0.1:8000/api/v2/search/${query}/`);
-            const filteredMovies = response.data.filter(movie => movie.poster);  // Фильтрация фильмов с наличием постера
+            const filteredMovies = response.data.filter(movie => movie.poster);
             setMovies(filteredMovies);
         } catch (error) {
             console.error('Ошибка при поиске фильмов:', error);
             setMovies([]);
+        }
+    };
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            handleSearch();
         }
     };
 
@@ -27,6 +34,7 @@ export default function Finder() {
                     className="search-input-finder"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
+                    onKeyDown={handleKeyDown}
                 />
                 <button className="search-button-finder" onClick={handleSearch}>
                     <i className="fa-solid fa-magnifying-glass"></i>

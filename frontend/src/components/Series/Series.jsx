@@ -1,11 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
-import './Films.css';
+import { useState, useEffect, useCallback } from "react";
+import './Series.css'
 import { motion } from "framer-motion";
 
-export default function Films() {
+
+export default function Series() {
     const apiKey = import.meta.env.VITE_API_KEY;
 
-    const [movies, setMovies] = useState([]);
+    const [series, setSeries] = useState([]);
     const [year, setYear] = useState('');
     const [rating, setRating] = useState('');
     const [genre, setGenre] = useState('');
@@ -17,12 +18,12 @@ export default function Films() {
     const genres = ["драма", "комедия", "мелодрама", "ужасы", "фэнтези", "боевик", "приключения", "детектив", "триллер", "фантастика", "анимация", "документальный", "музыкальный", "биография", "история"];
     const countries = ["США", "Великобритания", "Франция", "Германия", "Италия", "Канада", "Австралия", "Индия", "Япония", "Южная Корея", "Испания", "Россия", "Китай", "Швеция", "Бразилия"];
 
-    const fetchMovies = useCallback(() => {
+    const fetchSeries = useCallback(() => {
         let filtersApplied = year || rating || genre || country;
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
-            `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=movie` :
-            `http://127.0.0.1:8000/api/v2/films`;
+            'https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=tv-series' :
+            'http://127.0.0.1:8000/api/v2/tvshows';
 
         if (year) url += `&year=${year}`;
         if (rating) url += `&rating.imdb=${rating}`;
@@ -39,20 +40,20 @@ export default function Films() {
         .then(response => response.json())
         .then(data => {
             const results = url.includes("kinopoisk.dev") ?
-                data.docs.map(movie => ({
-                    ...movie,
-                    poster: movie.poster ? movie.poster.url : null,
-                    watch_url: `http://127.0.0.1:8000/v/player?id=${movie.id}`
+                data.docs.map(serial => ({
+                    ...serial,
+                    poster: serial.poster ? serial.poster.url : null,
+                    watch_url: `http://127.0.0.1:8000/v/player?id=${serial.id}`
                 })) :
                 data;
-            setMovies(results.filter(movie => movie.name && movie.poster && (movie.shortDescription || movie.description)));
+            setSeries(results.filter(serial => serial.name && serial.poster && (serial.shortDescription || serial.description)));
         })
-        .catch(error => console.error('Error fetching movies:', error));
+        .catch(error => console.error('Ошибка при поиске сериалов:', error));
     }, [year, genre, country, rating, apiKey]);
 
     useEffect(() => {
-        fetchMovies();
-    }, [fetchMovies]);
+        fetchSeries();
+    }, [fetchSeries]);
 
     const resetFilters = () => {
         setYear('');
@@ -60,7 +61,7 @@ export default function Films() {
         setGenre('');
         setCountry('');
         setIsFiltered(false);
-        fetchMovies(); // Сброс и повторный запрос фильмов без фильтров
+        fetchSeries();
     };
 
     return (
@@ -92,18 +93,18 @@ export default function Films() {
                 <button onClick={resetFilters}>Сбросить фильтры</button>
             </div>
             <div className="popular-movie">
-                <h2>{isFiltered ? "Фильмы по вашим критериям" : "Популярные фильмы"}</h2>
+                <h2>{isFiltered ? "Сериалы по вашим критериям" : "Популярные сериалы"}</h2>
             </div>
             <div className="movies-section">
-                {movies.map(movie => (
-                    movie.poster && (
-                        <a href={movie.watch_url} key={movie.id} className="movie">
-                            <img src={movie.poster} alt={movie.name} className="movie-poster"/>
+                {series.map(seria => (
+                    seria.poster && (
+                        <a href={seria.watch_url} key={seria.id} className="movie">
+                             <img src={seria.poster} alt={seria.name} className="movie-poster"/>
                             <div className="movie-overlay">
                                 <i className="fa-solid fa-play play-icon"></i>
                                 <div className="movie-info">
-                                    <div className="movie-title">{movie.name}</div>
-                                    <div className="movie-description">{movie.shortDescription || movie.description}</div>
+                                    <div className="movie-title">{seria.name}</div>
+                                    <div className="movie-description">{seria.shortDescription || seria.description}</div>
                                 </div>
                             </div>
                         </a>

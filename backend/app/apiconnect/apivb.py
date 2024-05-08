@@ -10,7 +10,7 @@ class MovieSearch:
             "X-API-Key": APIConfig.api_key,
             "accept": "application/json"
         }
-        url = f'https://api.kinopoisk.dev/v1.4/movie/search?page=1&limit=10&query={query}/'
+        url = f'https://api.kinopoisk.dev/v1.4/movie/search?page=1&limit=25&query={query}/'
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(url, headers=headers) as response:

@@ -1,11 +1,11 @@
-.movies-section {
+.series-section {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     padding: 20px;
 }
 
-.movie {
+.series {
     position: relative;
     width: 250px;
     height: 375px;
@@ -16,19 +16,19 @@
     transition: transform 0.3s ease;
 }
 
-.movie:hover {
+.series:hover {
     transform: scale(1.05);
     z-index: 1;
 }
 
-.movie-poster {
+.series-poster {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: opacity 0.3s ease;
 }
 
-.movie-overlay {
+.series-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -46,22 +46,22 @@
     transition: visibility 0s, opacity 0.3s linear;
 }
 
-.movie:hover .movie-overlay {
+.series:hover .series-overlay {
     visibility: visible;
     opacity: 1;
 }
 
-.movie-info {
+.series-info {
     text-align: center;
     width: 100%;
 }
 
-.movie-title {
+.series-title {
     font-size: 1.2em;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
 }
 
-.movie-description {
+.series-description {
     font-size: 0.8em;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -123,7 +123,7 @@
     background-color: #0056b3;
 }
 
-.popular-movie {
+.popular-series h2 {
     color: white;
     display: flex;
     justify-content: center;
