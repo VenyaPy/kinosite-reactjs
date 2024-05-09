@@ -1,8 +1,9 @@
 import './Popular.css';
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import PropTypes from "prop-types";
 
-export default function Popular() {
+export default function Popular({ setActiveSection }) {
   const [films, setFilms] = useState([]);
   const scrollContainer = useRef(null);
 
@@ -23,6 +24,10 @@ export default function Popular() {
     }
   };
 
+  const handleFilmClick = (filmId) => {
+    setActiveSection({ section: 'player', params: { movieId: filmId } });
+  };
+
   const itemVariants = {
     hidden: { opacity: 0, y: 0 },
     visible: { opacity: 1, y: 0 },
@@ -34,24 +39,20 @@ export default function Popular() {
       <div id="films-container" ref={scrollContainer} className='films-container'>
         <AnimatePresence>
           {films.map((film, index) => (
-            <motion.a
+            <motion.div
               key={index}
-              href={film.watch_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className='film-link'
+              className='film-item'
+              onClick={() => handleFilmClick(film.id)} // Используйте правильный идентификатор в зависимости от вашего API
               initial="hidden"
               animate="visible"
               exit="exit"
               variants={itemVariants}
               whileHover={{ scale: 1.05 }}
             >
-              <div className='film-item'>
-                <img src={film.poster} alt={film.name} />
-                <h3>{film.name}</h3>
-                <p>{film.description || "Описание отсутствует"}</p>
-              </div>
-            </motion.a>
+              <img src={film.poster} alt={film.name} />
+              <h3>{film.name}</h3>
+              <p>{film.description || "Описание отсутствует"}</p>
+            </motion.div>
           ))}
         </AnimatePresence>
       </div>
@@ -59,3 +60,7 @@ export default function Popular() {
     </div>
   );
 }
+
+Popular.propTypes = {
+  setActiveSection: PropTypes.func.isRequired,
+};

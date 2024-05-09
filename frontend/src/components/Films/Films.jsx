@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import './Films.css';
 import { motion } from "framer-motion";
+import PropTypes from "prop-types";
 
-export default function Films() {
+function Films( {setActiveSection} ) {
     const apiKey = import.meta.env.VITE_API_KEY;
 
     const [movies, setMovies] = useState([]);
@@ -41,8 +42,7 @@ export default function Films() {
             const results = url.includes("kinopoisk.dev") ?
                 data.docs.map(movie => ({
                     ...movie,
-                    poster: movie.poster ? movie.poster.url : null,
-                    watch_url: `http://127.0.0.1:8000/v/player?id=${movie.id}`
+                    poster: movie.poster ? movie.poster.url : null
                 })) :
                 data;
             setMovies(results.filter(movie => movie.name && movie.poster && (movie.shortDescription || movie.description)));
@@ -53,6 +53,11 @@ export default function Films() {
     useEffect(() => {
         fetchMovies();
     }, [fetchMovies]);
+
+    const handleMovieClick = (id) => {
+        console.log("Movie ID to set:", id); // Добавьте это для отладки
+        setActiveSection({ section: 'player', params: { movieId: id } });
+    };
 
     const resetFilters = () => {
         setYear('');
@@ -97,16 +102,17 @@ export default function Films() {
             <div className="movies-section">
                 {movies.map(movie => (
                     movie.poster && (
-                        <a href={movie.watch_url} key={movie.id} className="movie">
+                        <div onClick={() => handleMovieClick(movie.id)} key={movie.id} className="movie">
                             <img src={movie.poster} alt={movie.name} className="movie-poster"/>
                             <div className="movie-overlay">
                                 <i className="fa-solid fa-play play-icon"></i>
                                 <div className="movie-info">
                                     <div className="movie-title">{movie.name}</div>
-                                    <div className="movie-description">{movie.shortDescription || movie.description}</div>
+                                    <div
+                                        className="movie-description">{movie.shortDescription || movie.description}</div>
                                 </div>
                             </div>
-                        </a>
+                        </div>
                     )
                 ))}
             </div>
@@ -114,3 +120,9 @@ export default function Films() {
         </motion.div>
     );
 }
+
+Films.propTypes = {
+    setActiveSection: PropTypes.func.isRequired,
+};
+
+export default Films;

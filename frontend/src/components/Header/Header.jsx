@@ -5,12 +5,12 @@ export default function Header({ setActiveSection }) {
   return (
     <div className="header">
         <div className="elements-header">
-        <div className="logo" onClick={() => setActiveSection('main')}>КиноДом</div>
+        <div className="logo" onClick={() => setActiveSection({ section: 'main', params: {} })}>КиноДом</div>
         <div className="sections">
             <ul>
-                <li className="section" onClick={() => setActiveSection('films')}>Фильмы</li>
-                <li className="section" onClick={() => setActiveSection('series')}>Сериалы</li>
-                <li className="section" onClick={() => setActiveSection('anime')}>Аниме</li>
+                <li className="section" onClick={() => setActiveSection({ section: 'films', params: {} })}>Фильмы</li>
+                <li className="section" onClick={() => setActiveSection({ section: 'series', params: {} })}>Сериалы</li>
+                <li className="section" onClick={() => setActiveSection({ section: 'anime', params: {} })}>Аниме</li>
             </ul>
         </div>
         <div className="login">

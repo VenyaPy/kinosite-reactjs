@@ -1,0 +1,77 @@
+.player-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 70px auto;
+    padding: 20px;
+    gap: 20px;
+    background-color: #333; /* Темнее для акцента на контенте */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* Более выраженный тень для глубины */
+    border-radius: 8px; /* Скругление углов */
+    transition: transform 0.3s ease; /* Плавное преобразование при наведении */
+}
+
+
+
+/* Стиль деталей фильма */
+.movie-details {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.movie-details img {
+    width: 300px; /* Размер постера */
+    height: auto;
+    border-radius: 10px; /* Скругление углов постера */
+    margin-right: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3); /* Тень для постера */
+}
+
+.movie-details div {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+h2, p {
+    margin: 0;
+    padding-bottom: 10px;
+}
+
+h2 {
+    font-size: 28px; /* Больший размер для заголовка */
+    color: #E0E0E0; /* Светлый серый цвет */
+}
+
+p {
+    font-size: 16px;
+    color: #CCC; /* Серый цвет для текста описания */
+}
+
+/* Стиль плеера */
+.kinobox_player {
+    width: 100%;
+    height: 600px; /* Увеличенная высота плеера */
+    background-color: #000;
+}
+
+/* Адаптация под мобильные устройства */
+@media (max-width: 768px) {
+    .movie-details {
+        flex-direction: column;
+    }
+
+    .movie-details img {
+        width: 100%; /* Полноразмерный постер на маленьких экранах */
+        margin-bottom: 10px;
+    }
+
+    .player-container {
+        padding: 10px;
+    }
+}
