@@ -1,0 +1,136 @@
+.movies-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Центрирует содержимое при flex-расположении */
+    gap: 20px;
+    padding: 20px;
+    margin: 0 auto;
+    width: 100%; /* Обеспечивает, что section занимает всю доступную ширину */
+}
+
+.movie {
+    position: relative;
+    cursor: pointer;
+    width: 250px;
+    height: 375px;
+    overflow: hidden;
+    display: block;
+    background-color: #000;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.movie:hover {
+    transform: scale(1.05);
+    z-index: 1;
+}
+
+.movie-poster {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+}
+
+.movie-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(37, 37, 37, 0.8) 0%, rgba(37, 37, 37, 0) 100%);
+    color: white;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s linear;
+}
+
+.movie:hover .movie-overlay {
+    visibility: visible;
+    opacity: 1;
+}
+
+.movie-info {
+    text-align: center;
+    width: 100%;
+}
+
+.movie-title {
+    font-size: 1.2em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.movie-description {
+    font-size: 0.8em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.play-icon {
+    font-size: 3em;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.filters {
+    display: flex;
+    gap: 10px;
+    padding: 30px;
+    background: #252525;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.filters select {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 2px solid #ffffff;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    color: #333;
+}
+
+.filters select:hover, .filters select:focus {
+    background-color: #ffffff;
+    border-color: #0056b3;
+}
+
+.filters button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.filters button:hover {
+    background-color: #0056b3;
+}
+
+.popular-movie {
+    color: white;
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+}

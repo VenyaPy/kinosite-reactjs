@@ -3,14 +3,26 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PropTypes from "prop-types";
 
+
 export default function Popular({ setActiveSection }) {
   const [films, setFilms] = useState([]);
   const scrollContainer = useRef(null);
 
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]]; // Элементы массива меняются местами
+    }
+  }
+
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/v2/mainpage')
+    fetch('http://127.0.0.1:8000/api/v2/mains')
       .then(response => response.json())
-      .then(data => setFilms(data.slice(5, 100)))
+      .then(data => {
+        const selectedFilms = data.slice(5, 120); // Выборка фильмов
+        shuffleArray(selectedFilms); // Перемешиваем выбранные фильмы
+        setFilms(selectedFilms);
+      })
       .catch(error => console.error('Ошибка при загрузке данных:', error));
   }, []);
 
@@ -29,7 +41,6 @@ export default function Popular({ setActiveSection }) {
     setActiveSection({ section: 'player', params: { movieId: filmId } });
   };
 
-
   return (
     <div className="films-wrapper">
       <div id="films-container" ref={scrollContainer} className='films-container'>
@@ -38,7 +49,7 @@ export default function Popular({ setActiveSection }) {
             <motion.div
               key={index}
               className='film-item'
-              onClick={() => handleFilmClick(film.id)}  // Убедитесь, что film.id действительно содержит корректный ID
+              onClick={() => handleFilmClick(film.id)} // Убедитесь, что film.id действительно содержит корректный ID
               initial="hidden"
               animate="visible"
               exit="exit"

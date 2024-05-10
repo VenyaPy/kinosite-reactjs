@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import './Films.css';
+import './Cartoon.css'
 import { motion } from "framer-motion";
 import PropTypes from "prop-types";
 
-function Films( {setActiveSection} ) {
+function Cartoon( {setActiveSection} ) {
     const apiKey = import.meta.env.VITE_API_KEY;
 
     const [movies, setMovies] = useState([]);
@@ -29,8 +29,8 @@ function Films( {setActiveSection} ) {
         let filtersApplied = year || rating || genre || country;
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
-            `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=movie` :
-            `http://127.0.0.1:8000/api/v2/movies`;
+            `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=cartoon` :
+            `http://127.0.0.1:8000/api/v2/cartoon`;
 
         if (year) url += `&year=${year}`;
         if (rating) url += `&rating.imdb=${rating}`;
@@ -105,7 +105,7 @@ function Films( {setActiveSection} ) {
                     <button onClick={resetFilters}>Сбросить фильтры</button>
                 </div>
                 <div className="popular-movie">
-                    <h2>{isFiltered ? "Фильмы по вашим критериям" : "Популярные фильмы"}</h2>
+                    <h2>{isFiltered ? "Мультфильмы по вашим критериям" : "Популярные мультфильмы"}</h2>
                 </div>
                 <div className="movies-section">
                     {movies.map(movie => (
@@ -129,8 +129,8 @@ function Films( {setActiveSection} ) {
     );
 }
 
-Films.propTypes = {
+Cartoon.propTypes = {
     setActiveSection: PropTypes.func.isRequired,
 };
 
-export default Films;
+export default Cartoon;

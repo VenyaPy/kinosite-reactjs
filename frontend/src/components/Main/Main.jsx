@@ -17,7 +17,7 @@ export default function Main({ setActiveSection }) {
         >
             <div className="search-container">
                 <div className="image-container">
-                    <img className="image" src="https://i.ibb.co/Pcm2cBZ/DALL-E-2024-05-04-22-38-40-A-v.webp" alt="some"/>
+                    <img className="image" src="https://i.ibb.co/m6RLjND/123211223323132.jpg" alt="some"/>
                 </div>
                 <Finder setActiveSection={setActiveSection} />
                 <div className="popular-films">

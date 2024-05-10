@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import './Series.css'
 import { motion } from "framer-motion";
+import PropTypes from "prop-types";
 
 
-export default function Series( {setActiveSection} ) {
+export default function Series({ setActiveSection }) {
     const apiKey = import.meta.env.VITE_API_KEY;
 
     const [series, setSeries] = useState([]);
@@ -15,8 +16,16 @@ export default function Series( {setActiveSection} ) {
 
     const years = Array.from({length: 45}, (_, i) => 2024 - i);
     const ratings = ["1-3", "3-5", "5-7", "7-10"];
-    const genres = ["драма", "комедия", "мелодрама", "ужасы", "фэнтези", "боевик", "приключения", "детектив", "триллер", "фантастика", "анимация", "документальный", "музыкальный", "биография", "история"];
+    const genres = ["драма", "комедия", "мелодрама", "ужасы", "фэнтези", "боевик", "семейный", "приключения", "детектив", "триллер", "фантастика", "документальный", "биография", "для взрослых", "короткометражка", "криминал"];
     const countries = ["США", "Великобритания", "Франция", "Германия", "Италия", "Канада", "Австралия", "Индия", "Япония", "Южная Корея", "Испания", "Россия", "Китай", "Швеция", "Бразилия"];
+
+    // Функция для перемешивания массива
+    const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    };
 
     const fetchSeries = useCallback(() => {
         let filtersApplied = year || rating || genre || country;
@@ -46,6 +55,7 @@ export default function Series( {setActiveSection} ) {
                     watch_url: `http://127.0.0.1:8000/v/player?id=${serial.id}`
                 })) :
                 data;
+            shuffleArray(results); // Перемешиваем результаты
             setSeries(results.filter(serial => serial.name && serial.poster && (serial.shortDescription || serial.description)));
         })
         .catch(error => console.error('Ошибка при поиске сериалов:', error));
@@ -56,10 +66,8 @@ export default function Series( {setActiveSection} ) {
     }, [fetchSeries]);
 
     const handleMovieClick = (id) => {
-        console.log("Movie ID to set:", id); // Добавьте это для отладки
         setActiveSection({ section: 'player', params: { movieId: id } });
     };
-
 
     const resetFilters = () => {
         setYear('');
@@ -122,3 +130,7 @@ export default function Series( {setActiveSection} ) {
         </motion.div>
     );
 }
+
+Series.propTypes = {
+    setActiveSection: PropTypes.func.isRequired,
+};

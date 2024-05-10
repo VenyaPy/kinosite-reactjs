@@ -9,7 +9,6 @@
     z-index: 1000; /* Убедитесь, что заголовок всегда наверху */
 }
 
-
 .elements-header {
     display: flex;
     justify-content: space-evenly;

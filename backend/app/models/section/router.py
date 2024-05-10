@@ -81,6 +81,27 @@ async def anime_section():
         print(e)
 
 
+@section_router.get("/cartoon",
+                     response_model=List[Selection],
+                     summary="Раздел мультфильмов")
+@cache(expire=36000)
+async def carton_section():
+    try:
+        movie_data = await KinopoiskCategory.kinopoisk_api(
+            url='https://api.kinopoisk.dev/v1.4/movie?page=1&limit=150&type=cartoon'
+        )
+
+        if not movie_data:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Не найдено"
+            )
+
+        return movie_data
+
+    except Exception as e:
+        print(e)
+
+
 @section_router.get("/random",
                     response_model=Selection,
                     summary="Случайный фильм")

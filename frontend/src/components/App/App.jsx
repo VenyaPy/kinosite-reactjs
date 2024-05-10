@@ -8,10 +8,13 @@ import Series from "../Series/Series.jsx";
 import Anime from "../Anime/Anime.jsx";
 import { AnimatePresence } from 'framer-motion';
 import Player from "../Player/Player.jsx";
+import Cartoon from "../Cartoon/Cartoon.jsx";
+import Register from "../Register/Register.jsx";
 
 function App() {
   const [activeSection, setActiveSection] = useState({ section: 'main', params: {} });
-  console.log("Current activeSection:", activeSection);
+  const [showRegister, setShowRegister] = useState(false);
+
   const SectionComponent = () => {
     switch(activeSection.section) {
       case 'main':
@@ -22,6 +25,8 @@ function App() {
         return <Player movieId={activeSection.params.movieId} />;
       case 'series':
         return <Series setActiveSection={setActiveSection} />;
+      case 'cartoon':
+        return <Cartoon setActiveSection={setActiveSection} />;
       case 'anime':
         return <Anime setActiveSection={setActiveSection} />;
       default:
@@ -29,14 +34,23 @@ function App() {
     }
   };
 
+
+  const handleShowRegister = () => setShowRegister(true);
+  const handleCloseRegister = () => setShowRegister(false);
+
   return (
     <>
-      <Header setActiveSection={setActiveSection} />
+      <Header setActiveSection={setActiveSection} onLoginClick={handleShowRegister} />
       <div className="main-container">
         <AnimatePresence mode="wait">
           <SectionComponent key={activeSection.section} />
-      </AnimatePresence>
+        </AnimatePresence>
       </div>
+      {showRegister && (
+        <div className="modal-overlay">
+          <Register closeModal={handleCloseRegister} />
+        </div>
+      )}
       <Footer />
     </>
   );

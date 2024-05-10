@@ -8,8 +8,6 @@ from starlette.middleware.cors import CORSMiddleware
 
 from redis import asyncio as aioredis
 
-from backend.app.database.database import engine
-from backend.app.models.admin.router import UserAdmin
 from backend.app.models.users.router import router_auth
 from backend.app.models.search.router import router_search
 from backend.app.models.admin.auth import auth_backend
@@ -34,7 +32,6 @@ app.add_middleware(
     allow_headers=["*"],  # Разрешить все заголовки
 )
 
-admin = Admin(app, engine, authentication_backend=auth_backend)
 
 app.include_router(main_router)
 app.include_router(router_auth)
@@ -44,7 +41,6 @@ app.include_router(category_router)
 app.include_router(router_search)
 app.include_router(room_router)
 
-admin.add_view(UserAdmin)
 
 
 @app.on_event("startup")
