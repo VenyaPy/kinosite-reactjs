@@ -18,6 +18,7 @@
     "react-router-dom": "^6.23.0",
     "react-scroll": "^1.9.0",
     "react-spring": "^9.7.3",
+    "socket.io-client": "^4.7.5",
     "use-smooth-horizontal-scroll": "^0.7.0"
   },
   "devDependencies": {

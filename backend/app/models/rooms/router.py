@@ -1,68 +1,41 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-
-from datetime import datetime
-from typing import List
 from uuid import uuid4
+from fastapi import FastAPI
+import socketio
 
-from backend.app.exceptions import UserNotAuth
-from backend.app.models.users.model import Users
-from backend.app.models.users.dependencies import get_current_user
-from backend.app.models.session.sessiondao import SessionDAO
-from backend.app.models.rooms.schema import Room
+# Создаем экземпляр сервера Socket.IO
+sio = socketio.AsyncServer(async_mode='asgi')
+app = FastAPI()
+socket_app = socketio.ASGIApp(sio, other_asgi_app=app)
 
+# Обработчики событий Socket.IO
+@sio.event
+async def connect(sid, environ):
+    print("connect ", sid)
 
-room_router = APIRouter(
-    prefix="/rooms",
-    tags=["Комнаты для просмотра"],
-)
-
-
-@room_router.post("/create_room/{movie_id}", summary="Создать комнату")
-async def create_room(movie_url: str,
-                      movie_name: str,
-                      movie_poster: str,
-                      current_user: Users = Depends(get_current_user)):
-    if not current_user:
-        raise UserNotAuth
-
+@sio.event
+async def create_room(sid, data):
     room_id = str(uuid4())
+    await sio.enter_room(sid, room_id)
+    await sio.emit('room_created', {'room_id': room_id}, room=room_id)
+    print(f"Room {room_id} created by {sid}")
 
-    session_data = {
-        "room_id": room_id,
-        "username": current_user.username,
-        "movie_name": movie_name,
-        "movie_poster": movie_poster,
-        "movie_url": movie_url,
-        "time": datetime.now()
-    }
+@sio.event
+async def play_video(sid, data):
+    await sio.emit('play', data, room=data['room_id'])
 
-    try:
-        new_session = await SessionDAO.add(**session_data)
-        if not new_session:
-            raise HTTPException(status_code=500, detail="Не удалось создать сессию")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Ошибка базы данных: {e}")
+@sio.event
+async def pause_video(sid, data):
+    await sio.emit('pause', data, room=data['room_id'])
 
-    return {"room_id": room_id}
+@sio.event
+async def seek_video(sid, data):
+    await sio.emit('seek', data, room=data['room_id'])
 
-
-@room_router.get("/me", response_model=List[Room], summary="Мои комнаты")
-async def get_my_rooms(current_user: Users = Depends(get_current_user)):
-    sessions = await SessionDAO.find_all_columns(username=current_user.username)
-    if not sessions:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Комнаты не найдены")
-    return sessions
+@sio.event
+async def disconnect(sid):
+    print('disconnect ', sid)
 
 
-@room_router.delete("/delete_room", summary="Удалить комнату")
-async def delete_room(room_id: str, current_user: Users = Depends(get_current_user)):
-    room = await SessionDAO.find_one_or_none(room_id=room_id)
-    if room is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Комната не найдена")
-    if room.username != current_user.username:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Недостаточно прав для операции")
-    await SessionDAO.delete(room_id=room_id)
-    return {"message": "Комната удалена"}
 
 
 

@@ -11,7 +11,6 @@ from redis import asyncio as aioredis
 from backend.app.models.users.router import router_auth
 from backend.app.models.search.router import router_search
 from backend.app.models.admin.auth import auth_backend
-from backend.app.models.rooms.router import room_router
 from backend.app.models.images.router import router_user
 from backend.app.models.mainpage.router import main_router
 from backend.app.models.section.router import section_router
@@ -39,7 +38,7 @@ app.include_router(router_user)
 app.include_router(section_router)
 app.include_router(category_router)
 app.include_router(router_search)
-app.include_router(room_router)
+
 
 
 
