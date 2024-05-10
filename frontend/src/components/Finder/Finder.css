@@ -54,6 +54,7 @@
 
 .movie-item {
     display: flex;
+    cursor: pointer;
     flex-direction: row; /* Убедитесь, что это значение установлено правильно */
     align-items: flex-start; /* Выравнивание элементов по верху */
     width: 70%; /* Процент ширины относительно контейнера фильмов */

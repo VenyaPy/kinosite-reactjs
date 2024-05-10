@@ -8,9 +8,9 @@ export default function Popular({ setActiveSection }) {
   const scrollContainer = useRef(null);
 
   useEffect(() => {
-    fetch('https://ve.po2014.fvds.ru:80/api/v1/main')
+    fetch('http://127.0.0.1:8000/api/v2/mainpage')
       .then(response => response.json())
-      .then(data => setFilms(data.slice(0, 100)))
+      .then(data => setFilms(data.slice(5, 100)))
       .catch(error => console.error('Ошибка при загрузке данных:', error));
   }, []);
 
@@ -25,14 +25,10 @@ export default function Popular({ setActiveSection }) {
   };
 
   const handleFilmClick = (filmId) => {
+    console.log("Film clicked, id:", filmId); // Добавьте для отладки
     setActiveSection({ section: 'player', params: { movieId: filmId } });
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 0 },
-    visible: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: 0 }
-  };
 
   return (
     <div className="films-wrapper">
@@ -42,12 +38,10 @@ export default function Popular({ setActiveSection }) {
             <motion.div
               key={index}
               className='film-item'
-              onClick={() => handleFilmClick(film.id)} // Используйте правильный идентификатор в зависимости от вашего API
+              onClick={() => handleFilmClick(film.id)}  // Убедитесь, что film.id действительно содержит корректный ID
               initial="hidden"
               animate="visible"
               exit="exit"
-              variants={itemVariants}
-              whileHover={{ scale: 1.05 }}
             >
               <img src={film.poster} alt={film.name} />
               <h3>{film.name}</h3>

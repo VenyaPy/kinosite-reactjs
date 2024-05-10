@@ -23,12 +23,18 @@
 .film-item {
   display: inline-block;
   width: 200px;
-    height: 360px;
+  height: 360px;
   margin-right: 10px;
+  cursor: pointer;
   flex: 0 0 auto;
   background: #3e3e3e; /* Фон для улучшения видимости */
   border-radius: 8px; /* Скругление углов */
   overflow: hidden; /* Обрезка всего, что выходит за границы */
+  transition: transform 0.3s ease; /* Добавляем плавный переход для transform */
+}
+
+.film-item:hover {
+  transform: scale(1.05); /* Увеличение размера элемента при наведении */
 }
 
 .film-item img {
@@ -52,13 +58,12 @@
   font-size: 14px;
   margin: 8px;
   color: #8c8c8c;
-  /* Устанавливаем высоту блока на основе размера шрифта и желаемого количества строк */
-  height: 3.9em; /* примерно для 3 строк текста, учитывая line-height */
+  height: 3.3em; /* Примерно для 3 строк текста */
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3; /* Ограничиваем количество строк до 3 */
-  text-overflow: ellipsis; /* Добавляем троеточие, если текст не умещается */
+  text-overflow: ellipsis; /* Троеточие */
 }
 
 .scroll-button {

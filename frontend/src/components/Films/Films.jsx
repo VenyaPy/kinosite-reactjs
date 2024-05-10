@@ -23,7 +23,7 @@ function Films( {setActiveSection} ) {
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
             `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=movie` :
-            `http://127.0.0.1:8000/api/v2/films`;
+            `http://127.0.0.1:8000/api/v2/movies`;
 
         if (year) url += `&year=${year}`;
         if (rating) url += `&rating.imdb=${rating}`;
@@ -42,7 +42,7 @@ function Films( {setActiveSection} ) {
             const results = url.includes("kinopoisk.dev") ?
                 data.docs.map(movie => ({
                     ...movie,
-                    poster: movie.poster ? movie.poster.url : null
+                    poster: movie.poster ? movie.poster.previewUrl : null
                 })) :
                 data;
             setMovies(results.filter(movie => movie.name && movie.poster && (movie.shortDescription || movie.description)));

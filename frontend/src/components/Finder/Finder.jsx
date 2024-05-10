@@ -1,9 +1,10 @@
 import './Finder.css'
 import { useState } from 'react';
 import axios from 'axios';
+import PropTypes from "prop-types";
 
 
-export default function Finder() {
+function Finder({ setActiveSection }) {
     const [query, setQuery] = useState('');
     const [movies, setMovies] = useState([]);
 
@@ -25,6 +26,10 @@ export default function Finder() {
         }
     };
 
+    const handleFilmClick = (movieId) => {
+        setActiveSection({ section: 'player', params: { movieId: movieId } });
+    };
+
     return (
         <div className="finder-container">
             <div className="search-finder">
@@ -42,18 +47,22 @@ export default function Finder() {
             </div>
             <div className="movies-list">
                 {movies.map(movie => (
-                    <div key={movie.id} className="movie-item">
-                        <a href={movie.watch_url} target="_blank" rel="noopener noreferrer">
-                            <img src={movie.poster} alt={movie.name}/>
-                            <div className="details">
-                                <h3>{movie.name}</h3>
-                                <div className="year">{movie.year}</div>
-                                <p>{movie.description || "Описание отсутствует"}</p>
-                            </div>
-                        </a>
+                    <div key={movie.id} className="movie-item" onClick={() => handleFilmClick(movie.id)}>
+                        <img src={movie.poster} alt={movie.name} />
+                        <div className="details">
+                            <h3>{movie.name}</h3>
+                            <div className="year">{movie.year}</div>
+                            <p>{movie.description || "Описание отсутствует"}</p>
+                        </div>
                     </div>
                 ))}
             </div>
         </div>
     );
 }
+
+Finder.propTypes = {
+    setActiveSection: PropTypes.func.isRequired,
+};
+
+export default Finder;

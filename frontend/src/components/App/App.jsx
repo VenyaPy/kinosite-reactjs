@@ -15,17 +15,17 @@ function App() {
   const SectionComponent = () => {
     switch(activeSection.section) {
       case 'main':
-        return <Main />;
+        return <Main setActiveSection={setActiveSection}  />;
       case 'films':
         return <Films setActiveSection={setActiveSection} />;
       case 'player':
         return <Player movieId={activeSection.params.movieId} />;
       case 'series':
-        return <Series />;
+        return <Series setActiveSection={setActiveSection} />;
       case 'anime':
-        return <Anime />;
+        return <Anime setActiveSection={setActiveSection} />;
       default:
-        return <Main />;
+        return <Main setActiveSection={setActiveSection}  />;
     }
   };
 

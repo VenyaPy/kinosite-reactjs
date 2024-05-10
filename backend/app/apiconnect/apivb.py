@@ -23,7 +23,7 @@ class MovieSearch:
                             # Проверка и обработка данных постера
                             poster = movie.get('poster')
                             if isinstance(poster, dict):
-                                movie['poster'] = poster.get('url')
+                                movie['poster'] = poster.get('previewUrl')
                             else:
                                 movie['poster'] = None
                         return movies
@@ -80,13 +80,13 @@ class KinopoiskCategory:
             if 'id' in data:
                 data['watch_url'] = f'http://127.0.0.1:8000/v/player?id={data["id"]}'
                 data['id'] = f"{data['id']}"
-                data['poster'] = data['poster']['url']
+                data['poster'] = data['poster']['previewUrl'] if isinstance(data['poster'], dict) else data['poster']
             return data
         else:
             for film in films_data:
+                film['id'] = str(film['id'])
                 film['watch_url'] = f'http://127.0.0.1:8000/v/player?id={film["id"]}'
-                film['id'] = f"{film['id']}"
-                film['poster'] = film['poster']['url']
+                film['poster'] = film.get('poster', {}).get('previewUrl', None)
 
         return films_data
 

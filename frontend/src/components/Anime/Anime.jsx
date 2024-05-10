@@ -3,7 +3,7 @@ import './Anime.css'
 import { motion } from "framer-motion";
 
 
-export default function Anime() {
+export default function Anime( {setActiveSection} ) {
     const apiKey = import.meta.env.VITE_API_KEY;
 
     const [series, setSeries] = useState([]);
@@ -19,7 +19,7 @@ export default function Anime() {
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
             'https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=anime' :
-            'http://127.0.0.1:8000/api/v2/anime-series';
+            'http://127.0.0.1:8000/api/v2/anime';
 
         if (year) url += `&year=${year}`;
         if (rating) url += `&rating.imdb=${rating}`;
@@ -36,7 +36,7 @@ export default function Anime() {
             const results = url.includes("kinopoisk.dev") ?
                 data.docs.map(serial => ({
                     ...serial,
-                    poster: serial.poster ? serial.poster.url : null,
+                    poster: serial.poster ? serial.poster.previewUrl : null,
                     watch_url: `http://127.0.0.1:8000/v/player?id=${serial.id}`
                 })) :
                 data;
@@ -54,6 +54,11 @@ export default function Anime() {
         setRating('');
         setIsFiltered(false);
         fetchSeries();
+    };
+
+    const handleMovieClick = (id) => {
+        console.log("Movie ID to set:", id); // Добавьте это для отладки
+        setActiveSection({ section: 'player', params: { movieId: id } });
     };
 
     return (
@@ -82,16 +87,17 @@ export default function Anime() {
             <div className="movies-section">
                 {series.map(seria => (
                     seria.poster && (
-                        <a href={seria.watch_url} key={seria.id} className="movie">
+                        <div onClick={() => handleMovieClick(seria.id)} key={seria.id} className="movie">
                             <img src={seria.poster} alt={seria.name} className="movie-poster"/>
                             <div className="movie-overlay">
                                 <i className="fa-solid fa-play play-icon"></i>
                                 <div className="movie-info">
                                     <div className="movie-title">{seria.name}</div>
-                                    <div className="movie-description">{seria.shortDescription || seria.description}</div>
+                                    <div
+                                        className="movie-description">{seria.shortDescription || seria.description}</div>
                                 </div>
                             </div>
-                        </a>
+                        </div>
                     )
                 ))}
             </div>

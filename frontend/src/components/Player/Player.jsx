@@ -4,18 +4,19 @@ import PropTypes from "prop-types";
 import "./Player.css";
 
 function Player({ movieId }) {
+    const apiKey = import.meta.env.VITE_API_KEY;
+
     const [movie, setMovie] = useState(null);
     const [error, setError] = useState('');
     const playerRef = useRef(null);
     const scriptLoaded = useRef(false);
 
-    // Загрузка данных о фильме и скрипта для плеера
     useEffect(() => {
         if (movieId) {
             const fetchMovie = async () => {
                 try {
                     const response = await axios.get(`https://api.kinopoisk.dev/v1.4/movie/${movieId}`, {
-                        headers: { 'accept': 'application/json', 'X-API-KEY': 'QCHSW7T-7QP4BWT-QP5WGZA-MT64TRZ' }
+                        headers: { 'accept': 'application/json', 'X-API-KEY': apiKey }
                     });
                     setMovie(response.data);
                 } catch (err) {
@@ -28,7 +29,6 @@ function Player({ movieId }) {
         }
     }, [movieId]);
 
-    // Загрузка и инициализация плеера
     useEffect(() => {
         if (movie && !scriptLoaded.current) {
             const script = document.createElement('script');
@@ -51,14 +51,18 @@ function Player({ movieId }) {
         if (playerRef.current && movieId) {
             window.kbox(playerRef.current, {
                 search: {
-                    kinopoisk: movieId,  // Передаём movieId
+                    kinopoisk: movieId,
                 },
                 menu: { enable: false },
                 players: {
-                    alloha: { enable: true, position: 1, domain: 'https://sansa.newplayjj.com:9443' }
+                    alloha: { enable: true, position: 1, domain: 'https://sansa.newplayjj.com:9443' },
+                    videocdn: { enable: true, position: 2, domain: 'https://12537.svetacdn.in/gzIOdW6ZBYvH' },
+                    kodik: { enable: true, position: 3, domain: 'https://kodik.info/video/3007/d11f14905f287e1939c1875dc2ab9c6f/720p' }  // Добавлен третий плеер
                 },
                 params: {
-                    alloha: { token: '3a4e69a3bb3a0eb3b5bf5eba7e563b' }
+                    alloha: { token: '3a4e69a3bb3a0eb3b5bf5eba7e563b' },
+                    videocdn: { fallback: true },
+                    kodik: { fallback: true }  // Включение автоматического переключения на Kodik, если другие не работают
                 }
             });
         } else {
@@ -93,3 +97,4 @@ Player.propTypes = {
 };
 
 export default Player;
+
