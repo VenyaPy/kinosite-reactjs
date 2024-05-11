@@ -2,8 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import './Films.css';
 import { motion } from "framer-motion";
 import PropTypes from "prop-types";
+import Loading from "../Loading/Loading.jsx";
 
-function Films( {setActiveSection} ) {
+
+
+export default function Films({ setActiveSection }) {
     const apiKey = import.meta.env.VITE_API_KEY;
 
     const [movies, setMovies] = useState([]);
@@ -12,6 +15,7 @@ function Films( {setActiveSection} ) {
     const [genre, setGenre] = useState('');
     const [country, setCountry] = useState('');
     const [isFiltered, setIsFiltered] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);  // Новое состояние для индикации загрузки
 
     const years = Array.from({length: 45}, (_, i) => 2024 - i);
     const ratings = ["1-3", "3-5", "5-7", "7-10"];
@@ -26,6 +30,7 @@ function Films( {setActiveSection} ) {
     }
 
     const fetchMovies = useCallback(() => {
+        setIsLoading(true);  // Включение индикатора загрузки
         let filtersApplied = year || rating || genre || country;
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
@@ -52,10 +57,14 @@ function Films( {setActiveSection} ) {
                     poster: movie.poster ? movie.poster.previewUrl : null
                 })) :
                 data;
-            shuffleArray(results); // Перемешиваем результаты
+            shuffleArray(results);
             setMovies(results.filter(movie => movie.name && movie.poster && (movie.shortDescription || movie.description)));
+            setIsLoading(false);  // Выключение индикатора загрузки
         })
-        .catch(error => console.error('Error fetching movies:', error));
+        .catch(error => {
+            console.error('Error fetching movies:', error);
+            setIsLoading(false);  // Выключение индикатора загрузки в случае ошибки
+        });
     }, [year, genre, country, rating, apiKey]);
 
     useEffect(() => {
@@ -63,7 +72,7 @@ function Films( {setActiveSection} ) {
     }, [fetchMovies]);
 
     const handleMovieClick = (id) => {
-        console.log("Movie ID to set:", id); // Добавьте это для отладки
+        console.log("Movie ID to set:", id);
         setActiveSection({ section: 'player', params: { movieId: id } });
     };
 
@@ -73,7 +82,7 @@ function Films( {setActiveSection} ) {
         setGenre('');
         setCountry('');
         setIsFiltered(false);
-        fetchMovies(); // Сброс и повторный запрос фильмов без фильтров
+        fetchMovies();
     };
 
     return (
@@ -84,53 +93,55 @@ function Films( {setActiveSection} ) {
             transition={{duration: 1}}
             className="projects-container"
         >
-            <div>
-                <div className="filters">
-                    <select value={year} onChange={e => setYear(e.target.value)}>
-                        <option value="">Год</option>
-                        {years.map(y => <option key={y} value={y}>{y}</option>)}
-                    </select>
-                    <select value={rating} onChange={e => setRating(e.target.value)}>
-                        <option value="">Рейтинг</option>
-                        {ratings.map(r => <option key={r} value={r}>{r}</option>)}
-                    </select>
-                    <select value={genre} onChange={e => setGenre(e.target.value)}>
-                        <option value="">Жанр</option>
-                        {genres.map(g => <option key={g} value={g}>{g}</option>)}
-                    </select>
-                    <select value={country} onChange={e => setCountry(e.target.value)}>
-                        <option value="">Страна</option>
-                        {countries.map(c => <option key={c} value={c}>{c}</option>)}
-                    </select>
-                    <button onClick={resetFilters}>Сбросить фильтры</button>
-                </div>
-                <div className="popular-movie">
-                    <h2>{isFiltered ? "Фильмы по вашим критериям" : "Популярные фильмы"}</h2>
-                </div>
-                <div className="movies-section">
-                    {movies.map(movie => (
-                        movie.poster && (
-                            <div onClick={() => handleMovieClick(movie.id)} key={movie.id} className="movie">
-                                <img src={movie.poster} alt={movie.name} className="movie-poster"/>
-                                <div className="movie-overlay">
-                                    <i className="fa-solid fa-play play-icon"></i>
-                                    <div className="movie-info">
-                                        <div className="movie-title">{movie.name}</div>
-                                        <div
-                                            className="movie-description">{movie.shortDescription || movie.description}</div>
+            {isLoading ? (
+                <Loading /> // Отображение компонента загрузки
+            ) : (
+                <div>
+                    <div className="filters">
+                        <select value={year} onChange={e => setYear(e.target.value)}>
+                            <option value="">Год</option>
+                            {years.map(y => <option key={y} value={y}>{y}</option>)}
+                        </select>
+                        <select value={rating} onChange={e => setRating(e.target.value)}>
+                            <option value="">Рейтинг</option>
+                            {ratings.map(r => <option key={r} value={r}>{r}</option>)}
+                        </select>
+                        <select value={genre} onChange={e => setGenre(e.target.value)}>
+                            <option value="">Жанр</option>
+                            {genres.map(g => <option key={g} value={g}>{g}</option>)}
+                        </select>
+                        <select value={country} onChange={e => setCountry(e.target.value)}>
+                            <option value="">Страна</option>
+                            {countries.map(c => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                        <button onClick={resetFilters}>Сбросить фильтры</button>
+                    </div>
+                    <div className="popular-movie">
+                        <h2>{isFiltered ? "Фильмы по вашим критериям" : "Популярные фильмы"}</h2>
+                    </div>
+                    <div className="movies-section">
+                        {movies.map(movie => (
+                            movie.poster && (
+                                <div onClick={() => handleMovieClick(movie.id)} key={movie.id} className="movie">
+                                    <img src={movie.poster} alt={movie.name} className="movie-poster"/>
+                                    <div className="movie-overlay">
+                                        <i className="fa-solid fa-play play-icon"></i>
+                                        <div className="movie-info">
+                                            <div className="movie-title">{movie.name}</div>
+                                            <div className="movie-description">{movie.shortDescription || movie.description}</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )
-                    ))}
+                            )
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
         </motion.div>
     );
 }
 
 Films.propTypes = {
-    setActiveSection: PropTypes.func.isRequired,
+    setActiveSection: PropTypes.func.isRequired
 };
 
-export default Films;

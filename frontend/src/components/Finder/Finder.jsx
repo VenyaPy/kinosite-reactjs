@@ -8,10 +8,12 @@ function Finder({ setActiveSection }) {
     const [query, setQuery] = useState('');
     const [movies, setMovies] = useState([]);
     const [isModalOpen, setModalOpen] = useState(false);
+    const [isLoading, setLoading] = useState(false); // Добавляем состояние загрузки
 
     const handleSearch = async () => {
         if (!query) return;
         try {
+            setLoading(true); // Показываем загрузку при начале запроса
             const response = await axios.get(`http://127.0.0.1:8000/api/v2/search/${query}/`);
             const filteredMovies = response.data.filter(movie => movie.poster);
             setMovies(filteredMovies);
@@ -19,6 +21,8 @@ function Finder({ setActiveSection }) {
         } catch (error) {
             console.error('Ошибка при поиске фильмов:', error);
             setMovies([]);
+        } finally {
+            setLoading(false); // Скрываем загрузку после завершения запроса
         }
     };
 
@@ -47,6 +51,8 @@ function Finder({ setActiveSection }) {
                     <i className="fa-solid fa-magnifying-glass"></i>
                 </button>
             </div>
+            {/* Показываем загрузку, если isLoading === true */}
+            {isLoading && <div className="loading">Загрузка...</div>}
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content">

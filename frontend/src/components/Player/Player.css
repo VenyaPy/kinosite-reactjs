@@ -5,12 +5,13 @@
     width: 100%;
     max-width: 1200px;
     margin: 70px auto;
-    padding: 20px;
+    padding: 50px;
     gap: 20px;
-    background-color: #333; /* Темнее для акцента на контенте */
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* Более выраженный тень для глубины */
-    border-radius: 8px; /* Скругление углов */
-    transition: transform 0.3s ease; /* Плавное преобразование при наведении */
+    background-color: #333;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    min-height: 90%; /* Изменено с height на min-height */
 }
 
 
@@ -43,13 +44,20 @@ h2, p {
     padding-bottom: 10px;
 }
 
+.p-m {
+    padding-top: 15px;
+}
+
 h2 {
-    font-size: 28px; /* Больший размер для заголовка */
+    font-size: 35px; /* Больший размер для заголовка */
     color: #E0E0E0; /* Светлый серый цвет */
+    padding-bottom: 30px;
+
 }
 
 p {
-    font-size: 16px;
+    font-size: 18px;
+    width: 90%;
     color: #CCC; /* Серый цвет для текста описания */
 }
 
@@ -58,20 +66,66 @@ p {
     width: 100%;
     height: 600px; /* Увеличенная высота плеера */
     background-color: #000;
+    margin-top: 30px;
 }
 
-/* Адаптация под мобильные устройства */
-@media (max-width: 768px) {
-    .movie-details {
-        flex-direction: column;
-    }
-
-    .movie-details img {
-        width: 100%; /* Полноразмерный постер на маленьких экранах */
-        margin-bottom: 10px;
-    }
-
-    .player-container {
-        padding: 10px;
-    }
+.reviews {
+    width: 90%;
+    margin-top: 20px;
+    margin-bottom: 50px; /* Увеличиваем нижний отступ для блока отзывов */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
+
+.review-text {
+    color: white;
+    font-weight: bold;
+    font-size: 30px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.review {
+    background-color: #202020; /* Темный фон для каждого отзыва */
+    padding: 20px;
+    border-radius: 10px; /* Скругленные углы для блоков */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Слегка выразительная тень */
+    transition: transform 0.2s ease-in-out; /* Анимация для наведения */
+}
+
+.review:hover {
+    transform: translateY(-5px); /* Поднятие блока при наведении */
+}
+
+.review p {
+    color: #CCC; /* Светло-серый цвет текста */
+    font-size: 16px; /* Размер шрифта текста */
+    line-height: 1.6; /* Интерлиньяж для улучшенного чтения */
+    overflow: hidden; /* Обрезаем текст, чтобы он не вытекал за пределы блока */
+    display: block; /* Отображаем текст */
+    text-overflow: ellipsis; /* Точки в конце обрезанного текста */
+    max-height: 3.2em; /* Ограничиваем высоту текста для создания эффекта "скрытого" текста */
+}
+
+.review.open p {
+    white-space: normal; /* Возвращаем переносы строк */
+    max-height: none; /* Убираем ограничение по высоте */
+}
+
+.toggle-button {
+    cursor: pointer;
+    display: block;
+    background: none;
+    border: none;
+    color: #888;
+    text-align: center;
+    margin: 0 auto;
+    padding: 10px;
+    font-size: 16px; /* Подходящий размер текста для кнопки */
+}
+
+.review .toggle-button:hover {
+    color: #fff; /* Светлее при наведении для лучшей видимости */
+}
+

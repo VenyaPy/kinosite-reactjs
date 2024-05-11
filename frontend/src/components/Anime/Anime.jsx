@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import './Anime.css'
 import { motion } from "framer-motion";
 import PropTypes from "prop-types";
+import Loading from "../Loading/Loading.jsx";
 
 
 function Anime({ setActiveSection }) {
@@ -11,11 +12,11 @@ function Anime({ setActiveSection }) {
     const [year, setYear] = useState('');
     const [rating, setRating] = useState('');
     const [isFiltered, setIsFiltered] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Добавляем состояние загрузки
 
     const years = Array.from({length: 45}, (_, i) => 2024 - i);
     const ratings = ["1-3", "3-5", "5-7", "7-10"];
 
-    // Функция для перемешивания массива
     const shuffleArray = (array) => {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -24,6 +25,7 @@ function Anime({ setActiveSection }) {
     };
 
     const fetchSeries = useCallback(() => {
+        setIsLoading(true); // Включаем индикатор загрузки
         let filtersApplied = year || rating;
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
@@ -51,8 +53,12 @@ function Anime({ setActiveSection }) {
                 data;
             shuffleArray(results);  // Перемешиваем результаты
             setSeries(results.filter(anime => anime.name && anime.poster && (anime.shortDescription || anime.description)));
+            setIsLoading(false); // Выключаем индикатор загрузки
         })
-        .catch(error => console.error('Ошибка при поиске аниме:', error));
+        .catch(error => {
+            console.error('Ошибка при поиске аниме:', error);
+            setIsLoading(false); // Выключаем индикатор загрузки в случае ошибки
+        });
     }, [year, rating, apiKey]);
 
     useEffect(() => {
@@ -63,12 +69,6 @@ function Anime({ setActiveSection }) {
         setActiveSection({ section: 'player', params: { movieId: id } });
     };
 
-    const resetFilters = () => {
-        setYear('');
-        setRating('');
-        setIsFiltered(false);
-        fetchSeries();
-    };
 
     return (
         <motion.div
@@ -78,37 +78,41 @@ function Anime({ setActiveSection }) {
             transition={{ duration: 1 }}
             className="projects-container"
         >
-            <div>
-                <div className="filters">
-                    <select value={year} onChange={e => setYear(e.target.value)}>
-                        <option value="">Год</option>
-                        {years.map(y => <option key={y} value={y}>{y}</option>)}
-                    </select>
-                    <select value={rating} onChange={e => setRating(e.target.value)}>
-                        <option value="">Рейтинг</option>
-                        {ratings.map(r => <option key={r} value={r}>{r}</option>)}
-                    </select>
-                </div>
-                <div className="popular-movie">
-                    <h2>{isFiltered ? "Аниме по вашим критериям" : "Популярные аниме"}</h2>
-                </div>
-                <div className="movies-section">
-                    {series.map(anime => (
-                        anime.poster && (
-                            <div onClick={() => handleMovieClick(anime.id)} key={anime.id} className="movie">
-                                <img src={anime.poster} alt={anime.name} className="movie-poster"/>
-                                <div className="movie-overlay">
-                                    <i className="fa-solid fa-play play-icon"></i>
-                                    <div className="movie-info">
-                                        <div className="movie-title">{anime.name}</div>
-                                        <div className="movie-description">{anime.shortDescription || anime.description}</div>
+            {isLoading ? (
+                <Loading /> // Отображаем компонент загрузки
+            ) : (
+                <div>
+                    <div className="filters">
+                        <select value={year} onChange={e => setYear(e.target.value)}>
+                            <option value="">Год</option>
+                            {years.map(y => <option key={y} value={y}>{y}</option>)}
+                        </select>
+                        <select value={rating} onChange={e => setRating(e.target.value)}>
+                            <option value="">Рейтинг</option>
+                            {ratings.map(r => <option key={r} value={r}>{r}</option>)}
+                        </select>
+                    </div>
+                    <div className="popular-movie">
+                        <h2>{isFiltered ? "Аниме по вашим критериям" : "Популярные аниме"}</h2>
+                    </div>
+                    <div className="movies-section">
+                        {series.map(anime => (
+                            anime.poster && (
+                                <div onClick={() => handleMovieClick(anime.id)} key={anime.id} className="movie">
+                                    <img src={anime.poster} alt={anime.name} className="movie-poster"/>
+                                    <div className="movie-overlay">
+                                        <i className="fa-solid fa-play play-icon"></i>
+                                        <div className="movie-info">
+                                            <div className="movie-title">{anime.name}</div>
+                                            <div className="movie-description">{anime.shortDescription || anime.description}</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )
-                    ))}
+                            )
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
         </motion.div>
     );
 }

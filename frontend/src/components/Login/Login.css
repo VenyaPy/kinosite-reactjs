@@ -12,19 +12,19 @@
     z-index: 1050;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Центрирование всех элементов внутри */
+    align-items: center;
 }
 
 .login-form {
-    width: 100%; /* Установка ширины формы на 100% от родительского элемента */
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Центрирование всех элементов формы */
+    align-items: center;
     gap: 20px;
 }
 
 .form-group {
-    width: 100%; /* Установка ширины группы формы на 100% от родительского элемента */
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -37,9 +37,9 @@
 }
 
 .form-control {
-    width: 80%; /* Управление шириной поля ввода */
-    margin: 0 auto; /* Автоматическое выравнивание по центру */
-    padding: 10px 15px;
+    width: 80%;
+    margin: 0 auto;
+    padding: 12px 15px;
     background: #333333;
     border: 1px solid #444444;
     border-radius: 4px;
@@ -53,14 +53,15 @@
 }
 
 .btn-primary {
-    width: 60%; /* Управление шириной кнопки на 60% от ширины формы */
+    width: 80%;
     padding: 12px;
     background-color: #0056b3;
     border-radius: 4px;
     color: white;
     cursor: pointer;
     transition: background-color 0.2s;
-    margin: 10px 0; /* Добавление небольшого отступа для отделения от других элементов */
+    margin: 10px 0;
+    border: none;
 }
 
 .btn-primary:hover {
@@ -83,3 +84,5 @@
     text-align: center;
     padding-bottom: 20px;
 }
+
+

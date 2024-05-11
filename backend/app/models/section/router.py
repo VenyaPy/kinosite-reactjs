@@ -21,7 +21,7 @@ section_router = APIRouter(
 @section_router.get("/movies",
                      response_model=List[Selection],
                      summary="Раздел фильмы")
-@cache(expire=36000)
+@cache(expire=100000)
 async def movies_section():
 
     try:
@@ -43,7 +43,7 @@ async def movies_section():
 @section_router.get("/series",
                     response_model=List[Selection],
                     summary="Раздел сериалы")
-@cache(expire=36000)
+@cache(expire=100000)
 async def series_section():
 
     try:
@@ -63,7 +63,7 @@ async def series_section():
 @section_router.get("/anime",
                      response_model=List[Selection],
                      summary="Раздел аниме")
-@cache(expire=36000)
+@cache(expire=100000)
 async def anime_section():
     try:
         movie_data = await KinopoiskCategory.kinopoisk_api(

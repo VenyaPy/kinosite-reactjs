@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import './Cartoon.css'
 import { motion } from "framer-motion";
 import PropTypes from "prop-types";
+import Loading from "../Loading/Loading.jsx";
 
-function Cartoon( {setActiveSection} ) {
+export default function Cartoon({ setActiveSection }) {
     const apiKey = import.meta.env.VITE_API_KEY;
 
     const [movies, setMovies] = useState([]);
@@ -12,6 +13,7 @@ function Cartoon( {setActiveSection} ) {
     const [genre, setGenre] = useState('');
     const [country, setCountry] = useState('');
     const [isFiltered, setIsFiltered] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Добавляем состояние загрузки
 
     const years = Array.from({length: 45}, (_, i) => 2024 - i);
     const ratings = ["1-3", "3-5", "5-7", "7-10"];
@@ -26,6 +28,7 @@ function Cartoon( {setActiveSection} ) {
     }
 
     const fetchMovies = useCallback(() => {
+        setIsLoading(true); // Включаем индикатор загрузки
         let filtersApplied = year || rating || genre || country;
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
@@ -54,8 +57,12 @@ function Cartoon( {setActiveSection} ) {
                 data;
             shuffleArray(results); // Перемешиваем результаты
             setMovies(results.filter(movie => movie.name && movie.poster && (movie.shortDescription || movie.description)));
+            setIsLoading(false); // Выключаем индикатор загрузки
         })
-        .catch(error => console.error('Error fetching movies:', error));
+        .catch(error => {
+            console.error('Error fetching movies:', error);
+            setIsLoading(false); // Выключаем индикатор загрузки в случае ошибки
+        });
     }, [year, genre, country, rating, apiKey]);
 
     useEffect(() => {
@@ -84,47 +91,51 @@ function Cartoon( {setActiveSection} ) {
             transition={{duration: 1}}
             className="projects-container"
         >
-            <div>
-                <div className="filters">
-                    <select value={year} onChange={e => setYear(e.target.value)}>
-                        <option value="">Год</option>
-                        {years.map(y => <option key={y} value={y}>{y}</option>)}
-                    </select>
-                    <select value={rating} onChange={e => setRating(e.target.value)}>
-                        <option value="">Рейтинг</option>
-                        {ratings.map(r => <option key={r} value={r}>{r}</option>)}
-                    </select>
-                    <select value={genre} onChange={e => setGenre(e.target.value)}>
-                        <option value="">Жанр</option>
-                        {genres.map(g => <option key={g} value={g}>{g}</option>)}
-                    </select>
-                    <select value={country} onChange={e => setCountry(e.target.value)}>
-                        <option value="">Страна</option>
-                        {countries.map(c => <option key={c} value={c}>{c}</option>)}
-                    </select>
-                    <button onClick={resetFilters}>Сбросить фильтры</button>
-                </div>
-                <div className="popular-movie">
-                    <h2>{isFiltered ? "Мультфильмы по вашим критериям" : "Популярные мультфильмы"}</h2>
-                </div>
-                <div className="movies-section">
-                    {movies.map(movie => (
-                        movie.poster && (
-                            <div onClick={() => handleMovieClick(movie.id)} key={movie.id} className="movie">
-                                <img src={movie.poster} alt={movie.name} className="movie-poster"/>
-                                <div className="movie-overlay">
-                                    <i className="fa-solid fa-play play-icon"></i>
-                                    <div className="movie-info">
-                                        <div className="movie-title">{movie.name}</div>
-                                        <div
-                                            className="movie-description">{movie.shortDescription || movie.description}</div>
+            {isLoading ? (
+                <Loading /> // Показываем компонент загрузки
+            ) : (
+                <div>
+                    <div className="filters">
+                        <select value={year} onChange={e => setYear(e.target.value)}>
+                            <option value="">Год</option>
+                            {years.map(y => <option key={y} value={y}>{y}</option>)}
+                        </select>
+                        <select value={rating} onChange={e => setRating(e.target.value)}>
+                            <option value="">Рейтинг</option>
+                            {ratings.map(r => <option key={r} value={r}>{r}</option>)}
+                        </select>
+                        <select value={genre} onChange={e => setGenre(e.target.value)}>
+                            <option value="">Жанр</option>
+                            {genres.map(g => <option key={g} value={g}>{g}</option>)}
+                        </select>
+                        <select value={country} onChange={e => setCountry(e.target.value)}>
+                            <option value="">Страна</option>
+                            {countries.map(c => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                        <button onClick={resetFilters}>Сбросить фильтры</button>
+                    </div>
+                    <div className="popular-movie">
+                        <h2>{isFiltered ? "Мультфильмы по вашим критериям" : "Популярные мультфильмы"}</h2>
+                    </div>
+                    <div className="movies-section">
+                        {movies.map(movie => (
+                            movie.poster && (
+                                <div onClick={() => handleMovieClick(movie.id)} key={movie.id} className="movie">
+                                    <img src={movie.poster} alt={movie.name} className="movie-poster"/>
+                                    <div className="movie-overlay">
+                                        <i className="fa-solid fa-play play-icon"></i>
+                                        <div className="movie-info">
+                                            <div className="movie-title">{movie.name}</div>
+                                            <div
+                                                className="movie-description">{movie.shortDescription || movie.description}</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )
-                    ))}
+                            )
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
         </motion.div>
     );
 }
@@ -132,5 +143,3 @@ function Cartoon( {setActiveSection} ) {
 Cartoon.propTypes = {
     setActiveSection: PropTypes.func.isRequired,
 };
-
-export default Cartoon;

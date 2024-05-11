@@ -8,8 +8,8 @@ export default function Footer() {
                 <p>Бесплатный просмотр фильмов разного жанра.</p>
             </div>
             <div className="footer-section social">
-                <a href="http://facebook.com" target="_blank" rel="noopener noreferrer"><i className="fa fa-telegram"></i></a>
-                <a href="http://twitter.com" target="_blank" rel="noopener noreferrer"><i className="fa fa-vk"></i></a>
+                <a href="https://t.me/WildKino_bot" target="_blank" rel="noopener noreferrer"><i className="fa fa-telegram"></i></a>
+                <a href="https://vk.com/venya.popov" target="_blank" rel="noopener noreferrer"><i className="fa fa-vk"></i></a>
                 <a href="http://instagram.com" target="_blank" rel="noopener noreferrer"><i className="fa fa-instagram"></i></a>
             </div>
             <div className="footer-section contact">

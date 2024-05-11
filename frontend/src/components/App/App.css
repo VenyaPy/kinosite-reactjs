@@ -15,6 +15,7 @@ html {
 
 .main-container {
     padding-top: 70px; /* Размер должен соответствовать высоте .header */
+    padding-bottom: 50px; /* Добавлен нижний внутренний отступ для отделения содержимого от нижней части контейнера */
     margin: 0 auto;
     background-color: #252525;
     max-width: 80%;
