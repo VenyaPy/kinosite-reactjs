@@ -1,18 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
-import './Cartoon.css'
+import { useNavigate } from 'react-router-dom';
+import './Cartoon.css';
 import { motion } from "framer-motion";
-import PropTypes from "prop-types";
 import Loading from "../Loading/Loading.jsx";
 
-export default function Cartoon({ setActiveSection }) {
+export default function Cartoon() {
     const apiKey = import.meta.env.VITE_API_KEY;
+    const navigate = useNavigate();
 
     const [movies, setMovies] = useState([]);
     const [year, setYear] = useState('');
     const [rating, setRating] = useState('');
     const [genre, setGenre] = useState('');
     const [country, setCountry] = useState('');
-    const [studio, setStudio] = useState(''); // Добавлено новое состояние для фильтра по студиям
+    const [studio, setStudio] = useState('');
     const [isFiltered, setIsFiltered] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -20,7 +21,7 @@ export default function Cartoon({ setActiveSection }) {
     const ratings = ["1-3", "3-5", "5-7", "7-10"];
     const genres = ["драма", "комедия", "мелодрама", "ужасы", "фэнтези", "боевик", "семейный", "приключения", "детектив", "триллер", "фантастика", "документальный", "биография", "для взрослых", "короткометражка", "криминал"];
     const countries = ["США", "Великобритания", "Франция", "Германия", "Италия", "Канада", "Австралия", "Индия", "Япония", "Южная Корея", "Испания", "Россия", "Китай", "Швеция", "Бразилия"];
-    const studios = ["Netflix", "HBO", "Apple TV+", "Disney+", "Amazon Prime Video"]; // Список студий
+    const studios = ["Netflix", "HBO", "Apple TV+", "Disney+", "Amazon Prime Video"];
 
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -73,7 +74,7 @@ export default function Cartoon({ setActiveSection }) {
     }, [fetchMovies]);
 
     const handleMovieClick = (id) => {
-        setActiveSection({ section: 'player', params: { movieId: id } });
+        navigate(`/player/${id}`); // Используем navigate для перенаправления на страницу проигрывателя
     };
 
     const resetFilters = () => {
@@ -146,6 +147,3 @@ export default function Cartoon({ setActiveSection }) {
     );
 }
 
-Cartoon.propTypes = {
-    setActiveSection: PropTypes.func.isRequired,
-};

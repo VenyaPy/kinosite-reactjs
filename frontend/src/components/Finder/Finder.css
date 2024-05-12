@@ -1,18 +1,51 @@
 .search-finder {
     position: absolute;
-    top: 550px;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
-    margin-top: 30px; /* Это поможет футеру оставаться внизу */
-    margin-left: auto; /* Автоматический отступ слева */
-    margin-right: auto; /* Автоматический отступ справа */
-    margin-bottom: 1px;
-    background: rgb(45, 45, 45); /* Темный фон с небольшой прозрачностью */
+    margin-top: 5%; /* Уменьшаем отступ сверху */
+    background: rgb(45, 45, 45);
     border-radius: 30px;
     padding: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3); /* Более заметная тень */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
     z-index: 2;
+}
+
+/* Пример медиа-запроса для уменьшения размеров поисковика на разрешениях меньше Full HD (1920px) */
+@media (max-width: 1920px) {
+    .search-finder {
+        padding: 5px; /* Уменьшаем внутренний отступ */
+    }
+}
+
+/* Медиа-запросы для адаптации на различных устройствах */
+@media (max-width: 1600px) {
+    .search-finder {
+        margin-top: 10%; /* Увеличиваем отступ сверху на более маленьких экранах */
+    }
+}
+
+@media (max-width: 1200px) {
+    .search-finder {
+        margin-top: 15%; /* Еще больший отступ на меньших экранах */
+    }
+}
+
+@media (max-width: 768px) {
+    .search-finder {
+        width: 80%; /* Уменьшаем ширину поисковика на мобильных устройствах */
+    }
+}
+
+@media (max-width: 480px) {
+    .search-finder {
+        width: 90%; /* Еще больше уменьшаем ширину на устройствах с очень маленьким разрешением */
+    }
+}
+
+.image-container {
+    position: relative; /* Родительский контейнер для позиционирования */
 }
 
 .search-input-finder {
@@ -28,6 +61,7 @@
 }
 
 .loading {
+    z-index: 2000;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -67,7 +101,7 @@
     flex-direction: row; /* Убедитесь, что это значение установлено правильно */
     align-items: flex-start; /* Выравнивание элементов по верху */
     width: 70%; /* Процент ширины относительно контейнера фильмов */
-    background-color: rgba(37, 37, 37, 0.82);
+    background-color: rgba(32, 32, 32, 0.96);
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.69);

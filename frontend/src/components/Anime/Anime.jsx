@@ -1,20 +1,21 @@
-import { useState, useEffect, useCallback } from "react";
-import './Anime.css'
+import './Anime.css';
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
-import PropTypes from "prop-types";
 import Loading from "../Loading/Loading.jsx";
+import axios from "axios";
 
-
-function Anime({ setActiveSection }) {
+function Anime() {
     const apiKey = import.meta.env.VITE_API_KEY;
+    const navigate = useNavigate();
 
     const [series, setSeries] = useState([]);
     const [year, setYear] = useState('');
     const [rating, setRating] = useState('');
     const [isFiltered, setIsFiltered] = useState(false);
-    const [isLoading, setIsLoading] = useState(false); // Добавляем состояние загрузки
+    const [isLoading, setIsLoading] = useState(false);
 
-    const years = Array.from({length: 45}, (_, i) => 2024 - i);
+    const years = Array.from({ length: 45 }, (_, i) => 2024 - i);
     const ratings = ["1-3", "3-5", "5-7", "7-10"];
 
     const shuffleArray = (array) => {
@@ -25,12 +26,12 @@ function Anime({ setActiveSection }) {
     };
 
     const fetchSeries = useCallback(() => {
-        setIsLoading(true); // Включаем индикатор загрузки
+        setIsLoading(true);
         let filtersApplied = year || rating;
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
-            'https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=anime' :
-            'http://127.0.0.1:8000/api/v2/anime';
+            `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=anime` :
+            `http://127.0.0.1:8000/api/v2/anime`;
 
         if (year) url += `&year=${year}`;
         if (rating) url += `&rating.imdb=${rating}`;
@@ -66,9 +67,8 @@ function Anime({ setActiveSection }) {
     }, [fetchSeries]);
 
     const handleMovieClick = (id) => {
-        setActiveSection({ section: 'player', params: { movieId: id } });
+        navigate(`/player/${id}`); // Navigate to player page
     };
-
 
     return (
         <motion.div
@@ -116,9 +116,5 @@ function Anime({ setActiveSection }) {
         </motion.div>
     );
 }
-
-Anime.propTypes = {
-    setActiveSection: PropTypes.func.isRequired,
-};
 
 export default Anime;

@@ -7,6 +7,7 @@ export default function Login({ toggleForm, setAuthStatus }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -18,23 +19,17 @@ export default function Login({ toggleForm, setAuthStatus }) {
                     'Content-Type': 'application/json'
                 }
             });
-            console.log('Login Success:', response.data);
             localStorage.setItem('access_token', response.data.access_token);
             setAuthStatus(true);
-            setTimeout(() => {
-                toggleForm(null);  // Скрываем форму после успешного входа
-            }, 2000);  // Сообщение исчезнет через 2 секунды
+            toggleForm(null); // Close form on success immediately
         } catch (error) {
-            console.error('Login Error:', error);
-            setError('Неверный логин или пароль');
+            setError('Неверный логин или пароль'); // Simplify error handling
         }
     };
 
-
-
     return (
         <div className="login-panel">
-            <div className="text"><h2>Вход</h2></div>
+            <h2>Вход</h2>
             <form onSubmit={handleSubmit} className="login-form">
                 <div className="form-group">
                     <label>Логин:</label>
@@ -47,9 +42,7 @@ export default function Login({ toggleForm, setAuthStatus }) {
                 <button type="submit" className="btn-primary">Войти</button>
                 {error && <div className="error-message">{error}</div>}
             </form>
-            <div className="login-link" onClick={() => toggleForm('register')}>У вас нет аккаунта? Зарегистрируйтесь
-            </div>
-
+            <div className="login-link" onClick={() => toggleForm('register')}>У вас нет аккаунта? Зарегистрируйтесь</div>
         </div>
     );
 }

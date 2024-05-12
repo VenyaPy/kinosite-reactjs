@@ -69,33 +69,54 @@ p {
     margin-top: 30px;
 }
 
+.review-text {
+    color: #FFFFFF; /* Яркий белый для лучшей читаемости */
+    font-weight: bold;
+    font-size: 25px; /* Сделать немного меньше для более сдержанного вида */
+    text-align: center;
+    margin-bottom: 40px; /* Уменьшенный отступ сверху */
+}
+
+.reviews-container {
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
+    background: linear-gradient(145deg, rgba(41, 41, 41, 0.91), rgba(30, 30, 30, 0.85));
+    animation: GradientShift 8s ease infinite;
+
+}
+
+@keyframes GradientShift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
 .reviews {
-    width: 90%;
-    margin: 20px auto 50px; /* Centers reviews in the container with a bottom margin */
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 20px;
-}
-
-.review-text {
-    color: white;
-    font-weight: bold;
-    font-size: 30px;
-    text-align: center;
-    margin-bottom: 20px; /* Space above the reviews */
+    background-color: transparent;
+    padding: 20px;
+    border-radius: 10px;
 }
 
 .review {
-    background-color: rgba(32, 32, 32, 0.9); /* Dark background for each review */
-    padding: 20px;
-    margin: 0 10px; /* Gives some space from the container edge */
-    border-radius: 10px; /* Rounded corners for the blocks */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Stronger shadow for more depth */
-    transition: transform 0.2s ease-in-out;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .review:hover {
-    transform: translateY(-5px); /* Lifts the block slightly on hover */
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
 }
 
 .review-header {
@@ -105,38 +126,37 @@ p {
     margin-bottom: 10px;
 }
 
-.review-author {
-    color: #c3c3c3; /* Gold color for the author's name */
-    font-size: 16px;
+.review-author, .review-date {
+    color: #c3c3c3;
     font-weight: bold;
-}
-
-.review-date {
-    color: #AAAAAA; /* Light grey for the date */
-    font-size: 14px;
+    margin-bottom: 10px;
 }
 
 .review p {
-    color: #CCC; /* Light gray text color */
+    color: #e4e4e4;
     font-size: 16px;
     line-height: 1.6;
-    margin-bottom: 15px; /* Adds space below the text */
+    margin-bottom: 15px;
 }
 
 .toggle-button {
     cursor: pointer;
     display: block;
-    background: none;
-    border: none;
+    background: transparent;
+    border: 1px solid #888;
     color: #888;
     text-align: center;
     margin: 0 auto;
     padding: 10px;
     font-size: 16px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
 }
 
 .toggle-button:hover {
-    color: #fff; /* Brightens the button on hover for better visibility */
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: #fff;
 }
 
 

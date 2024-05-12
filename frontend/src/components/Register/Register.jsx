@@ -8,7 +8,7 @@ export default function Register({ toggleForm }) {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
-
+    const [successMessage, setSuccessMessage] = useState('');
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -23,16 +23,18 @@ export default function Register({ toggleForm }) {
                 }
             });
             console.log('Registration Success:', response.data);
+            setSuccessMessage('Регистрация прошла успешно!');
+            setError('');
             setTimeout(() => {
-                toggleForm('login'); // Переключаемся на форму входа
-            }, 2000); // Уведомление исчезнет через 2 секунды, а затем переход на вход
+                setSuccessMessage('');
+                toggleForm('login');
+            }, 3000);  // 5 секунд для отображения сообщения
         } catch (error) {
             console.error('Registration Error:', error.response ? error.response.data : "Неизвестная ошибка");
             setError('Ошибка регистрации. Пожалуйста, попробуйте снова.');
+            setSuccessMessage('');
         }
     };
-
-
 
     return (
         <div className="register-panel">
@@ -52,6 +54,7 @@ export default function Register({ toggleForm }) {
                 </div>
                 <button type="submit" className="btn-primary">Зарегистрироваться</button>
                 {error && <div className="error-message">{error}</div>}
+                {successMessage && <div className="success-message" style={{ color: 'lightgreen' }}>{successMessage}</div>}
                 <div className="login-link" onClick={() => toggleForm('login')}>Уже зарегистрированы? Войдите</div>
             </form>
         </div>

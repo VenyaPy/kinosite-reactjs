@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import PropTypes from "prop-types";
 import "./Player.css";
 import Loading from "../Loading/Loading.jsx";
 import parse from 'html-react-parser';
+import { useParams } from "react-router-dom";
+import Share from "../Share/Share.jsx";
 
-
-
-function Player({ movieId }) {
+export default function Player() {
+    const { movieId } = useParams();
     const apiKey = import.meta.env.VITE_API_KEY;
     const [movie, setMovie] = useState(null);
     const [reviews, setReviews] = useState([]);
@@ -20,6 +20,7 @@ function Player({ movieId }) {
         setIsLoading(true);
         const fetchMovieAndReviews = async () => {
             try {
+                console.log('Fetching movie and reviews...');
                 const movieResponse = await axios.get(`https://api.kinopoisk.dev/v1.4/movie/${movieId}`, {
                     headers: { 'accept': 'application/json', 'X-API-KEY': apiKey }
                 });
@@ -28,8 +29,9 @@ function Player({ movieId }) {
                 });
                 setMovie(movieResponse.data);
                 setReviews(reviewsResponse.data.docs.map(review => ({ ...review, isOpen: false })));
+                console.log('Movie and reviews fetched successfully.');
             } catch (err) {
-                setError('Ошибка при получении данных фильма');
+                setError(`Ошибка при получении данных фильма: ${err}`);
                 console.error(err);
             } finally {
                 setIsLoading(false);
@@ -37,17 +39,20 @@ function Player({ movieId }) {
         };
 
         fetchMovieAndReviews();
-    }, [movieId]);
+    }, [movieId, apiKey]);
 
     useEffect(() => {
         if (movie && !scriptLoaded.current) {
+            console.log('Loading Kinobox script...');
             const script = document.createElement('script');
             script.src = "https://kinobox.tv/kinobox.min.js";
+            script.async = true;  // Загружаем скрипт асинхронно
             script.onload = () => {
                 scriptLoaded.current = true;
                 if (playerRef.current) {
                     initializePlayer(movieId);
                 }
+                console.log('Kinobox script loaded.');
             };
             document.body.appendChild(script);
         } else if (movie && scriptLoaded.current && playerRef.current) {
@@ -56,6 +61,7 @@ function Player({ movieId }) {
     }, [movie, movieId]);
 
     const initializePlayer = (movieId) => {
+        console.log('Initializing player...');
         if (playerRef.current && movieId) {
             window.kbox(playerRef.current, {
                 search: { kinopoisk: movieId },
@@ -73,6 +79,7 @@ function Player({ movieId }) {
                     collaps: { fallback: true },
                 }
             });
+            console.log('Player initialized.');
         } else {
             console.error("Player reference or movieId is undefined.");
         }
@@ -110,25 +117,25 @@ function Player({ movieId }) {
             </div>
         </div>
         <div ref={playerRef} className="kinobox_player"></div>
-        <h3 className="review-text">Отзывы:</h3>
-        {reviews.map((review, index) => (
-            <div key={review.id} className={`review ${review.isOpen ? 'open' : ''}`}>
-                <div className="review-header">
-                    <span className="review-author">{review.author}</span>
-                    <span className="review-date">{new Date(review.date).toLocaleDateString()}</span>
-                </div>
-                <p>{review.isOpen ? parse(review.review) : parse(`${review.review.substring(0, 200)}...`)}</p>
-                <button className="toggle-button" onClick={() => toggleReviewVisibility(index)}>
-                    {review.isOpen ? 'Свернуть' : 'Развернуть отзыв'}
-                </button>
+        <Share/>
+        {reviews.length > 0 && (
+            <div className="reviews-container">
+                <h3 className="review-text">Отзывы:</h3>
+                {reviews.map((review, index) => (
+                    <div key={review.id} className={`review ${review.isOpen ? 'open' : ''}`}>
+                        <div className="review-header">
+                            <span className="review-author">{review.author}</span>
+                            <span className="review-date">{new Date(review.date).toLocaleDateString()}</span>
+                        </div>
+                        <p>{review.isOpen ? parse(review.review) : parse(`${review.review.substring(0, 200)}...`)}</p>
+                        <button className="toggle-button" onClick={() => toggleReviewVisibility(index)}>
+                            {review.isOpen ? 'Свернуть' : 'Развернуть отзыв'}
+                        </button>
+                    </div>
+                ))}
             </div>
-        ))}
+        )}
     </div>
 );}
 
-Player.propTypes = {
-    movieId: PropTypes.string.isRequired,
-};
-
-export default Player;
 

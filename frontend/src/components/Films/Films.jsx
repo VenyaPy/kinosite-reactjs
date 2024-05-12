@@ -1,20 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
-import './Films.css';
+import { useNavigate } from 'react-router-dom'; // Добавляем useNavigate
+import axios from 'axios';
+import "./Films.css";
 import { motion } from "framer-motion";
-import PropTypes from "prop-types";
 import Loading from "../Loading/Loading.jsx";
 
-
-
-export default function Films({ setActiveSection }) {
+export default function Films() {
     const apiKey = import.meta.env.VITE_API_KEY;
-
+    const navigate = useNavigate();
     const [movies, setMovies] = useState([]);
     const [year, setYear] = useState('');
     const [rating, setRating] = useState('');
     const [genre, setGenre] = useState('');
     const [country, setCountry] = useState('');
-    const [studio, setStudio] = useState(''); // Новое состояние для фильтра по студиям
+    const [studio, setStudio] = useState('');
     const [isFiltered, setIsFiltered] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -22,49 +21,34 @@ export default function Films({ setActiveSection }) {
     const ratings = ["1-3", "3-5", "5-7", "7-10"];
     const genres = ["драма", "комедия", "мелодрама", "ужасы", "фэнтези", "боевик", "семейный", "приключения", "детектив", "триллер", "фантастика", "документальный", "биография", "для взрослых", "короткометражка", "криминал"];
     const countries = ["США", "Великобритания", "Франция", "Германия", "Италия", "Канада", "Австралия", "Индия", "Япония", "Южная Корея", "Испания", "Россия", "Китай", "Швеция", "Бразилия"];
-    const studios = ["Netflix", "HBO", "Disney+", "KION", "Paramount+", "Premier", "Amazon Prime Video"]; // Список студий
-
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-    }
+    const studios = ["Netflix", "HBO", "Disney+", "KION", "Paramount+", "Premier", "Amazon Prime Video"];
 
     const fetchMovies = useCallback(() => {
         setIsLoading(true);
         let filtersApplied = year || rating || genre || country || studio;
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
-            `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=movie` :
-            `http://127.0.0.1:8000/api/v2/movies`;
+            `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=250&type=movie` :
+            `http://127.0.0.1:8000/api/v2/mainss`;
 
         if (year) url += `&year=${year}`;
         if (rating) url += `&rating.imdb=${rating}`;
         if (genre) url += `&genres.name=${encodeURIComponent(genre)}`;
         if (country) url += `&countries.name=${encodeURIComponent(country)}`;
-        if (studio) url += `&networks.items.name=${encodeURIComponent(studio)}`;  // Добавлено условие для студии
+        if (studio) url += `&networks.items.name=${encodeURIComponent(studio)}`;
 
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                'accept': 'application/json',
-                'X-API-KEY': apiKey
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
+        axios.get(url, {
+            headers: { 'accept': 'application/json', 'X-API-KEY': apiKey }
+        }).then(response => {
             const results = url.includes("kinopoisk.dev") ?
-                data.docs.map(movie => ({
+                response.data.docs.map(movie => ({
                     ...movie,
                     poster: movie.poster ? movie.poster.previewUrl : null
                 })) :
-                data;
-            shuffleArray(results);
-            setMovies(results.filter(movie => movie.name && movie.poster && (movie.shortDescription || movie.description)));
+                response.data;
+            setMovies(results.slice(0, 250).filter(movie => movie.name && movie.poster && (movie.shortDescription || movie.description)));
             setIsLoading(false);
-        })
-        .catch(error => {
+        }).catch(error => {
             console.error('Error fetching movies:', error);
             setIsLoading(false);
         });
@@ -75,8 +59,7 @@ export default function Films({ setActiveSection }) {
     }, [fetchMovies]);
 
     const handleMovieClick = (id) => {
-        console.log("Movie ID to set:", id);
-        setActiveSection({ section: 'player', params: { movieId: id } });
+        navigate(`/player/${id}`);
     };
 
     const resetFilters = () => {
@@ -148,8 +131,3 @@ export default function Films({ setActiveSection }) {
         </motion.div>
     );
 }
-
-Films.propTypes = {
-    setActiveSection: PropTypes.func.isRequired
-};
-

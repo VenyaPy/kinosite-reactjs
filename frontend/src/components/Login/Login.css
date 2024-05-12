@@ -85,25 +85,6 @@
     padding-bottom: 20px;
 }
 
-.success-message {
-    color: #fff; /* Белый цвет текста для контраста */
-    font-size: 24px; /* Большой размер шрифта */
-    font-weight: bold; /* Жирное начертание */
-    text-align: center; /* Выравнивание текста по центру */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); /* Градиентный фон */
-    border: none;
-    border-radius: 12px; /* Скруглённые углы */
-    padding: 20px 40px; /* Отступы вокруг текста */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Тень для добавления глубины */
-    z-index: 1051;
-    opacity: 0; /* Начинаем с прозрачного */
-    animation: fadeIn 0.5s ease-out forwards; /* Анимация появления */
-}
-
 @keyframes fadeIn {
     to {
         opacity: 1;

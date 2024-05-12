@@ -1,12 +1,15 @@
 import './Popular.css';
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import PropTypes from "prop-types";
+import Loading from "../Loading/Loading.jsx";
 
-
-export default function Popular({ setActiveSection }) {
+export default function Popular() {
+  const navigate = useNavigate();
   const [films, setFilms] = useState([]);
   const scrollContainer = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -16,14 +19,20 @@ export default function Popular({ setActiveSection }) {
   }
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/v2/mains')
+    setIsLoading(true);
+    fetch('http://127.0.0.1:8000/api/v2/moviesss')
       .then(response => response.json())
       .then(data => {
         const selectedFilms = data.slice(5, 120); // Выборка фильмов
         shuffleArray(selectedFilms); // Перемешиваем выбранные фильмы
         setFilms(selectedFilms);
       })
-      .catch(error => console.error('Ошибка при загрузке данных:', error));
+      .catch(error => {
+        console.error('Ошибка при загрузке данных:', error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   const scrollRight = () => {
@@ -37,35 +46,36 @@ export default function Popular({ setActiveSection }) {
   };
 
   const handleFilmClick = (filmId) => {
-    console.log("Film clicked, id:", filmId); // Добавьте для отладки
-    setActiveSection({ section: 'player', params: { movieId: filmId } });
+    navigate(`/player/${filmId}`); // Используем navigate для перехода
   };
 
-  return (
+    return (
     <div className="films-wrapper">
       <div id="films-container" ref={scrollContainer} className='films-container'>
-        <AnimatePresence>
-          {films.map((film, index) => (
-            <motion.div
-              key={index}
-              className='film-item'
-              onClick={() => handleFilmClick(film.id)} // Убедитесь, что film.id действительно содержит корректный ID
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-            >
-              <img src={film.poster} alt={film.name} />
-              <h3>{film.name}</h3>
-              <p>{film.description || "Описание отсутствует"}</p>
-            </motion.div>
-          ))}
-        </AnimatePresence>
+        {isLoading ? (
+          <div className="loading-wrapper">
+            <Loading />
+          </div>
+        ) : (
+          <AnimatePresence>
+            {films.map((film, index) => (
+              <motion.div
+                key={index}
+                className='film-item'
+                onClick={() => handleFilmClick(film.id)} // Действие по клику
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <img src={film.poster} alt={film.name} />
+                <h3>{film.name}</h3>
+                <p>{film.description || "Описание отсутствует"}</p>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        )}
       </div>
       <button onClick={scrollRight} className="scroll-button"><i className="fa-solid fa-arrow-right"></i></button>
     </div>
   );
 }
-
-Popular.propTypes = {
-  setActiveSection: PropTypes.func.isRequired,
-};

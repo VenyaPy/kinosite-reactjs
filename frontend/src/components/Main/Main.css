@@ -23,9 +23,16 @@
 }
 
 .image {
-    width: 100%;
+    width: 90vw; /* Или другие значения, которые вам подходят */
     display: block;
-    z-index: 0; /* Ниже чем у градиента, чтобы градиент накладывался на изображение */
+    margin: 0 auto; /* Центрируем изображение */
+    z-index: 0;
+}
+
+@media (max-width: 768px) {
+    .image {
+        width: 90vw;
+    }
 }
 
 .popular-films {

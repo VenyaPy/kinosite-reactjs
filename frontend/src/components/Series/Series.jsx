@@ -1,19 +1,19 @@
-import { useState, useEffect, useCallback } from "react";
-import './Series.css'
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Series.css';
 import { motion } from "framer-motion";
-import PropTypes from "prop-types";
 import Loading from "../Loading/Loading.jsx";
 
-
-export default function Series({ setActiveSection }) {
+export default function Series() {
     const apiKey = import.meta.env.VITE_API_KEY;
+    const navigate = useNavigate();
 
     const [series, setSeries] = useState([]);
     const [year, setYear] = useState('');
     const [rating, setRating] = useState('');
     const [genre, setGenre] = useState('');
     const [country, setCountry] = useState('');
-    const [studio, setStudio] = useState(''); // Новое состояние для фильтра по студиям
+    const [studio, setStudio] = useState('');
     const [isFiltered, setIsFiltered] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -21,7 +21,7 @@ export default function Series({ setActiveSection }) {
     const ratings = ["1-3", "3-5", "5-7", "7-10"];
     const genres = ["драма", "комедия", "мелодрама", "ужасы", "фэнтези", "боевик", "семейный", "приключения", "детектив", "триллер", "фантастика", "документальный", "биография", "для взрослых", "короткометражка", "криминал"];
     const countries = ["США", "Великобритания", "Франция", "Германия", "Италия", "Канада", "Австралия", "Индия", "Япония", "Южная Корея", "Испания", "Россия", "Китай", "Швеция", "Бразилия"];
-    const studios = ["Netflix", "HBO", "Apple TV+", "Disney+", "KION", "Paramount+", "Premier", "Amazon Prime Video"]; // Список студий для фильтрации
+    const studios = ["Netflix", "HBO", "Apple TV+", "Disney+", "KION", "Paramount+", "Premier", "Amazon Prime Video"];
 
     const shuffleArray = (array) => {
         for (let i = array.length - 1; i > 0; i--) {
@@ -36,7 +36,7 @@ export default function Series({ setActiveSection }) {
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
             'https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=tv-series' :
-            'http://127.0.0.1:8000/api/v2/series';
+            'http://127.0.0.1:8000/api/v2/serie';
 
         if (year) url += `&year=${year}`;
         if (rating) url += `&rating.imdb=${rating}`;
@@ -75,7 +75,7 @@ export default function Series({ setActiveSection }) {
     }, [fetchSeries]);
 
     const handleMovieClick = (id) => {
-        setActiveSection({ section: 'player', params: { movieId: id } });
+        navigate(`/player/${id}`);  // Используем navigate для перехода
     };
 
     const resetFilters = () => {
@@ -148,7 +148,3 @@ export default function Series({ setActiveSection }) {
         </motion.div>
     );
 }
-
-Series.propTypes = {
-    setActiveSection: PropTypes.func.isRequired,
-};

@@ -14,7 +14,7 @@ main_router = APIRouter(
 )
 
 
-@main_router.get("/mains",
+@main_router.get("/mainss",
                  response_model=List[PopularFilms],
                  summary="Главная страница")
 @cache(expire=120000)
@@ -23,7 +23,7 @@ async def main_page(
 
 
     movies_data = await KinopoiskCategory.kinopoisk_api(
-        url="https://api.kinopoisk.dev/v1.4/movie?page=1&limit=80&lists=popular-films"
+        url="https://api.kinopoisk.dev/v1.4/movie?page=1&limit=250&lists=popular-films"
 
     )
     if not movies_data:

@@ -18,7 +18,7 @@ section_router = APIRouter(
 )
 
 
-@section_router.get("/movies",
+@section_router.get("/moviesss",
                      response_model=List[Selection],
                      summary="Раздел фильмы")
 @cache(expire=100000)
@@ -26,7 +26,7 @@ async def movies_section():
 
     try:
         movie_data = await KinopoiskCategory.kinopoisk_api(
-            url='https://api.kinopoisk.dev/v1.4/movie?page=1&limit=150&type=movie&lists=top500'
+            url='https://api.kinopoisk.dev/v1.4/movie?page=1&limit=250&type=movie&lists=top250'
         )
 
         if not movie_data:
@@ -40,7 +40,7 @@ async def movies_section():
         print(e)
 
 
-@section_router.get("/series",
+@section_router.get("/serie",
                     response_model=List[Selection],
                     summary="Раздел сериалы")
 @cache(expire=100000)
@@ -48,7 +48,7 @@ async def series_section():
 
     try:
         movie_data = await KinopoiskCategory.kinopoisk_api(
-            url='https://api.kinopoisk.dev/v1.4/movie?page=1&limit=150&selectFields=&type=tv-series&lists=series-top250'
+            url='https://api.kinopoisk.dev/v1.4/movie?page=1&limit=250&selectFields=&type=tv-series&lists=popular-series'
         )
 
         if not movie_data:
