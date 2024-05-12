@@ -13,13 +13,15 @@ export default function Series({ setActiveSection }) {
     const [rating, setRating] = useState('');
     const [genre, setGenre] = useState('');
     const [country, setCountry] = useState('');
+    const [studio, setStudio] = useState(''); // Новое состояние для фильтра по студиям
     const [isFiltered, setIsFiltered] = useState(false);
-    const [isLoading, setIsLoading] = useState(false); // Новое состояние для индикации загрузки
+    const [isLoading, setIsLoading] = useState(false);
 
     const years = Array.from({ length: 45 }, (_, i) => 2024 - i);
     const ratings = ["1-3", "3-5", "5-7", "7-10"];
     const genres = ["драма", "комедия", "мелодрама", "ужасы", "фэнтези", "боевик", "семейный", "приключения", "детектив", "триллер", "фантастика", "документальный", "биография", "для взрослых", "короткометражка", "криминал"];
     const countries = ["США", "Великобритания", "Франция", "Германия", "Италия", "Канада", "Австралия", "Индия", "Япония", "Южная Корея", "Испания", "Россия", "Китай", "Швеция", "Бразилия"];
+    const studios = ["Netflix", "HBO", "Apple TV+", "Disney+", "KION", "Paramount+", "Premier", "Amazon Prime Video"]; // Список студий для фильтрации
 
     const shuffleArray = (array) => {
         for (let i = array.length - 1; i > 0; i--) {
@@ -29,8 +31,8 @@ export default function Series({ setActiveSection }) {
     };
 
     const fetchSeries = useCallback(() => {
-        setIsLoading(true);  // Включение индикатора загрузки
-        let filtersApplied = year || rating || genre || country;
+        setIsLoading(true);
+        let filtersApplied = year || rating || genre || country || studio;
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
             'https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=tv-series' :
@@ -40,6 +42,7 @@ export default function Series({ setActiveSection }) {
         if (rating) url += `&rating.imdb=${rating}`;
         if (genre) url += `&genres.name=${encodeURIComponent(genre)}`;
         if (country) url += `&countries.name=${encodeURIComponent(country)}`;
+        if (studio) url += `&networks.items.name=${encodeURIComponent(studio)}`;
 
         fetch(url, {
             method: 'GET',
@@ -57,15 +60,15 @@ export default function Series({ setActiveSection }) {
                     watch_url: `http://127.0.0.1:8000/v/player?id=${serial.id}`
                 })) :
                 data;
-            shuffleArray(results); // Перемешиваем результаты
+            shuffleArray(results);
             setSeries(results.filter(serial => serial.name && serial.poster && (serial.shortDescription || serial.description)));
-            setIsLoading(false);  // Выключение индикатора загрузки
+            setIsLoading(false);
         })
         .catch(error => {
             console.error('Ошибка при поиске сериалов:', error);
-            setIsLoading(false);  // Выключение индикатора загрузки в случае ошибки
+            setIsLoading(false);
         });
-    }, [year, genre, country, rating, apiKey]);
+    }, [year, genre, country, rating, studio, apiKey]);
 
     useEffect(() => {
         fetchSeries();
@@ -80,6 +83,7 @@ export default function Series({ setActiveSection }) {
         setRating('');
         setGenre('');
         setCountry('');
+        setStudio('');
         setIsFiltered(false);
         fetchSeries();
     };
@@ -93,7 +97,7 @@ export default function Series({ setActiveSection }) {
             className="projects-container"
         >
             {isLoading ? (
-                <Loading /> // Отображение компонента загрузки
+                <Loading />
             ) : (
                 <div>
                     <div className="filters">
@@ -112,6 +116,11 @@ export default function Series({ setActiveSection }) {
                         <select value={country} onChange={e => setCountry(e.target.value)}>
                             <option value="">Страна</option>
                             {countries.map(c => <option key={c} value={c}>{c}</option>)}
+                        </select>
+
+                        <select value={studio} onChange={e => setStudio(e.target.value)}>
+                            <option value="">Студия</option>
+                            {studios.map(s => <option key={s} value={s}>{s}</option>)}
                         </select>
                         <button onClick={resetFilters}>Сбросить фильтры</button>
                     </div>

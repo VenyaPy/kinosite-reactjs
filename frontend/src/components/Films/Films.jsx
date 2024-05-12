@@ -14,13 +14,15 @@ export default function Films({ setActiveSection }) {
     const [rating, setRating] = useState('');
     const [genre, setGenre] = useState('');
     const [country, setCountry] = useState('');
+    const [studio, setStudio] = useState(''); // Новое состояние для фильтра по студиям
     const [isFiltered, setIsFiltered] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);  // Новое состояние для индикации загрузки
+    const [isLoading, setIsLoading] = useState(false);
 
-    const years = Array.from({length: 45}, (_, i) => 2024 - i);
+    const years = Array.from({ length: 45 }, (_, i) => 2024 - i);
     const ratings = ["1-3", "3-5", "5-7", "7-10"];
     const genres = ["драма", "комедия", "мелодрама", "ужасы", "фэнтези", "боевик", "семейный", "приключения", "детектив", "триллер", "фантастика", "документальный", "биография", "для взрослых", "короткометражка", "криминал"];
     const countries = ["США", "Великобритания", "Франция", "Германия", "Италия", "Канада", "Австралия", "Индия", "Япония", "Южная Корея", "Испания", "Россия", "Китай", "Швеция", "Бразилия"];
+    const studios = ["Netflix", "HBO", "Disney+", "KION", "Paramount+", "Premier", "Amazon Prime Video"]; // Список студий
 
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -30,8 +32,8 @@ export default function Films({ setActiveSection }) {
     }
 
     const fetchMovies = useCallback(() => {
-        setIsLoading(true);  // Включение индикатора загрузки
-        let filtersApplied = year || rating || genre || country;
+        setIsLoading(true);
+        let filtersApplied = year || rating || genre || country || studio;
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
             `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=movie` :
@@ -41,6 +43,7 @@ export default function Films({ setActiveSection }) {
         if (rating) url += `&rating.imdb=${rating}`;
         if (genre) url += `&genres.name=${encodeURIComponent(genre)}`;
         if (country) url += `&countries.name=${encodeURIComponent(country)}`;
+        if (studio) url += `&networks.items.name=${encodeURIComponent(studio)}`;  // Добавлено условие для студии
 
         fetch(url, {
             method: 'GET',
@@ -59,13 +62,13 @@ export default function Films({ setActiveSection }) {
                 data;
             shuffleArray(results);
             setMovies(results.filter(movie => movie.name && movie.poster && (movie.shortDescription || movie.description)));
-            setIsLoading(false);  // Выключение индикатора загрузки
+            setIsLoading(false);
         })
         .catch(error => {
             console.error('Error fetching movies:', error);
-            setIsLoading(false);  // Выключение индикатора загрузки в случае ошибки
+            setIsLoading(false);
         });
-    }, [year, genre, country, rating, apiKey]);
+    }, [year, genre, country, rating, studio, apiKey]);
 
     useEffect(() => {
         fetchMovies();
@@ -81,6 +84,7 @@ export default function Films({ setActiveSection }) {
         setRating('');
         setGenre('');
         setCountry('');
+        setStudio('');
         setIsFiltered(false);
         fetchMovies();
     };
@@ -94,7 +98,7 @@ export default function Films({ setActiveSection }) {
             className="projects-container"
         >
             {isLoading ? (
-                <Loading /> // Отображение компонента загрузки
+                <Loading />
             ) : (
                 <div>
                     <div className="filters">
@@ -113,6 +117,10 @@ export default function Films({ setActiveSection }) {
                         <select value={country} onChange={e => setCountry(e.target.value)}>
                             <option value="">Страна</option>
                             {countries.map(c => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                        <select value={studio} onChange={e => setStudio(e.target.value)}>  // Добавлен новый фильтр
+                            <option value="">Студия</option>
+                            {studios.map(s => <option key={s} value={s}>{s}</option>)}
                         </select>
                         <button onClick={resetFilters}>Сбросить фильтры</button>
                     </div>

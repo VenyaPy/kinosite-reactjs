@@ -81,7 +81,7 @@ async def anime_section():
         print(e)
 
 
-@section_router.get("/cartoon",
+@section_router.get("/carton",
                      response_model=List[Selection],
                      summary="Раздел мультфильмов")
 @cache(expire=36000)

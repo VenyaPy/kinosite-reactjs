@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 class APIConfig:
     api_hbtv = "0befa987b7d85bcdad0b31e2e7c3f4ec"
-    api_key = "QCHSW7T-7QP4BWT-QP5WGZA-MT64TRZ"
+    api_key = "VBZ63SW-PFHMYEM-M3384F6-X6BXVSY"
     kinoclub = ('Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiM2E2NGI2NzdhYzk0YmQwMTEyN2U2NDc'
                 '1Yzg1ODY3N2E3N2Y4ZmRmN2ZhOTExM2U5MjhjOTg0MzNmOWJjM2UxZGEyODY3NmVmOWExZDQyZWYiLCJpYXQiOjE3MTI0MTc3Nj'
                 'YuNDcyMDYsIm5iZiI6MTcxMjQxNzc2Ni40NzIwNjMsImV4cCI6MjAyNzk1MDU2Ni40Njg4NDcsInN1YiI6IjMzIiwic2NvcGVzI'

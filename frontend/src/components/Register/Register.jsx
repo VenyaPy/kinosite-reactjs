@@ -3,10 +3,12 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import './Register.css';
 
-export default function Register( {toggleForm} ) {
+export default function Register({ toggleForm }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
+    const [error, setError] = useState('');
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -21,10 +23,16 @@ export default function Register( {toggleForm} ) {
                 }
             });
             console.log('Registration Success:', response.data);
+            setTimeout(() => {
+                toggleForm('login'); // Переключаемся на форму входа
+            }, 2000); // Уведомление исчезнет через 2 секунды, а затем переход на вход
         } catch (error) {
-            console.error('Registration Error:', error);
+            console.error('Registration Error:', error.response ? error.response.data : "Неизвестная ошибка");
+            setError('Ошибка регистрации. Пожалуйста, попробуйте снова.');
         }
     };
+
+
 
     return (
         <div className="register-panel">
@@ -43,7 +51,8 @@ export default function Register( {toggleForm} ) {
                     <input type="email" className="form-control" value={email} onChange={e => setEmail(e.target.value)} />
                 </div>
                 <button type="submit" className="btn-primary">Зарегистрироваться</button>
-                <div className="login-link" onClick={toggleForm}>Уже зарегистрированы? Войдите</div>
+                {error && <div className="error-message">{error}</div>}
+                <div className="login-link" onClick={() => toggleForm('login')}>Уже зарегистрированы? Войдите</div>
             </form>
         </div>
     );

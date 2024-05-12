@@ -1,0 +1,41 @@
+/* Основные стили страницы */
+.profile {
+    color: #ffffff;
+    background-color: #252525;
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    max-width: 600px;
+    margin: 50px auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.profile h1 {
+    color: #e0e0e0;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.profile p {
+    font-size: 1.2em;
+    margin: 10px 0;
+    width: 100%; /* Обеспечиваем, что параграфы занимают всю доступную ширину */
+}
+
+.profile p strong {
+    color: #76c7c0; /* Светлый аквамариновый цвет для ключевых слов */
+}
+
+.profile img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%; /* Круглое изображение */
+    margin-top: 20px;
+    border: 3px solid #76c7c0; /* Рамка в цвет ключевых слов */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}

@@ -12,13 +12,15 @@ export default function Cartoon({ setActiveSection }) {
     const [rating, setRating] = useState('');
     const [genre, setGenre] = useState('');
     const [country, setCountry] = useState('');
+    const [studio, setStudio] = useState(''); // Добавлено новое состояние для фильтра по студиям
     const [isFiltered, setIsFiltered] = useState(false);
-    const [isLoading, setIsLoading] = useState(false); // Добавляем состояние загрузки
+    const [isLoading, setIsLoading] = useState(false);
 
-    const years = Array.from({length: 45}, (_, i) => 2024 - i);
+    const years = Array.from({ length: 45 }, (_, i) => 2024 - i);
     const ratings = ["1-3", "3-5", "5-7", "7-10"];
     const genres = ["драма", "комедия", "мелодрама", "ужасы", "фэнтези", "боевик", "семейный", "приключения", "детектив", "триллер", "фантастика", "документальный", "биография", "для взрослых", "короткометражка", "криминал"];
     const countries = ["США", "Великобритания", "Франция", "Германия", "Италия", "Канада", "Австралия", "Индия", "Япония", "Южная Корея", "Испания", "Россия", "Китай", "Швеция", "Бразилия"];
+    const studios = ["Netflix", "HBO", "Apple TV+", "Disney+", "Amazon Prime Video"]; // Список студий
 
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -28,17 +30,18 @@ export default function Cartoon({ setActiveSection }) {
     }
 
     const fetchMovies = useCallback(() => {
-        setIsLoading(true); // Включаем индикатор загрузки
-        let filtersApplied = year || rating || genre || country;
+        setIsLoading(true);
+        let filtersApplied = year || rating || genre || country || studio;
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
             `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=cartoon` :
-            `http://127.0.0.1:8000/api/v2/cartoon`;
+            `http://127.0.0.1:8000/api/v2/carton`;
 
         if (year) url += `&year=${year}`;
         if (rating) url += `&rating.imdb=${rating}`;
         if (genre) url += `&genres.name=${encodeURIComponent(genre)}`;
         if (country) url += `&countries.name=${encodeURIComponent(country)}`;
+        if (studio) url += `&networks.items.name=${encodeURIComponent(studio)}`; // Добавлено условие для студии
 
         fetch(url, {
             method: 'GET',
@@ -55,22 +58,21 @@ export default function Cartoon({ setActiveSection }) {
                     poster: movie.poster ? movie.poster.previewUrl : null
                 })) :
                 data;
-            shuffleArray(results); // Перемешиваем результаты
+            shuffleArray(results);
             setMovies(results.filter(movie => movie.name && movie.poster && (movie.shortDescription || movie.description)));
-            setIsLoading(false); // Выключаем индикатор загрузки
+            setIsLoading(false);
         })
         .catch(error => {
             console.error('Error fetching movies:', error);
-            setIsLoading(false); // Выключаем индикатор загрузки в случае ошибки
+            setIsLoading(false);
         });
-    }, [year, genre, country, rating, apiKey]);
+    }, [year, genre, country, rating, studio, apiKey]);
 
     useEffect(() => {
         fetchMovies();
     }, [fetchMovies]);
 
     const handleMovieClick = (id) => {
-        console.log("Movie ID to set:", id); // Добавьте это для отладки
         setActiveSection({ section: 'player', params: { movieId: id } });
     };
 
@@ -79,20 +81,21 @@ export default function Cartoon({ setActiveSection }) {
         setRating('');
         setGenre('');
         setCountry('');
+        setStudio(''); // Сброс фильтра по студиям
         setIsFiltered(false);
-        fetchMovies(); // Сброс и повторный запрос фильмов без фильтров
+        fetchMovies();
     };
 
     return (
         <motion.div
-            initial={{opacity: 0}}
-            animate={{opacity: 1}}
-            exit={{opacity: 0}}
-            transition={{duration: 1}}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
             className="projects-container"
         >
             {isLoading ? (
-                <Loading /> // Показываем компонент загрузки
+                <Loading />
             ) : (
                 <div>
                     <div className="filters">
@@ -112,6 +115,10 @@ export default function Cartoon({ setActiveSection }) {
                             <option value="">Страна</option>
                             {countries.map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
+                        <select value={studio} onChange={e => setStudio(e.target.value)}>
+                            <option value="">Студия</option>
+                            {studios.map(s => <option key={s} value={s}>{s}</option>)}
+                        </select>
                         <button onClick={resetFilters}>Сбросить фильтры</button>
                     </div>
                     <div className="popular-movie">
@@ -126,8 +133,7 @@ export default function Cartoon({ setActiveSection }) {
                                         <i className="fa-solid fa-play play-icon"></i>
                                         <div className="movie-info">
                                             <div className="movie-title">{movie.name}</div>
-                                            <div
-                                                className="movie-description">{movie.shortDescription || movie.description}</div>
+                                            <div className="movie-description">{movie.shortDescription || movie.description}</div>
                                         </div>
                                     </div>
                                 </div>

@@ -71,8 +71,7 @@ p {
 
 .reviews {
     width: 90%;
-    margin-top: 20px;
-    margin-bottom: 50px; /* Увеличиваем нижний отступ для блока отзывов */
+    margin: 20px auto 50px; /* Centers reviews in the container with a bottom margin */
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -83,34 +82,45 @@ p {
     font-weight: bold;
     font-size: 30px;
     text-align: center;
-    margin-top: 50px;
+    margin-bottom: 20px; /* Space above the reviews */
 }
 
 .review {
-    background-color: #202020; /* Темный фон для каждого отзыва */
+    background-color: rgba(32, 32, 32, 0.9); /* Dark background for each review */
     padding: 20px;
-    border-radius: 10px; /* Скругленные углы для блоков */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Слегка выразительная тень */
-    transition: transform 0.2s ease-in-out; /* Анимация для наведения */
+    margin: 0 10px; /* Gives some space from the container edge */
+    border-radius: 10px; /* Rounded corners for the blocks */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Stronger shadow for more depth */
+    transition: transform 0.2s ease-in-out;
 }
 
 .review:hover {
-    transform: translateY(-5px); /* Поднятие блока при наведении */
+    transform: translateY(-5px); /* Lifts the block slightly on hover */
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.review-author {
+    color: #c3c3c3; /* Gold color for the author's name */
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.review-date {
+    color: #AAAAAA; /* Light grey for the date */
+    font-size: 14px;
 }
 
 .review p {
-    color: #CCC; /* Светло-серый цвет текста */
-    font-size: 16px; /* Размер шрифта текста */
-    line-height: 1.6; /* Интерлиньяж для улучшенного чтения */
-    overflow: hidden; /* Обрезаем текст, чтобы он не вытекал за пределы блока */
-    display: block; /* Отображаем текст */
-    text-overflow: ellipsis; /* Точки в конце обрезанного текста */
-    max-height: 3.2em; /* Ограничиваем высоту текста для создания эффекта "скрытого" текста */
-}
-
-.review.open p {
-    white-space: normal; /* Возвращаем переносы строк */
-    max-height: none; /* Убираем ограничение по высоте */
+    color: #CCC; /* Light gray text color */
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 15px; /* Adds space below the text */
 }
 
 .toggle-button {
@@ -122,10 +132,11 @@ p {
     text-align: center;
     margin: 0 auto;
     padding: 10px;
-    font-size: 16px; /* Подходящий размер текста для кнопки */
+    font-size: 16px;
 }
 
-.review .toggle-button:hover {
-    color: #fff; /* Светлее при наведении для лучшей видимости */
+.toggle-button:hover {
+    color: #fff; /* Brightens the button on hover for better visibility */
 }
+
 

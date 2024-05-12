@@ -10,6 +10,7 @@ import { AnimatePresence } from 'framer-motion';
 import Player from "../Player/Player.jsx";
 import Cartoon from "../Cartoon/Cartoon.jsx";
 import Register from "../Register/Register.jsx";
+import Profile from "../Profile/Profile.jsx";
 
 function App() {
   const [activeSection, setActiveSection] = useState({ section: 'main', params: {} });
@@ -27,6 +28,8 @@ function App() {
         return <Series setActiveSection={setActiveSection} />;
       case 'cartoon':
         return <Cartoon setActiveSection={setActiveSection} />;
+      case 'profile':
+        return <Profile />;
       case 'anime':
         return <Anime setActiveSection={setActiveSection} />;
       default:
@@ -39,21 +42,21 @@ function App() {
   const handleCloseRegister = () => setShowRegister(false);
 
   return (
-    <>
-      <Header setActiveSection={setActiveSection} onLoginClick={handleShowRegister} />
-      <div className="main-container">
-        <AnimatePresence mode="wait">
-          <SectionComponent key={activeSection.section} />
-        </AnimatePresence>
-      </div>
-      {showRegister && (
-        <div className="modal-overlay">
-          <Register closeModal={handleCloseRegister} />
-        </div>
-      )}
-      <Footer />
-    </>
-  );
-}
+          <>
+              <Header setActiveSection={setActiveSection} onLoginClick={handleShowRegister} />
+              <div className="main-container">
+                  <AnimatePresence mode="wait">
+                      <SectionComponent key={activeSection.section} />
+                  </AnimatePresence>
+              </div>
+              {showRegister && (
+                  <div className="modal-overlay">
+                      <Register toggleForm={handleCloseRegister} />
+                  </div>
+              )}
+              <Footer />
+          </>
+      );
+  }
 
-export default App;
+  export default App;
