@@ -1,20 +1,19 @@
+/* Основные стили */
 .player-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     max-width: 1200px;
-    margin: 70px auto;
-    padding: 50px;
+    margin: 20px auto;
+    padding: 20px;
     gap: 20px;
-    background-color: #333;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    background-color: #1e1e1e;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-    transition: transform 0.3s ease;
-    min-height: 90%; /* Изменено с height на min-height */
+    color: #e0e0e0;
+    box-sizing: border-box; /* Включение padding в общую ширину */
 }
-
-
 
 /* Стиль деталей фильма */
 .movie-details {
@@ -23,14 +22,15 @@
     align-items: flex-start;
     width: 100%;
     margin-bottom: 20px;
+    gap: 20px;
+    box-sizing: border-box; /* Включение padding в общую ширину */
 }
 
 .movie-details img {
-    width: 300px; /* Размер постера */
+    width: 300px; /* Уменьшаем размер постера */
     height: auto;
-    border-radius: 10px; /* Скругление углов постера */
-    margin-right: 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3); /* Тень для постера */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .movie-details div {
@@ -39,26 +39,15 @@
     flex-direction: column;
 }
 
-h2, p {
-    margin: 0;
-    padding-bottom: 10px;
-}
-
-.p-m {
-    padding-top: 15px;
-}
-
 h2 {
-    font-size: 35px; /* Больший размер для заголовка */
-    color: #E0E0E0; /* Светлый серый цвет */
-    padding-bottom: 30px;
-
+    font-size: 28px;
+    margin-bottom: 10px;
 }
 
 p {
-    font-size: 18px;
-    width: 90%;
-    color: #CCC; /* Серый цвет для текста описания */
+    font-size: 16px;
+    line-height: 1.5;
+    margin-right: 20px; /* Добавляем отступ справа */
 }
 
 /* Стиль плеера */
@@ -69,94 +58,125 @@ p {
     margin-top: 30px;
 }
 
+/* Стиль отзывов */
 .review-text {
-    color: #FFFFFF; /* Яркий белый для лучшей читаемости */
+    font-size: 24px;
     font-weight: bold;
-    font-size: 25px; /* Сделать немного меньше для более сдержанного вида */
-    text-align: center;
-    margin-bottom: 40px; /* Уменьшенный отступ сверху */
+    margin-bottom: 20px;
+    text-align: center; /* Центрирование заголовка отзывов */
 }
 
 .reviews-container {
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
-    background: linear-gradient(145deg, rgba(41, 41, 41, 0.91), rgba(30, 30, 30, 0.85));
-    animation: GradientShift 8s ease infinite;
-
-}
-
-@keyframes GradientShift {
-    0%, 100% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
+    width: 100%;
+    padding: 20px;
+    border-radius: 8px;
+    background: #292929;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box; /* Включение padding в общую ширину */
 }
 
 .reviews {
-    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    background-color: transparent;
-    padding: 20px;
-    border-radius: 10px;
 }
 
 .review {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: #333;
     padding: 15px;
-    margin: 20px 0;
     border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden; /* Предотвращение выхода содержимого за пределы */
+    word-wrap: break-word; /* Перенос длинных слов */
+    margin-bottom: 20px; /* Добавляем отступ снизу для разделения отзывов */
 }
 
 .review:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .review-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     margin-bottom: 10px;
-}
-
-.review-author, .review-date {
-    color: #c3c3c3;
-    font-weight: bold;
-    margin-bottom: 10px;
+    font-size: 14px;
+    color: #aaa;
 }
 
 .review p {
-    color: #e4e4e4;
     font-size: 16px;
-    line-height: 1.6;
-    margin-bottom: 15px;
+    line-height: 1.5;
+    color: #e0e0e0;
 }
 
 .toggle-button {
-    cursor: pointer;
-    display: block;
-    background: transparent;
+    background-color: transparent;
     border: 1px solid #888;
     color: #888;
-    text-align: center;
-    margin: 0 auto;
-    padding: 10px;
+    padding: 10px 20px;
     font-size: 16px;
     border-radius: 4px;
+    cursor: pointer;
     transition: all 0.2s ease;
+    display: block;
+    margin: 20px auto 0;
+    text-align: center;
 }
 
 .toggle-button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #444;
     color: #fff;
     border-color: #fff;
 }
 
+/* Мобильная версия */
+@media (max-width: 768px) {
+    .player-container {
+        padding: 10px;
+    }
 
+    .movie-details {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .movie-details img {
+        width: 100%; /* Постер будет занимать всю ширину */
+        max-width: 300px; /* Ограничиваем максимальную ширину */
+        margin-bottom: 20px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    p {
+        font-size: 14px;
+        width: 100%;
+    }
+
+    .kinobox_player {
+        height: 200px; /* Уменьшаем высоту плеера для мобильной версии */
+        padding-bottom: 0;
+    }
+
+    .reviews-container {
+        padding: 10px;
+    }
+
+    .review {
+        padding: 10px;
+    }
+
+    .review-text {
+        font-size: 20px;
+    }
+
+    .toggle-button {
+        font-size: 14px;
+        padding: 8px;
+    }
+}

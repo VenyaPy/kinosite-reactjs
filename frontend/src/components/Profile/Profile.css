@@ -1,4 +1,3 @@
-/* Основные стили страницы */
 .profile {
     color: #ffffff;
     background-color: #252525;
@@ -38,4 +37,29 @@
     margin-top: 20px;
     border: 3px solid #76c7c0; /* Рамка в цвет ключевых слов */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 768px) {
+    .profile {
+        padding: 15px;
+        margin: 20px auto;
+        max-width: 90%;
+        margin-bottom: 60px;
+    }
+
+    .profile h1 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+    }
+
+    .profile p {
+        font-size: 1em;
+        margin: 8px 0;
+    }
+
+    .profile img {
+        width: 120px;
+        height: 120px;
+        margin-top: 15px;
+    }
 }

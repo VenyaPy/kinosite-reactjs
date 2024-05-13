@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Cartoon.css';
+
 import { motion } from "framer-motion";
 import Loading from "../Loading/Loading.jsx";
+import './Cartoon.css'
 
 export default function Cartoon() {
     const apiKey = import.meta.env.VITE_API_KEY;
@@ -16,6 +17,7 @@ export default function Cartoon() {
     const [studio, setStudio] = useState('');
     const [isFiltered, setIsFiltered] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [showFilters, setShowFilters] = useState(false); // Изначально скрытые фильтры
 
     const years = Array.from({ length: 45 }, (_, i) => 2024 - i);
     const ratings = ["1-3", "3-5", "5-7", "7-10"];
@@ -87,6 +89,10 @@ export default function Cartoon() {
         fetchMovies();
     };
 
+    const toggleFilters = () => {
+        setShowFilters(!showFilters);
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -99,42 +105,47 @@ export default function Cartoon() {
                 <Loading />
             ) : (
                 <div>
-                    <div className="filters">
-                        <select value={year} onChange={e => setYear(e.target.value)}>
-                            <option value="">Год</option>
-                            {years.map(y => <option key={y} value={y}>{y}</option>)}
-                        </select>
-                        <select value={rating} onChange={e => setRating(e.target.value)}>
-                            <option value="">Рейтинг</option>
-                            {ratings.map(r => <option key={r} value={r}>{r}</option>)}
-                        </select>
-                        <select value={genre} onChange={e => setGenre(e.target.value)}>
-                            <option value="">Жанр</option>
-                            {genres.map(g => <option key={g} value={g}>{g}</option>)}
-                        </select>
-                        <select value={country} onChange={e => setCountry(e.target.value)}>
-                            <option value="">Страна</option>
-                            {countries.map(c => <option key={c} value={c}>{c}</option>)}
-                        </select>
-                        <select value={studio} onChange={e => setStudio(e.target.value)}>
-                            <option value="">Студия</option>
-                            {studios.map(s => <option key={s} value={s}>{s}</option>)}
-                        </select>
-                        <button onClick={resetFilters}>Сбросить фильтры</button>
+                    <button className="filter-toggle-button" onClick={toggleFilters}>
+                        {showFilters ? "Скрыть фильтры" : "Показать фильтры"}
+                    </button>
+                    <div className="unique-cartoon-filters-container" style={{ maxHeight: showFilters ? '1000px' : '0' }}>
+                        <div className="unique-cartoon-filters">
+                            <select value={year} onChange={e => setYear(e.target.value)}>
+                                <option value="">Год</option>
+                                {years.map(y => <option key={y} value={y}>{y}</option>)}
+                            </select>
+                            <select value={rating} onChange={e => setRating(e.target.value)}>
+                                <option value="">Рейтинг</option>
+                                {ratings.map(r => <option key={r} value={r}>{r}</option>)}
+                            </select>
+                            <select value={genre} onChange={e => setGenre(e.target.value)}>
+                                <option value="">Жанр</option>
+                                {genres.map(g => <option key={g} value={g}>{g}</option>)}
+                            </select>
+                            <select value={country} onChange={e => setCountry(e.target.value)}>
+                                <option value="">Страна</option>
+                                {countries.map(c => <option key={c} value={c}>{c}</option>)}
+                            </select>
+                            <select value={studio} onChange={e => setStudio(e.target.value)}>
+                                <option value="">Студия</option>
+                                {studios.map(s => <option key={s} value={s}>{s}</option>)}
+                            </select>
+                            <button onClick={resetFilters}>Сбросить фильтры</button>
+                        </div>
                     </div>
-                    <div className="popular-movie">
+                    <div className="unique-popular-cartoon">
                         <h2>{isFiltered ? "Мультфильмы по вашим критериям" : "Популярные мультфильмы"}</h2>
                     </div>
-                    <div className="movies-section">
+                    <div className="unique-cartoon-section">
                         {movies.map(movie => (
                             movie.poster && (
-                                <div onClick={() => handleMovieClick(movie.id)} key={movie.id} className="movie">
-                                    <img src={movie.poster} alt={movie.name} className="movie-poster"/>
-                                    <div className="movie-overlay">
-                                        <i className="fa-solid fa-play play-icon"></i>
-                                        <div className="movie-info">
-                                            <div className="movie-title">{movie.name}</div>
-                                            <div className="movie-description">{movie.shortDescription || movie.description}</div>
+                                <div onClick={() => handleMovieClick(movie.id)} key={movie.id} className="unique-cartoon">
+                                    <img src={movie.poster} alt={movie.name} className="unique-cartoon-poster"/>
+                                    <div className="unique-cartoon-overlay">
+                                        <i className="fa-solid fa-play unique-play-icon"></i>
+                                        <div className="unique-cartoon-info">
+                                            <div className="unique-cartoon-title">{movie.name}</div>
+                                            <div className="unique-cartoon-description">{movie.shortDescription || movie.description}</div>
                                         </div>
                                     </div>
                                 </div>

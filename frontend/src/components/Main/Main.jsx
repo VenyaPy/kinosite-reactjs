@@ -15,12 +15,12 @@ export default function Main() {
             <div className="search-container">
                 <div className="image-container">
                     <img className="image" src="https://i.ibb.co/m6RLjND/123211223323132.jpg" alt="some" />
-                    <Finder /> {/* Убрал setActiveSection */}
+                    <Finder />
                 </div>
                 <div className="popular-films">
                     <h2>Популярные фильмы за месяц</h2>
                 </div>
-                <Popular /> {/* Убрал setActiveSection */}
+                <Popular />
             </div>
         </motion.div>
     );

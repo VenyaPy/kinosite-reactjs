@@ -64,4 +64,68 @@
 }
 
 
+@media (max-width: 900px) {
+
+    .footer-container {
+        flex-direction: column;
+        height: 220px;
+        width: 100%;
+        padding-top: 10px;
+        padding-bottom: 5px;
+        margin: 0 auto;
+
+    }
+
+    .footer-section {
+        flex: 1;
+    }
+
+    .footer-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 15px; /* Отступ для разделения секций */
+    }
+
+    .social {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .footer-section h4 {
+        font-size: 14px; /* Увеличенный размер для заголовков */
+    }
+
+    .footer-section ul {
+        list-style-type: none;
+        padding: 0;
+        text-align: center;
+    }
+
+    .footer-section a {
+        color: #ccc;
+        font-size: 20px; /* Увеличенный размер иконок */
+        transition: color 0.3s;
+    }
+
+    .footer-section a:hover {
+        color: white;
+    }
+
+    .social a {
+        font-size: 20px; /* Размер иконок социальных сетей */
+    }
+
+    .footer-section p {
+        text-align: center;
+
+        font-size: 10px;
+    }
+}
+
+
+
+
 

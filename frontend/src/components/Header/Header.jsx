@@ -10,13 +10,20 @@ export default function Header() {
     const [authStatus, setAuthStatus] = useState(false);
     const [showForm, setShowForm] = useState(null);
     const [username, setUsername] = useState('');
-    const [error, setError] = useState(null); // Добавим состояние для ошибки
 
     useEffect(() => {
         const token = localStorage.getItem('access_token');
-        if (token) {
+        const tokenTimestamp = parseInt(localStorage.getItem('token_timestamp'), 10);
+        const now = Date.now();
+        const tokenLifetime = 90 * 60 * 1000; // 90 минут в миллисекундах
+
+        if (token && (now - tokenTimestamp < tokenLifetime)) {
             setAuthStatus(true);
             fetchUserProfile(token);
+        } else {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('token_timestamp');
+            setAuthStatus(false);
         }
     }, []);
 
@@ -34,7 +41,9 @@ export default function Header() {
         })
         .catch(error => {
             console.error('Error fetching user profile:', error);
-            setError("Ошибка при загрузке профиля пользователя."); // Обновляем состояние ошибки
+            localStorage.removeItem('access_token'); // Удаляем токен если есть проблемы с аутентификацией
+            localStorage.removeItem('token_timestamp');
+            setAuthStatus(false);
         });
     };
 
@@ -69,7 +78,6 @@ export default function Header() {
                     {authStatus && <span className="auth-text">{username}</span>}
                     {!authStatus && <span className="auth-text">Войти</span>}
                 </div>
-                {error && <div className="error-message">{error}</div>}
                 {showForm === 'login' && <Login toggleForm={setShowForm} setAuthStatus={setAuthStatus} />}
                 {showForm === 'register' && <Register toggleForm={setShowForm} />}
             </div>

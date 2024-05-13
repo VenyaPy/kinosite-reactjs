@@ -29,12 +29,6 @@
     z-index: 0;
 }
 
-@media (max-width: 768px) {
-    .image {
-        width: 90vw;
-    }
-}
-
 .popular-films {
     display: flex;
     justify-content: center;
@@ -51,3 +45,60 @@
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+@media (max-width: 768px) {
+    .search-container {
+        position: relative;
+        width: 100%; /* Полная ширина, оптимизировано для мобильных */
+    }
+
+    .image-container {
+        display: flex;
+        position: relative;
+        overflow: hidden; /* Скрытие выходящих за пределы элементов */
+        margin: 0;
+        height: 40vh; /* Увеличиваем высоту контейнера для мобильных устройств */
+    }
+
+    .image-container::after {
+        content: '';
+        position: absolute;
+        height: 100%; /* Указываем полную высоту контейнера */
+        width: 100%;
+        background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(37, 37, 37, 1));
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .image {
+        display: block;
+        margin: 0 auto;
+        height: 100%;
+        width: auto;
+        object-fit: cover; /* Центрирование и обрезка изображения по ширине */
+        z-index: 0;
+    }
+
+    .popular-films {
+        display: flex;
+        justify-content: center;
+        padding-top: 20px; /* Добавлено верхнее отступление */
+        color: white; /* Убедитесь, что текст виден на темном фоне */
+    }
+
+    .popular-films h2 {
+        font-size: 17px;
+        text-align: center;
+        margin-top: 10px;
+        animation: fadeIn 2s ease-out; /* Плавное появление названий */
+        padding: 0;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+}
+
+
+

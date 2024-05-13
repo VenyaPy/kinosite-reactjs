@@ -20,10 +20,11 @@ export default function Login({ toggleForm, setAuthStatus }) {
                 }
             });
             localStorage.setItem('access_token', response.data.access_token);
+            localStorage.setItem('token_timestamp', Date.now()); // Сохраняем текущее время в миллисекундах
             setAuthStatus(true);
-            toggleForm(null); // Close form on success immediately
+            toggleForm(null); // Закрываем форму после успешного входа
         } catch (error) {
-            setError('Неверный логин или пароль'); // Simplify error handling
+            setError('Неверный логин или пароль'); // Упрощаем обработку ошибок
         }
     };
 

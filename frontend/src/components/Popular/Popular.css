@@ -29,8 +29,8 @@
 
 .film-item {
   display: inline-block;
-  width: 200px;
-  height: 360px;
+  width: 220px;
+  height: 380px;
   margin-right: 10px;
   cursor: pointer;
   flex: 0 0 auto;
@@ -46,7 +46,7 @@
 
 .film-item img {
   width: 100%;
-  height: 250px; /* Фиксированная высота для всех изображений */
+  height: 280px; /* Фиксированная высота для всех изображений */
   object-fit: cover; /* Обрезка изображения по контейнеру */
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -65,7 +65,7 @@
   font-size: 14px;
   margin: 8px;
   color: #8c8c8c;
-  height: 3.3em; /* Примерно для 3 строк текста */
+  height: 3.1em; /* Примерно для 3 строк текста */
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -98,3 +98,33 @@
   transform: scale(0.95);
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
 }
+
+@media (max-width: 768px) {
+  .film-item {
+    width: 150px; /* Уменьшенная ширина для мобильных устройств */
+    height: 270px; /* Уменьшенная высота для мобильных устройств */
+  }
+
+  .film-item img {
+    height: 180px; /* Адаптированная высота изображений */
+  }
+
+  .scroll-button {
+    font-size: 20px; /* Меньший размер шрифта для кнопок */
+  }
+
+  .film-item h3 {
+    font-size: 12px;
+  }
+
+  .film-item p {
+    font-size: 11px;
+    height: 3.1em;
+  }
+
+  .scroll-button {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    font-size: 0;
+  }}

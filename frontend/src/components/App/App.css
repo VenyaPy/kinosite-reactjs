@@ -2,22 +2,71 @@ html {
     font-family: 'Montserrat', sans-serif;
     font-size: 17px;
     background-color: #1F1F1F;
+    margin: 0;
+    padding: 0;
 }
 
-.main-container {
-    padding-top: 70px; /* Размер должен соответствовать высоте .header */
-    margin: 0 auto;
-    background-color: #252525;
-    max-width: 80%;
-    min-height: calc(100vh - 150px); /* Вычитаем высоту футера, если она известна */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #1F1F1F;
+    overflow-x: hidden; /* Запрещаем горизонтальную прокрутку */
 }
-
 
 .main-container {
     padding-top: 70px; /* Размер должен соответствовать высоте .header */
     padding-bottom: 50px; /* Добавлен нижний внутренний отступ для отделения содержимого от нижней части контейнера */
     margin: 0 auto;
     background-color: #252525;
+    max-width: 80%;html {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 17px;
+    background: linear-gradient(135deg, #FFDEE9, #B5FFFC); /* Светлый градиент для фона */
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #FFDEE9, #B5FFFC); /* Светлый градиент для фона */
+    overflow-x: hidden; /* Запрещаем горизонтальную прокрутку */
+}
+
+.main-container {
+    padding-top: 70px; /* Размер должен соответствовать высоте .header */
+    padding-bottom: 50px; /* Добавлен нижний внутренний отступ для отделения содержимого от нижней части контейнера */
+    margin: 0 auto;
+    background-color: #FFFFFF; /* Светлый фон для основного контейнера */
+    color: #333333; /* Темный цвет текста для контраста */
     max-width: 80%;
     min-height: 100vh;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легкая тень для глубины */
+    border-radius: 8px; /* Скругленные углы */
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        padding-top: 0; /* Меньше отступ сверху для мобильных устройств */
+        padding-bottom: 0; /* Убираем нижний отступ для мобильных устройств */
+        width: 100%; /* Убедимся, что контейнер на всю ширину */
+        max-width: 100%; /* Убедимся, что максимальная ширина также 100% */
+        min-height: 0;
+        margin: 0; /* Убираем внешние отступы */
+        border-radius: 0; /* Убираем скругленные углы для мобильных устройств */
+    }
+}
+
+    min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        padding-top: 0; /* Меньше отступ сверху для мобильных устройств */
+        padding-bottom: 0; /* Убираем нижний отступ для мобильных устройств */
+        width: 100%; /* Убедимся, что контейнер на всю ширину */
+        max-width: 100%; /* Убедимся, что максимальная ширина также 100% */
+        min-height: 0;
+        margin: 0; /* Убираем внешние отступы */
+    }
 }

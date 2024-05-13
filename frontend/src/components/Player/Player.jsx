@@ -46,7 +46,7 @@ export default function Player() {
             console.log('Loading Kinobox script...');
             const script = document.createElement('script');
             script.src = "https://kinobox.tv/kinobox.min.js";
-            script.async = true;  // Загружаем скрипт асинхронно
+            script.async = true;
             script.onload = () => {
                 scriptLoaded.current = true;
                 if (playerRef.current) {
@@ -104,38 +104,37 @@ export default function Player() {
     }
 
     return (
-    <div className="player-container">
-        <div className="movie-details">
-            <img src={movie.poster.previewUrl} alt={movie.name} />
-            <div>
-                <h2>{movie.name}</h2>
-                <p>{movie.description}</p>
-                <p className="p-m">Рейтинг: Кинопоиск - {movie.rating.kp}, IMDb - {movie.rating.imdb}</p>
-                <p className="p-m">Длина: {movie.movieLength} минут</p>
-                <p className="p-m">Жанр: {movie.genres.map(genre => genre.name).join(', ')}</p>
-                <p className="p-m">Страна: {movie.countries.map(country => country.name).join(', ')}</p>
+        <div className="player-container">
+            <div className="movie-details">
+                <img src={movie.poster.previewUrl} alt={movie.name} />
+                <div>
+                    <h2>{movie.name}</h2>
+                    <p>{movie.description}</p>
+                    <p className="p-m">Рейтинг: Кинопоиск - {movie.rating.kp}, IMDb - {movie.rating.imdb}</p>
+                    <p className="p-m">Длина: {movie.movieLength} минут</p>
+                    <p className="p-m">Жанр: {movie.genres.map(genre => genre.name).join(', ')}</p>
+                    <p className="p-m">Страна: {movie.countries.map(country => country.name).join(', ')}</p>
+                </div>
             </div>
-        </div>
-        <div ref={playerRef} className="kinobox_player"></div>
-        <Share/>
-        {reviews.length > 0 && (
-            <div className="reviews-container">
-                <h3 className="review-text">Отзывы:</h3>
-                {reviews.map((review, index) => (
-                    <div key={review.id} className={`review ${review.isOpen ? 'open' : ''}`}>
-                        <div className="review-header">
-                            <span className="review-author">{review.author}</span>
-                            <span className="review-date">{new Date(review.date).toLocaleDateString()}</span>
+            <div ref={playerRef} className="kinobox_player"></div>
+            <Share />
+            {reviews.length > 0 && (
+                <div className="reviews-container">
+                    <h3 className="review-text">Отзывы:</h3>
+                    {reviews.map((review, index) => (
+                        <div key={review.id} className={`review ${review.isOpen ? 'open' : ''}`}>
+                            <div className="review-header">
+                                <span className="review-author">{review.author}</span>
+                                <span className="review-date">{new Date(review.date).toLocaleDateString()}</span>
+                            </div>
+                            <p>{review.isOpen ? parse(review.review) : parse(`${review.review.substring(0, 200)}...`)}</p>
+                            <button className="toggle-button" onClick={() => toggleReviewVisibility(index)}>
+                                {review.isOpen ? 'Свернуть' : 'Развернуть отзыв'}
+                            </button>
                         </div>
-                        <p>{review.isOpen ? parse(review.review) : parse(`${review.review.substring(0, 200)}...`)}</p>
-                        <button className="toggle-button" onClick={() => toggleReviewVisibility(index)}>
-                            {review.isOpen ? 'Свернуть' : 'Развернуть отзыв'}
-                        </button>
-                    </div>
-                ))}
-            </div>
-        )}
-    </div>
-);}
-
-
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}

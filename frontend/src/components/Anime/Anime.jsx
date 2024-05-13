@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import Loading from "../Loading/Loading.jsx";
-import axios from "axios";
 
 function Anime() {
     const apiKey = import.meta.env.VITE_API_KEY;
@@ -14,6 +13,7 @@ function Anime() {
     const [rating, setRating] = useState('');
     const [isFiltered, setIsFiltered] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [showFilters, setShowFilters] = useState(false); // Изначально скрытые фильтры
 
     const years = Array.from({ length: 45 }, (_, i) => 2024 - i);
     const ratings = ["1-3", "3-5", "5-7", "7-10"];
@@ -52,13 +52,13 @@ function Anime() {
                     watch_url: `http://127.0.0.1:8000/v/player?id=${anime.id}`
                 })) :
                 data;
-            shuffleArray(results);  // Перемешиваем результаты
+            shuffleArray(results);
             setSeries(results.filter(anime => anime.name && anime.poster && (anime.shortDescription || anime.description)));
-            setIsLoading(false); // Выключаем индикатор загрузки
+            setIsLoading(false);
         })
         .catch(error => {
             console.error('Ошибка при поиске аниме:', error);
-            setIsLoading(false); // Выключаем индикатор загрузки в случае ошибки
+            setIsLoading(false);
         });
     }, [year, rating, apiKey]);
 
@@ -67,7 +67,18 @@ function Anime() {
     }, [fetchSeries]);
 
     const handleMovieClick = (id) => {
-        navigate(`/player/${id}`); // Navigate to player page
+        navigate(`/player/${id}`);
+    };
+
+    const resetFilters = () => {
+        setYear('');
+        setRating('');
+        setIsFiltered(false);
+        fetchSeries();
+    };
+
+    const toggleFilters = () => {
+        setShowFilters(!showFilters);
     };
 
     return (
@@ -79,32 +90,38 @@ function Anime() {
             className="projects-container"
         >
             {isLoading ? (
-                <Loading /> // Отображаем компонент загрузки
+                <Loading />
             ) : (
                 <div>
-                    <div className="filters">
-                        <select value={year} onChange={e => setYear(e.target.value)}>
-                            <option value="">Год</option>
-                            {years.map(y => <option key={y} value={y}>{y}</option>)}
-                        </select>
-                        <select value={rating} onChange={e => setRating(e.target.value)}>
-                            <option value="">Рейтинг</option>
-                            {ratings.map(r => <option key={r} value={r}>{r}</option>)}
-                        </select>
+                    <button className="filter-toggle-button" onClick={toggleFilters}>
+                        {showFilters ? "Скрыть фильтры" : "Показать фильтры"}
+                    </button>
+                    <div className="unique-anime-filters-container" style={{ maxHeight: showFilters ? '1000px' : '0' }}>
+                        <div className="unique-anime-filters">
+                            <select value={year} onChange={e => setYear(e.target.value)}>
+                                <option value="">Год</option>
+                                {years.map(y => <option key={y} value={y}>{y}</option>)}
+                            </select>
+                            <select value={rating} onChange={e => setRating(e.target.value)}>
+                                <option value="">Рейтинг</option>
+                                {ratings.map(r => <option key={r} value={r}>{r}</option>)}
+                            </select>
+                            <button onClick={resetFilters}>Сбросить фильтры</button>
+                        </div>
                     </div>
-                    <div className="popular-movie">
+                    <div className="unique-popular-anime">
                         <h2>{isFiltered ? "Аниме по вашим критериям" : "Популярные аниме"}</h2>
                     </div>
-                    <div className="movies-section">
+                    <div className="unique-anime-section">
                         {series.map(anime => (
                             anime.poster && (
-                                <div onClick={() => handleMovieClick(anime.id)} key={anime.id} className="movie">
-                                    <img src={anime.poster} alt={anime.name} className="movie-poster"/>
-                                    <div className="movie-overlay">
-                                        <i className="fa-solid fa-play play-icon"></i>
-                                        <div className="movie-info">
-                                            <div className="movie-title">{anime.name}</div>
-                                            <div className="movie-description">{anime.shortDescription || anime.description}</div>
+                                <div onClick={() => handleMovieClick(anime.id)} key={anime.id} className="unique-anime">
+                                    <img src={anime.poster} alt={anime.name} className="unique-anime-poster"/>
+                                    <div className="unique-anime-overlay">
+                                        <i className="fa-solid fa-play unique-play-icon"></i>
+                                        <div className="unique-anime-info">
+                                            <div className="unique-anime-title">{anime.name}</div>
+                                            <div className="unique-anime-description">{anime.shortDescription || anime.description}</div>
                                         </div>
                                     </div>
                                 </div>

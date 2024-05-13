@@ -1,31 +1,49 @@
 .button-share {
-  display: flex;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-top: 30px;
     margin-bottom: 60px;
 }
 
 .share-button {
-  background-color: #4CAF50; /* Зеленый цвет кнопки */
-  color: white;
-  border: none;
-  padding: 15px 25px;
-  font-size: 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .share-button:hover {
-  background-color: #45a049; /* Темно-зеленый цвет при наведении */
+    background-color: #45a049;
 }
 
 .share-button:active {
-  background-color: #3e8e41; /* Темно-зеленый цвет при нажатии */
+    background-color: #3e8e41;
 }
 
 .copy-message {
-  color: #ffffff;
-  margin-left: 10px;
-  font-size: 14px;
+    color: #ffffff;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+    .button-share {
+        margin-top: 20px;
+        margin-bottom: 40px;
+    }
+
+    .share-button {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+
+    .copy-message {
+        font-size: 12px;
+    }
 }

@@ -1,11 +1,15 @@
-.movies-section {
+/* Основные стили */
+.unique-movies-section {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 20px;
     padding: 20px;
+    margin: 0 auto;
+    width: 100%;
 }
 
-.movie {
+.unique-movie {
     position: relative;
     cursor: pointer;
     width: 250px;
@@ -17,12 +21,12 @@
     transition: transform 0.3s ease;
 }
 
-.movie:hover {
+.unique-movie:hover {
     transform: scale(1.05);
     z-index: 1;
 }
 
-.movie-poster {
+.unique-movie-poster {
     cursor: pointer;
     width: 100%;
     height: 100%;
@@ -30,7 +34,7 @@
     transition: opacity 0.3s ease;
 }
 
-.movie-overlay {
+.unique-movie-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -48,22 +52,22 @@
     transition: visibility 0s, opacity 0.3s linear;
 }
 
-.movie:hover .movie-overlay {
+.unique-movie:hover .unique-movie-overlay {
     visibility: visible;
     opacity: 1;
 }
 
-.movie-info {
+.unique-movie-info {
     text-align: center;
     width: 100%;
 }
 
-.movie-title {
+.unique-movie-title {
     font-size: 1.2em;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
 }
 
-.movie-description {
+.unique-movie-description {
     font-size: 0.8em;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -71,7 +75,7 @@
     overflow: hidden;
 }
 
-.play-icon {
+.unique-play-icon {
     font-size: 3em;
     color: white;
     position: absolute;
@@ -80,7 +84,13 @@
     transform: translate(-50%, -50%);
 }
 
-.filters {
+.unique-filters-container {
+    width: 100%;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.unique-filters {
     display: flex;
     gap: 10px;
     padding: 30px;
@@ -91,7 +101,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.filters select {
+.unique-filters select {
     padding: 10px 15px;
     font-size: 16px;
     border: 2px solid #ffffff;
@@ -104,12 +114,12 @@
     color: #333;
 }
 
-.filters select:hover, .filters select:focus {
+.unique-filters select:hover, .unique-filters select:focus {
     background-color: #ffffff;
     border-color: #0056b3;
 }
 
-.filters button {
+.unique-filters button {
     padding: 10px 20px;
     font-size: 16px;
     color: #fff;
@@ -121,13 +131,97 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-.filters button:hover {
+.unique-filters button:hover {
     background-color: #0056b3;
 }
 
-.popular-movie {
+.unique-popular-movie {
     color: white;
     display: flex;
     justify-content: center;
     padding-top: 20px;
+    text-align: center;
+}
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+    html, body {
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+    .unique-movies-section {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* По два фильма в ряд */
+        gap: 10px;
+        padding: 10px;
+        margin: 0 auto; /* Центрируем содержимое */
+        width: 100%; /* Устанавливаем ширину в 100%, чтобы занять всю доступную область */
+        box-sizing: border-box; /* Обеспечиваем включение отступов в общую ширину */
+    }
+
+
+    .unique-movie {
+        width: 100%;
+        height: auto; /* Убираем фиксированную высоту для мобильной версии */
+        margin-bottom: 15px;
+    }
+
+    .unique-movie-title {
+        font-size: 1em;
+    }
+
+    .unique-movie-description {
+        font-size: 0.7em;
+    }
+
+    .unique-play-icon {
+        font-size: 2em;
+    }
+
+    .unique-filters {
+        flex-direction: column;
+        padding: 10px;
+        gap: 15px;
+    }
+
+    .unique-filters select, .unique-filters button {
+        width: 90%;
+        max-width: 100%;
+    }
+
+    .unique-popular-movie h2 {
+        font-size: 1.2em;
+    }
+
+
+
+    button.filter-toggle-button {
+        margin: 0 auto; /* Центрируем кнопку */
+        text-align: center; /* Центрируем текст */
+        margin-top: 10px; /* Отступ сверху для ПК */
+        margin-bottom: 20px;
+    }
+}
+
+.filter-toggle-button {
+    display: block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 20px auto; /* Центрируем кнопку */
+    text-align: center; /* Центрируем текст */
+    margin-top: 50px; /* Отступ сверху для ПК */
+}
+
+.filter-toggle-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
 }

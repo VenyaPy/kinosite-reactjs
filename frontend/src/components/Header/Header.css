@@ -17,17 +17,6 @@
     margin-right: 70px;
 }
 
-.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #1F1F1F;
-    color: white;
-    padding: 10px 0;
-    z-index: 1000;
-}
-
 .elements-header {
     display: flex;
     justify-content: space-evenly;
@@ -104,4 +93,67 @@
 
     border-radius: 50%; /* Делаем изображение круглым */
     cursor: pointer;
+}
+
+
+@media (max-width: 900px) {
+    .header {
+        position: relative;
+        width: 100%; /* Устанавливаем ширину в 85% */
+        background-color: #1F1F1F;
+        color: white;
+        padding: 10px 0;
+        z-index: 1000;
+        margin: 0 auto; /* Центрирование заголовка */
+    }
+
+    .header ul {
+        flex-direction: column; /* Вертикальное расположение элементов */
+    }
+
+    .header li {
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+        list-style-type: none;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out; /* Добавляем плавную анимацию */
+    }
+
+    .elements-header {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%; /* Устанавливаем ширину в 85% */
+        height: auto; /* Автоматическая высота по содержимому */
+        margin: 0 auto; /* Центрирование по горизонтали */
+    }
+
+    .logo {
+        font-size: 30px; /* Уменьшаем размер шрифта для экономии пространства */
+        text-align: center;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+
+    .login {
+        margin-top: 20px;
+        flex-direction: column;
+    }
+
+    .image-user {
+        margin-bottom: 10px;
+    }
+
+    .auth-text {
+        font-size: 14px;
+        color: #9a9a9a;
+        margin: 0;
+        padding-bottom: 15px;
+    }
+
+    .header .image-login, .header .image-user {
+        width: 40px; /* Уменьшаем размер иконок */
+    }
 }

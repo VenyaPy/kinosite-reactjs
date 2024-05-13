@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Series.css';
 import { motion } from "framer-motion";
 import Loading from "../Loading/Loading.jsx";
+import './Series.css'
 
-export default function Series() {
+export default function UniqueSeries() {
     const apiKey = import.meta.env.VITE_API_KEY;
     const navigate = useNavigate();
 
@@ -16,6 +16,7 @@ export default function Series() {
     const [studio, setStudio] = useState('');
     const [isFiltered, setIsFiltered] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [showFilters, setShowFilters] = useState(false); // Изначально скрытые фильтры
 
     const years = Array.from({ length: 45 }, (_, i) => 2024 - i);
     const ratings = ["1-3", "3-5", "5-7", "7-10"];
@@ -74,8 +75,8 @@ export default function Series() {
         fetchSeries();
     }, [fetchSeries]);
 
-    const handleMovieClick = (id) => {
-        navigate(`/player/${id}`);  // Используем navigate для перехода
+    const handleSeriesClick = (id) => {
+        navigate(`/player/${id}`);
     };
 
     const resetFilters = () => {
@@ -86,6 +87,10 @@ export default function Series() {
         setStudio('');
         setIsFiltered(false);
         fetchSeries();
+    };
+
+    const toggleFilters = () => {
+        setShowFilters(!showFilters);
     };
 
     return (
@@ -100,43 +105,47 @@ export default function Series() {
                 <Loading />
             ) : (
                 <div>
-                    <div className="filters">
-                        <select value={year} onChange={e => setYear(e.target.value)}>
-                            <option value="">Год</option>
-                            {years.map(y => <option key={y} value={y}>{y}</option>)}
-                        </select>
-                        <select value={rating} onChange={e => setRating(e.target.value)}>
-                            <option value="">Рейтинг</option>
-                            {ratings.map(r => <option key={r} value={r}>{r}</option>)}
-                        </select>
-                        <select value={genre} onChange={e => setGenre(e.target.value)}>
-                            <option value="">Жанр</option>
-                            {genres.map(g => <option key={g} value={g}>{g}</option>)}
-                        </select>
-                        <select value={country} onChange={e => setCountry(e.target.value)}>
-                            <option value="">Страна</option>
-                            {countries.map(c => <option key={c} value={c}>{c}</option>)}
-                        </select>
-
-                        <select value={studio} onChange={e => setStudio(e.target.value)}>
-                            <option value="">Студия</option>
-                            {studios.map(s => <option key={s} value={s}>{s}</option>)}
-                        </select>
-                        <button onClick={resetFilters}>Сбросить фильтры</button>
+                    <button className="filter-toggle-button" onClick={toggleFilters}>
+                        {showFilters ? "Скрыть фильтры" : "Показать фильтры"}
+                    </button>
+                    <div className="unique-series-filters-container" style={{ maxHeight: showFilters ? '1000px' : '0' }}>
+                        <div className="unique-series-filters">
+                            <select value={year} onChange={e => setYear(e.target.value)}>
+                                <option value="">Год</option>
+                                {years.map(y => <option key={y} value={y}>{y}</option>)}
+                            </select>
+                            <select value={rating} onChange={e => setRating(e.target.value)}>
+                                <option value="">Рейтинг</option>
+                                {ratings.map(r => <option key={r} value={r}>{r}</option>)}
+                            </select>
+                            <select value={genre} onChange={e => setGenre(e.target.value)}>
+                                <option value="">Жанр</option>
+                                {genres.map(g => <option key={g} value={g}>{g}</option>)}
+                            </select>
+                            <select value={country} onChange={e => setCountry(e.target.value)}>
+                                <option value="">Страна</option>
+                                {countries.map(c => <option key={c} value={c}>{c}</option>)}
+                            </select>
+                            <select value={studio} onChange={e => setStudio(e.target.value)}>
+                                <option value="">Студия</option>
+                                {studios.map(s => <option key={s} value={s}>{s}</option>)}
+                            </select>
+                            <button onClick={resetFilters}>Сбросить фильтры</button>
+                        </div>
                     </div>
-                    <div className="popular-movie">
+                    <div className="unique-popular-series">
                         <h2>{isFiltered ? "Сериалы по вашим критериям" : "Популярные сериалы"}</h2>
                     </div>
-                    <div className="movies-section">
+                    <div className="unique-series-section">
                         {series.map(seria => (
                             seria.poster && (
-                                <div onClick={() => handleMovieClick(seria.id)} key={seria.id} className="movie">
-                                    <img src={seria.poster} alt={seria.name} className="movie-poster"/>
-                                    <div className="movie-overlay">
-                                        <i className="fa-solid fa-play play-icon"></i>
-                                        <div className="movie-info">
-                                            <div className="movie-title">{seria.name}</div>
-                                            <div className="movie-description">{seria.shortDescription || seria.description}</div>
+                                <div onClick={() => handleSeriesClick(seria.id)} key={seria.id} className="unique-series">
+                                    <img src={seria.poster} alt={seria.name} className="unique-series-poster"/>
+                                    <div className="unique-series-overlay">
+                                        <i className="fa-solid fa-play unique-play-icon"></i>
+                                        <div className="unique-series-info">
+                                            <div className="unique-series-title">{seria.name}</div>
+                                            <div className="unique-series-description">{seria.shortDescription || seria.description}</div>
                                         </div>
                                     </div>
                                 </div>
