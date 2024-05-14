@@ -28,7 +28,7 @@ export default function Header() {
     }, []);
 
     const fetchUserProfile = (token) => {
-        axios.get('http://127.0.0.1:8000/api/v2/users/profile', {
+        axios.get('https://kinowild.ru/api/v2/users/profile', {
             headers: {
                 'accept': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -59,7 +59,7 @@ export default function Header() {
         <div className="header">
             <div className="elements-header">
                 <div className="logo" onClick={() => navigate('/')}>
-                    КиноДом
+                    WildKino
                 </div>
                 <div className="sections">
                     <ul>

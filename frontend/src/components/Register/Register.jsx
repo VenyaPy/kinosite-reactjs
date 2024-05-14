@@ -13,7 +13,7 @@ export default function Register({ toggleForm }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/v2/auth/register', {
+            const response = await axios.post('https://kinowild.ru/api/v2/auth/register', {
                 username,
                 password,
                 email

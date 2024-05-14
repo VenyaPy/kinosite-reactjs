@@ -7,6 +7,9 @@ import { useParams } from "react-router-dom";
 import Share from "../Share/Share.jsx";
 
 export default function Player() {
+    const apiKeyAlloha = import.meta.env.VITE_ALLOHA;
+    const cdnApi = import.meta.env.VITE_DOMAIN;
+
     const { movieId } = useParams();
     const apiKey = import.meta.env.VITE_API_KEY;
     const [movie, setMovie] = useState(null);
@@ -29,7 +32,6 @@ export default function Player() {
                 });
                 setMovie(movieResponse.data);
                 setReviews(reviewsResponse.data.docs.map(review => ({ ...review, isOpen: false })));
-                console.log('Movie and reviews fetched successfully.');
             } catch (err) {
                 setError(`Ошибка при получении данных фильма: ${err}`);
                 console.error(err);
@@ -61,7 +63,6 @@ export default function Player() {
     }, [movie, movieId]);
 
     const initializePlayer = (movieId) => {
-        console.log('Initializing player...');
         if (playerRef.current && movieId) {
             window.kbox(playerRef.current, {
                 search: { kinopoisk: movieId },
@@ -73,13 +74,12 @@ export default function Player() {
                     collaps: { enable: true, position: 2, domain: `https://api.delivembd.ws/embed/kp/${movieId}` }
                 },
                 params: {
-                    alloha: { token: '3a4e69a3bb3a0eb3b5bf5eba7e563b' },
-                    cdnmovies: { fallback: true, domain: 'kinobox.tv' },
+                    alloha: { token: apiKeyAlloha },
+                    cdnmovies: { fallback: true, domain: cdnApi },
                     kodik: { fallback: true },
                     collaps: { fallback: true },
                 }
             });
-            console.log('Player initialized.');
         } else {
             console.error("Player reference or movieId is undefined.");
         }

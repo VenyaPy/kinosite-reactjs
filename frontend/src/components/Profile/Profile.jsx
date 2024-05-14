@@ -18,7 +18,7 @@ export default function Profile() {
         async function fetchUserData() {
             const token = localStorage.getItem('access_token');
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/v2/users/profile', {
+                const response = await axios.get('https://kinowild.ru/api/v2/users/profile', {
                     headers: {
                         'accept': 'application/json',
                         'Authorization': `Bearer ${token}`

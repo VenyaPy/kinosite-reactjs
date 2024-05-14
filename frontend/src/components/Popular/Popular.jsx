@@ -20,7 +20,7 @@ export default function Popular() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch('http://127.0.0.1:8000/api/v2/moviesss')
+    fetch('https://kinowild.ru/api/v2/movies')
       .then(response => response.json())
       .then(data => {
         const selectedFilms = data.slice(5, 120); // Выборка фильмов

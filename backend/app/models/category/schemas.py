@@ -10,4 +10,4 @@ class Category(BaseModel):
     description: str | None
     year: int | None
     poster: HttpUrl | None | dict
-    watch_url: HttpUrl = Field(default=f"http://127.0.0.1:8000/v/player?id={id}")
+    watch_url: HttpUrl = Field(default=f"https://kinowild.ru/player?{id}")

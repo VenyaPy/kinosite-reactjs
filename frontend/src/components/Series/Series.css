@@ -147,7 +147,7 @@
 }
 
 /* Мобильная версия */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     html, body {
         overflow-x: hidden;
         margin: 0;
@@ -183,13 +183,15 @@
     }
 
     .unique-series-filters {
-        flex-direction: column;
+        flex-direction: column; /* Меняем направление на колонку */
         padding: 10px;
         gap: 15px;
+        width: 100%; /* Устанавливаем ширину на 100% */
+        align-items: center; /* Центрируем элементы */
     }
 
     .unique-series-filters select, .unique-series-filters button {
-        width: 90%;
+        width: 90%; /* Ширина элементов */
         max-width: 100%;
     }
 

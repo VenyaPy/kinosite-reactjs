@@ -14,7 +14,7 @@ main_router = APIRouter(
 )
 
 
-@main_router.get("/mainss",
+@main_router.get("/main",
                  response_model=List[PopularFilms],
                  summary="Главная страница")
 @cache(expire=120000)

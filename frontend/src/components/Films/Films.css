@@ -146,7 +146,7 @@
 }
 
 /* Мобильная версия */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     html, body {
         overflow-x: hidden;
         margin: 0;

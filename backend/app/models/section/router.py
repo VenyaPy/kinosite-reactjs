@@ -18,7 +18,7 @@ section_router = APIRouter(
 )
 
 
-@section_router.get("/moviesss",
+@section_router.get("/movies",
                      response_model=List[Selection],
                      summary="Раздел фильмы")
 @cache(expire=100000)
@@ -40,7 +40,7 @@ async def movies_section():
         print(e)
 
 
-@section_router.get("/serie",
+@section_router.get("/series",
                     response_model=List[Selection],
                     summary="Раздел сериалы")
 @cache(expire=100000)
@@ -81,7 +81,7 @@ async def anime_section():
         print(e)
 
 
-@section_router.get("/carton",
+@section_router.get("/cartoon",
                      response_model=List[Selection],
                      summary="Раздел мультфильмов")
 @cache(expire=36000)

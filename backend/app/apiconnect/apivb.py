@@ -16,11 +16,10 @@ class MovieSearch:
                 async with session.get(url, headers=headers) as response:
                     if response.status == 200:
                         response_data = await response.json(content_type=None)
-                        movies = response_data.get('docs', [])  # Предполагаем, что данные фильмов находятся в ключе 'docs'
+                        movies = response_data.get('docs', [])
                         for movie in movies:
-                            movie['watch_url'] = f'https://kinodomvideo.ru/player.html?id={movie.get("id")}'
+                            movie['watch_url'] = f'https://kinowild.ru/player?{movie.get("id")}'
 
-                            # Проверка и обработка данных постера
                             poster = movie.get('poster')
                             if isinstance(poster, dict):
                                 movie['poster'] = poster.get('previewUrl')
@@ -78,14 +77,14 @@ class KinopoiskCategory:
 
         if not films_data:
             if 'id' in data:
-                data['watch_url'] = f'http://127.0.0.1:8000/v/player?id={data["id"]}'
+                data['watch_url'] = f'https://kinowild.ru/player?{data["id"]}'
                 data['id'] = f"{data['id']}"
                 data['poster'] = data['poster']['previewUrl'] if isinstance(data['poster'], dict) else data['poster']
             return data
         else:
             for film in films_data:
                 film['id'] = str(film['id'])
-                film['watch_url'] = f'http://127.0.0.1:8000/v/player?id={film["id"]}'
+                film['watch_url'] = f'https://kinowild.ru/player?{film["id"]}'
                 film['poster'] = film.get('poster', {}).get('previewUrl', None)
 
         return films_data

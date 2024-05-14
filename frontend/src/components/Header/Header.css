@@ -17,14 +17,6 @@
     margin-right: 70px;
 }
 
-.elements-header {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    height: 100%;
-    margin-right: 70px;
-}
-
 .header ul {
     list-style-type: none; /* Убрать маркеры слева */
 }
@@ -50,11 +42,14 @@
 .logo {
     display: flex;
     align-items: center;
-    font-size: 25px;
+    font-size: 30px;
     font-weight: bold;
     cursor: pointer;
     transition: transform 0.3s ease-in-out; /* Добавляем плавную анимацию */
-
+    background: linear-gradient(to right, rgba(255, 195, 160, 0.9), #ffda79);
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
 }
 
 .logo:hover {
@@ -70,7 +65,6 @@
 
 .login:hover {
     transform: scale(1.05); /* Увеличиваем элемент при наведении */
-
 }
 
 .auth-text {
@@ -83,18 +77,15 @@
 .header .image-login {
     /* Стили для иконки логина */
     width: 50px;
-
     cursor: pointer;
 }
 
 .header .image-user {
     /* Стили для иконки профиля */
     width: 45px;
-
     border-radius: 50%; /* Делаем изображение круглым */
     cursor: pointer;
 }
-
 
 @media (max-width: 900px) {
     .header {

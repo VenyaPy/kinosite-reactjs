@@ -31,7 +31,7 @@ function Anime() {
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
             `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=anime` :
-            `http://127.0.0.1:8000/api/v2/anime`;
+            `https://kinowild.ru/api/v2/anime`;
 
         if (year) url += `&year=${year}`;
         if (rating) url += `&rating.imdb=${rating}`;
@@ -49,7 +49,7 @@ function Anime() {
                 data.docs.map(anime => ({
                     ...anime,
                     poster: anime.poster ? anime.poster.previewUrl : null,
-                    watch_url: `http://127.0.0.1:8000/v/player?id=${anime.id}`
+                    watch_url: `https://kinowild.ru/player?${anime.id}`
                 })) :
                 data;
             shuffleArray(results);

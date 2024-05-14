@@ -37,7 +37,7 @@ export default function UniqueSeries() {
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
             'https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=tv-series' :
-            'http://127.0.0.1:8000/api/v2/serie';
+            'https://kinowild.ru/api/v2/series';
 
         if (year) url += `&year=${year}`;
         if (rating) url += `&rating.imdb=${rating}`;
@@ -58,7 +58,7 @@ export default function UniqueSeries() {
                 data.docs.map(serial => ({
                     ...serial,
                     poster: serial.poster ? serial.poster.previewUrl : null,
-                    watch_url: `http://127.0.0.1:8000/v/player?id=${serial.id}`
+                    watch_url: `https://kinowild.ru/player?${serial.id}`
                 })) :
                 data;
             shuffleArray(results);

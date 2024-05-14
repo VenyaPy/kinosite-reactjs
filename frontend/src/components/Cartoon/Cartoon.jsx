@@ -38,7 +38,7 @@ export default function Cartoon() {
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
             `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=cartoon` :
-            `http://127.0.0.1:8000/api/v2/carton`;
+            `https://kinowild.ru/api/v2/cartoon`;
 
         if (year) url += `&year=${year}`;
         if (rating) url += `&rating.imdb=${rating}`;
