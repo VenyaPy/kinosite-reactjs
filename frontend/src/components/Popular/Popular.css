@@ -101,31 +101,30 @@
 }
 
 @media (max-width: 768px) {
-  .film-item {
-    width: 150px; /* Уменьшенная ширина для мобильных устройств */
-    height: 270px; /* Уменьшенная высота для мобильных устройств */
-  }
+    .films-container {
+      margin: 0;
+    }
 
-  .film-item img {
-    height: 180px; /* Адаптированная высота изображений */
-  }
+    .film-item {
+        width: 175px; /* Уменьшенная ширина для мобильных устройств */
+        height: 300px; /* Уменьшенная высота для мобильных устройств */
+    }
 
-  .scroll-button {
-    font-size: 20px; /* Меньший размер шрифта для кнопок */
-  }
+    .film-item img {
+        height: 200px; /* Адаптированная высота изображений */
+    }
 
-  .film-item h3 {
-    font-size: 12px;
-  }
 
-  .film-item p {
-    font-size: 11px;
-    height: 3.1em;
-  }
+    .film-item h3 {
+        font-size: 14px;
+    }
 
-  .scroll-button {
-    padding: 6px 10px; /* Добавлено: Обеспечиваем, что кнопка все еще видна и кликабельна */
-    margin: 0 5px; /* Уменьшаем отступы, чтобы кнопки не выходили за экран */
-    border-radius: 20px; /* Скругляем углы для мобильных устройств */
-  }
+    .film-item p {
+        font-size: 11px;
+        height: 4.7em;
+    }
+
+    .scroll-button {
+        display: none; /* Скрыть кнопки на мобильных устройствах */
+    }
 }

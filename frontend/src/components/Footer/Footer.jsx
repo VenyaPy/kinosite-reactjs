@@ -15,7 +15,7 @@ export default function Footer() {
             <div className="footer-section contact">
                 <h4>Контакты</h4>
                 <p>Email: ve.po2014@yandex.ru</p>
-                <p>Телефон: +993 609 7096</p>
+                <p>Телефон: +7 993 609 7096</p>
             </div>
         </div>
     );

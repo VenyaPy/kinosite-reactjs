@@ -200,7 +200,7 @@
     button.filter-toggle-button {
         margin: 0 auto; /* Центрируем кнопку */
         text-align: center; /* Центрируем текст */
-        margin-top: 10px; /* Отступ сверху для мобильной версии */
+        margin-top: 0; /* Отступ сверху для мобильной версии */
         margin-bottom: 20px;
     }
 }
@@ -212,7 +212,7 @@
     color: #fff;
     background-color: #007bff;
     border: none;
-    border-radius: 5px;
+    border-radius: 2px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

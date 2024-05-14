@@ -5,54 +5,64 @@
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
-    margin-top: 5%; /* Уменьшаем отступ сверху */
-    background: rgb(45, 45, 45);
+    align-items: center;
+    background: #2d2d2d;
     border-radius: 30px;
-    padding: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    padding: 10px 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     z-index: 2;
 }
 
-.image-container {
-    position: relative; /* Родительский контейнер для позиционирования */
+.find-text-films {
+    color: white;
+    margin-bottom: 50px;
 }
 
 .search-input-finder {
-    border: 1px solid #555; /* Светлый цвет рамки, который хорошо виден на темном фоне */
-    background: #333; /* Темный фон для поля ввода */
-    color: #ccc; /* Светлый цвет текста для контраста */
+    border: none;
+    background: #333;
+    color: #ccc;
     outline: none;
-    padding: 15px 20px;
-    font-size: 16px;
+    padding: 20px 25px;
+    font-size: 18px;
     border-radius: 30px;
-    width: 300px;
+    width: 350px;
     transition: width 0.4s ease-in-out;
 }
 
-.loading {
-    z-index: 2000;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #fff;
-    font-size: 24px;
-}
-
 .search-input-finder:focus {
-    width: 450px;
-    border-color: #777; /* Светлее цвет рамки при фокусе */
+    width: 500px;
+    background: #444;
+    color: #fff;
 }
 
 .search-button-finder {
-    padding-left: 10px;
-    background: none;
+    background: #444;
     border: none;
     font-size: 20px;
     cursor: pointer;
-    color: #ffffff; /* Белый цвет текста на кнопке */
-    outline: none;
+    color: #ffffff;
+    padding: 10px 15px;
+    border-radius: 50%;
+    margin-left: 10px;
+    transition: background 0.3s ease, transform 0.3s ease;
 }
+
+.search-button-finder:hover {
+    background: #555;
+    transform: scale(1.1);
+}
+
+/* Анимации и эффекты */
+.search-input-finder::placeholder {
+    color: #888;
+    transition: color 0.3s ease;
+}
+
+.search-input-finder:focus::placeholder {
+    color: #ccc;
+}
+
 
 .movies-list {
     display: flex;
@@ -175,38 +185,24 @@
     display: none; /* Скрыть, если не активен */
 }
 
-/* Мобильная версия */
 @media (max-width: 768px) {
     .search-finder {
-        position: absolute;
         top: 60%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        display: flex;
-        background: rgb(45, 45, 45);
-        border-radius: 30px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        z-index: 2;
-        margin: 0 auto;
-        padding-top: 7px;
-        padding-bottom: 7px;
-    }
-
-    .image-container {
-        position: relative; /* Родительский контейнер для позиционирования */
+        padding: 10px 15px;
     }
 
     .search-input-finder {
-        border: 1px solid #555; /* Светлый цвет рамки, который хорошо виден на темном фоне */
-        background: #333; /* Темный фон для поля ввода */
-        color: #ccc; /* Светлый цвет текста для контраста */
-        outline: none;
-        padding: 14px 10px;
-        border-radius: 40px;
-        width: 160px;
-        height: 12px;
-        font-size: 12px;
-        transition: width 0.4s ease-in-out;
+        padding: 10px 15px;
+        font-size: 15px;
+        width: 180px;
+    }
+
+    .search-button-finder {
+        font-size: 15px;
+    }
+
+    .search-input-finder:focus {
+        width: 200px;
     }
 
     .loading {
@@ -219,7 +215,7 @@
     }
 
     .search-input-finder:focus {
-        width: 220px;
+        width: 230px;
         border-color: #777; /* Светлее цвет рамки при фокусе */
     }
 
@@ -248,7 +244,7 @@
         width: 90%; /* Процент ширины относительно контейнера фильмов */
         background-color: rgba(32, 32, 32, 0.96);
         padding: 20px;
-        border-radius: 10px;
+        border-radius: 40px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.69);
     }
 
@@ -333,6 +329,11 @@
     .modal-content {
         -ms-overflow-style: none; /* IE and Edge */
         scrollbar-width: none; /* Firefox */
+    }
+
+    .find-text-films {
+        color: white;
+        margin-bottom: 20px;
     }
 
     .close-modal {

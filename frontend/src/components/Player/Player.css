@@ -12,7 +12,7 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     color: #e0e0e0;
-    box-sizing: border-box; /* Включение padding в общую ширину */
+    box-sizing: border-box;
 }
 
 /* Стиль деталей фильма */
@@ -31,23 +31,28 @@
     height: auto;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    margin: 0 auto; /* Центрирование изображения */
 }
 
 .movie-details div {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    margin: 0;
 }
 
 h2 {
     font-size: 28px;
     margin-bottom: 10px;
+    text-align: left; /* Выравнивание по левому краю */
+    margin: 0;
 }
 
 p {
     font-size: 16px;
     line-height: 1.5;
-    margin-right: 20px; /* Добавляем отступ справа */
+    text-align: left; /* Выравнивание по левому краю */
+    margin: 0;
 }
 
 /* Стиль плеера */
@@ -63,7 +68,8 @@ p {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 20px;
-    text-align: center; /* Центрирование заголовка отзывов */
+    text-align: left; /* Выравнивание заголовка отзывов по левому краю */
+    margin: 0;
 }
 
 .reviews-container {
@@ -109,6 +115,8 @@ p {
     font-size: 16px;
     line-height: 1.5;
     color: #e0e0e0;
+    text-align: left; /* Выравнивание по левому краю */
+    margin: 0;
 }
 
 .toggle-button {
@@ -140,7 +148,6 @@ p {
     .movie-details {
         flex-direction: column;
         align-items: center;
-        text-align: center;
     }
 
     .movie-details img {
@@ -151,11 +158,15 @@ p {
 
     h2 {
         font-size: 24px;
+        text-align: left; /* Выравнивание по левому краю */
+        margin-bottom: 25px;
     }
 
     p {
         font-size: 14px;
         width: 100%;
+        text-align: left; /* Выравнивание по левому краю */
+        margin-bottom: 15px;
     }
 
     .kinobox_player {
@@ -173,6 +184,8 @@ p {
 
     .review-text {
         font-size: 20px;
+        text-align: center; /* Выравнивание по левому краю */
+        margin: 20px;
     }
 
     .toggle-button {

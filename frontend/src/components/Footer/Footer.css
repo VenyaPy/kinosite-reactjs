@@ -91,6 +91,7 @@
 
     .footer-section h4 {
         font-size: 14px; /* Увеличенный размер для заголовков */
+        margin-top: 5px;
     }
 
     .footer-section ul {

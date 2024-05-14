@@ -1,11 +1,11 @@
 import './Finder.css';
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Loading from "../Loading/Loading.jsx";
 
 function Finder() {
-    const navigate = useNavigate(); // Использование хука navigate
+    const navigate = useNavigate();
     const [query, setQuery] = useState('');
     const [movies, setMovies] = useState([]);
     const [isModalOpen, setModalOpen] = useState(false);
@@ -20,7 +20,7 @@ function Finder() {
             setMovies(filteredMovies);
             setModalOpen(true);
         } catch (error) {
-            console.error('Ошибка при поиске фильмов:', error);
+            console.error('Error searching movies:', error);
             setMovies([]);
         } finally {
             setLoading(false);
@@ -36,7 +36,7 @@ function Finder() {
     const closeModal = () => setModalOpen(false);
 
     const handleClickMovie = (movieId) => {
-        navigate(`/player/${movieId}`); // Используем navigate для перехода
+        navigate(`/player/${movieId}`);
         closeModal();
     };
 
@@ -52,7 +52,7 @@ function Finder() {
                     onKeyDown={handleKeyDown}
                 />
                 <button className="search-button-finder" onClick={handleSearch}>
-                    <i className="fa-solid fa-magnifying-glass"></i>
+                    <i className="fa fa-search"></i>
                 </button>
             </div>
             {isLoading && <div className="loading"><Loading/></div>}
@@ -61,13 +61,14 @@ function Finder() {
                     <div className="modal-content">
                         <span className="close-modal" onClick={closeModal}>&times;</span>
                         <div className="movies-list">
+                            <h2 className="find-text-films">Найденные фильмы:</h2>
                             {movies.map(movie => (
                                 <div key={movie.id} className="movie-item" onClick={() => handleClickMovie(movie.id)}>
                                     <img src={movie.poster} alt={movie.name} />
                                     <div className="details">
                                         <h3>{movie.name}</h3>
                                         <div className="year">{movie.year}</div>
-                                        <p>{movie.description || "Описание отсутствует"}</p>
+                                        <p>{movie.description || "Описание недоступно"}</p>
                                     </div>
                                 </div>
                             ))}

@@ -46,7 +46,7 @@ export default function Player() {
             console.log('Loading Kinobox script...');
             const script = document.createElement('script');
             script.src = "https://kinobox.tv/kinobox.min.js";
-            script.async = true;
+            script.async = true;  // Загружаем скрипт асинхронно
             script.onload = () => {
                 scriptLoaded.current = true;
                 if (playerRef.current) {
@@ -117,7 +117,7 @@ export default function Player() {
                 </div>
             </div>
             <div ref={playerRef} className="kinobox_player"></div>
-            <Share />
+            <Share/>
             {reviews.length > 0 && (
                 <div className="reviews-container">
                     <h3 className="review-text">Отзывы:</h3>
