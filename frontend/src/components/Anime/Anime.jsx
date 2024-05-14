@@ -31,7 +31,7 @@ function Anime() {
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
             `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=anime` :
-            `https://kinowild.ru/api/v2/anime`;
+            `https://ve1.po2014.fvds.ru:8000/api/v2/anime`;
 
         if (year) url += `&year=${year}`;
         if (rating) url += `&rating.imdb=${rating}`;

@@ -15,7 +15,7 @@ function Finder() {
         if (!query) return;
         try {
             setLoading(true);
-            const response = await axios.get(`https://kinowild.ru/api/v2/search/${query}/`);
+            const response = await axios.get(`https://ve1.po2014.fvds.ru:8000/api/v2/search/${query}/`);
             const filteredMovies = response.data.filter(movie => movie.poster);
             setMovies(filteredMovies);
             setModalOpen(true);

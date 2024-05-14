@@ -28,7 +28,7 @@ export default function Header() {
     }, []);
 
     const fetchUserProfile = (token) => {
-        axios.get('https://kinowild.ru/api/v2/users/profile', {
+        axios.get('https://ve1.po2014.fvds.ru:8000/api/v2/users/profile', {
             headers: {
                 'accept': 'application/json',
                 'Authorization': `Bearer ${token}`
