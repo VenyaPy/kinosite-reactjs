@@ -30,6 +30,7 @@ export default function Login({ toggleForm, setAuthStatus }) {
 
     return (
         <div className="login-panel">
+            <button className="close-button" onClick={() => toggleForm(null)}>&times;</button>
             <h2>Вход</h2>
             <form onSubmit={handleSubmit} className="login-form">
                 <div className="form-group">

@@ -23,7 +23,6 @@
 }
 
 .films-container::-webkit-scrollbar {
-  scroll-behavior: smooth;
   display: none; /* Chrome, Safari, Opera */
 }
 
@@ -75,6 +74,8 @@
 
 .scroll-button {
   display: flex;
+  align-items: center; /* Центрирование текста по вертикали */
+  justify-content: center; /* Центрирование текста по горизонтали */
   margin-left: 10px;
   margin-right: 10px;
   background: linear-gradient(145deg, #393939, #302b2b);
@@ -123,8 +124,8 @@
   }
 
   .scroll-button {
-    padding: 0;
-    margin: 0;
-    border: 0;
-    font-size: 0;
-  }}
+    padding: 6px 10px; /* Добавлено: Обеспечиваем, что кнопка все еще видна и кликабельна */
+    margin: 0 5px; /* Уменьшаем отступы, чтобы кнопки не выходили за экран */
+    border-radius: 20px; /* Скругляем углы для мобильных устройств */
+  }
+}

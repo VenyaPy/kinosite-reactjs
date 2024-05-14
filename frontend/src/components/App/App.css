@@ -46,6 +46,11 @@ body {
 }
 
 @media (max-width: 768px) {
+    body, html {
+    touch-action: manipulation;
+}
+
+
     .main-container {
         padding-top: 0; /* Меньше отступ сверху для мобильных устройств */
         padding-bottom: 0; /* Убираем нижний отступ для мобильных устройств */
@@ -61,6 +66,10 @@ body {
 }
 
 @media (max-width: 768px) {
+        body, html {
+    touch-action: manipulation;
+}
+
     .main-container {
         padding-top: 0; /* Меньше отступ сверху для мобильных устройств */
         padding-bottom: 0; /* Убираем нижний отступ для мобильных устройств */

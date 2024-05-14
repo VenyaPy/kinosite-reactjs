@@ -1,3 +1,4 @@
+/* Основные стили */
 .search-finder {
     position: absolute;
     top: 50%;
@@ -52,7 +53,6 @@
     color: #ffffff; /* Белый цвет текста на кнопке */
     outline: none;
 }
-
 
 .movies-list {
     display: flex;
@@ -125,7 +125,6 @@
     color: #ccc;
 }
 
-
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -169,14 +168,14 @@
 }
 
 .modal-overlay.active {
-    display: flex;  // Только когда активен
+    display: flex; /* Только когда активен */
 }
 
 .modal-overlay.inactive {
-    display: none;  // Скрыть, если не активен
+    display: none; /* Скрыть, если не активен */
 }
 
-
+/* Мобильная версия */
 @media (max-width: 768px) {
     .search-finder {
         position: absolute;
@@ -193,10 +192,9 @@
         padding-bottom: 7px;
     }
 
-
     .image-container {
         position: relative; /* Родительский контейнер для позиционирования */
-        }
+    }
 
     .search-input-finder {
         border: 1px solid #555; /* Светлый цвет рамки, который хорошо виден на темном фоне */
@@ -235,7 +233,6 @@
         outline: none;
     }
 
-
     .movies-list {
         display: flex;
         flex-direction: column;
@@ -259,20 +256,23 @@
         text-decoration: none; /* Убрать подчеркивание для всей ссылки */
         color: inherit; /* Наследовать цвет текста */
         display: flex;
+        flex-direction: column; /* Изменено на вертикальное расположение */
         width: 100%;
+        align-items: center; /* Центрирование содержимого по горизонтали */
     }
 
     .movie-item img {
         width: 150px; /* Фиксированная ширина для изображения */
         height: auto;
         border-radius: 5px;
-        margin-right: 20px; /* Отступ между изображением и деталями фильма */
+        margin-bottom: 20px; /* Отступ между изображением и деталями фильма */
     }
 
     .details {
         flex-grow: 1; /* Позволяет деталям занимать доступное пространство */
         display: flex;
         flex-direction: column; /* Элементы деталей выстраиваются вертикально */
+        align-items: center; /* Центрирование содержимого по горизонтали */
     }
 
     .movie-item h3,
@@ -281,11 +281,11 @@
         margin: 0;
         padding: 5px;
         width: 100%; /* Занимает всю ширину контейнера деталей */
+        text-align: center; /* Центрирование текста */
     }
 
     .movie-item h3 {
         font-size: 15px;
-        text-align: center;
         color: #fff;
         margin-bottom: 5px;
         margin-top: 10px;
@@ -295,14 +295,12 @@
         font-size: 13px;
         color: #ccc;
         margin-bottom: 5px;
-        text-align: center;
     }
 
     .movie-item p {
         font-size: 13px;
         color: #ccc;
     }
-
 
     .modal-overlay {
         position: fixed;
@@ -347,12 +345,10 @@
     }
 
     .modal-overlay.active {
-        display: flex;  // Только когда активен
+        display: flex; /* Только когда активен */
     }
 
     .modal-overlay.inactive {
-        display: none;  // Скрыть, если не активен
+        display: none; /* Скрыть, если не активен */
     }
-
-
 }

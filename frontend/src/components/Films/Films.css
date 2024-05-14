@@ -50,11 +50,13 @@
     visibility: hidden;
     opacity: 0;
     transition: visibility 0s, opacity 0.3s linear;
+    pointer-events: none; /* Добавлено */
 }
 
 .unique-movie:hover .unique-movie-overlay {
     visibility: visible;
     opacity: 1;
+    pointer-events: auto; /* Добавлено */
 }
 
 .unique-movie-info {
@@ -161,7 +163,6 @@
         box-sizing: border-box; /* Обеспечиваем включение отступов в общую ширину */
     }
 
-
     .unique-movie {
         width: 100%;
         height: auto; /* Убираем фиксированную высоту для мобильной версии */
@@ -195,12 +196,10 @@
         font-size: 1.2em;
     }
 
-
-
     button.filter-toggle-button {
         margin: 0 auto; /* Центрируем кнопку */
         text-align: center; /* Центрируем текст */
-        margin-top: 10px; /* Отступ сверху для ПК */
+        margin-top: 10px; /* Отступ сверху для мобильной версии */
         margin-bottom: 20px;
     }
 }

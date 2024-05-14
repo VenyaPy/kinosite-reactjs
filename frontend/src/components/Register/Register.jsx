@@ -28,7 +28,7 @@ export default function Register({ toggleForm }) {
             setTimeout(() => {
                 setSuccessMessage('');
                 toggleForm('login');
-            }, 3000);  // 5 секунд для отображения сообщения
+            }, 3000);  // 3 секунды для отображения сообщения
         } catch (error) {
             console.error('Registration Error:', error.response ? error.response.data : "Неизвестная ошибка");
             setError('Ошибка регистрации. Пожалуйста, попробуйте снова.');
@@ -38,6 +38,7 @@ export default function Register({ toggleForm }) {
 
     return (
         <div className="register-panel">
+            <button className="close-button" onClick={() => toggleForm(null)}>&times;</button>
             <div className="text"><h2>Регистрация</h2></div>
             <form onSubmit={handleSubmit} className="register-form">
                 <div className="form-group">
@@ -64,4 +65,3 @@ export default function Register({ toggleForm }) {
 Register.propTypes = {
     toggleForm: PropTypes.func.isRequired
 };
-
