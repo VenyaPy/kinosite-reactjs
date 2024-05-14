@@ -29,7 +29,7 @@
 .film-item {
   display: inline-block;
   width: 220px;
-  height: 380px;
+  height: 390px;
   margin-right: 10px;
   cursor: pointer;
   flex: 0 0 auto;
@@ -64,7 +64,7 @@
   font-size: 14px;
   margin: 8px;
   color: #8c8c8c;
-  height: 3.1em; /* Примерно для 3 строк текста */
+  height: 3.8em; /* Примерно для 3 строк текста */
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
