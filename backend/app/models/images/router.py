@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status, Depends, UploadFile, File
+from fastapi import APIRouter, HTTPException, status, Depends, UploadFile, File, Response
 
 from backend.app.exceptions import UserNotAuth, IncorrectPassword, PasswordError
 from backend.app.models.users.model import Users
@@ -17,6 +17,14 @@ router_user = APIRouter(
     tags=["Пользователи"],
 )
 
+@router_user.options("/profile",
+                     status_code=204,
+                     summary="CORS preflight")
+async def options_profile(response: Response):
+    response.headers["Access-Control-Allow-Origin"] = "https://kinowild.ru"
+    response.headers["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
+    return response
 
 @router_user.get("/profile",
                  summary="Получить данные о себе")
