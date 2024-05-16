@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Loading from "../Loading/Loading.jsx";
 
+
 export default function Popular() {
   const navigate = useNavigate();
   const [films, setFilms] = useState([]);
@@ -23,8 +24,8 @@ export default function Popular() {
     fetch('https://ve1.po2014.fvds.ru:8000/api/v2/movies')
       .then(response => response.json())
       .then(data => {
-        const selectedFilms = data.slice(5, 120); // Выборка фильмов
-        shuffleArray(selectedFilms); // Перемешиваем выбранные фильмы
+        const selectedFilms = data.slice(5, 120);
+        shuffleArray(selectedFilms);
         setFilms(selectedFilms);
       })
       .catch(error => {

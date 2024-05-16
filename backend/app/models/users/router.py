@@ -26,15 +26,6 @@ async def register_user(user_data: SUserReg):
                       hashed_password=hashed_password)
     return {"status": "okey"}
 
-@router_auth.options("/register",
-                     status_code=204,
-                     summary="CORS preflight")
-async def options_register(response: Response):
-    response.headers["Access-Control-Allow-Origin"] = "https://kinowild.ru"
-    response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
-    return response
-
 @router_auth.post("/login",
                   status_code=201,
                   summary="Войти в аккаунт")
@@ -46,15 +37,6 @@ async def login_user(
     access_token = create_access_token({"sub": str(user.id)})
     response.set_cookie("token_access", access_token, httponly=True)
     return {"access_token": access_token}
-
-@router_auth.options("/login",
-                     status_code=204,
-                     summary="CORS preflight")
-async def options_login(response: Response):
-    response.headers["Access-Control-Allow-Origin"] = "https://kinowild.ru"
-    response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
-    return response
 
 
 @router_auth.delete("/logout",

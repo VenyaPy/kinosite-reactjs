@@ -16,7 +16,7 @@ function Anime() {
     const [showFilters, setShowFilters] = useState(false); // Изначально скрытые фильтры
 
     const years = Array.from({ length: 45 }, (_, i) => 2024 - i);
-    const ratings = ["1-3", "3-5", "5-7", "7-10"];
+    const ratings = ["1-2", "3-4", "5-7", "7-8", "9-10"];
 
     const shuffleArray = (array) => {
         for (let i = array.length - 1; i > 0; i--) {

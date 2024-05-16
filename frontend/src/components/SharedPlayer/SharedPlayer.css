@@ -1,0 +1,177 @@
+/* Основные стили */
+.shared-player-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    gap: 20px;
+    background-color: #1e1e1e;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    color: #e0e0e0;
+    box-sizing: border-box;
+}
+
+/* Стиль деталей фильма */
+.movie-details {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 20px;
+    gap: 20px;
+    box-sizing: border-box; /* Включение padding в общую ширину */
+}
+
+.movie-details img {
+    width: 350px; /* Уменьшаем размер постера */
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    margin: 0 auto; /* Центрирование изображения */
+}
+
+.movie-details div {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+.movie-details h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    text-align: left; /* Выравнивание по левому краю */
+    margin: 0;
+}
+
+.movie-details p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    text-align: left; /* Выравнивание по левому краю */
+    margin: 0;
+}
+
+/* Стиль плеера */
+.kinobox_player {
+    width: 100%;
+    height: 600px; /* Увеличенная высота плеера */
+    background-color: #000;
+    margin-top: 30px;
+}
+
+/* Стиль чата */
+.chat-container {
+    width: 100%;
+    padding: 20px;
+    border-radius: 8px;
+    background: #292929;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box; /* Включение padding в общую ширину */
+}
+
+.messages {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.message {
+    background-color: #333;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden; /* Предотвращение выхода содержимого за пределы */
+    word-wrap: break-word; /* Перенос длинных слов */
+    margin-bottom: 20px; /* Добавляем отступ снизу для разделения сообщений */
+}
+
+.message:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+input[type="text"] {
+    width: calc(100% - 100px);
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #444;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+    .shared-player-container {
+        padding: 10px;
+    }
+
+    .movie-details {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .movie-details img {
+        width: 100%; /* Постер будет занимать всю ширину */
+        max-width: 300px; /* Ограничиваем максимальную ширину */
+        margin-bottom: 20px;
+    }
+
+    h2 {
+        font-size: 24px;
+        text-align: left; /* Выравнивание по левому краю */
+        margin-bottom: 25px;
+    }
+
+    p {
+        font-size: 14px;
+        width: 100%;
+        text-align: left; /* Выравнивание по левому краю */
+        margin-bottom: 15px;
+    }
+
+    .kinobox_player {
+        height: 200px; /* Уменьшаем высоту плеера для мобильной версии */
+        padding-bottom: 0;
+    }
+
+    .chat-container {
+        padding: 10px;
+    }
+
+    .message {
+        padding: 10px;
+    }
+
+    input[type="text"] {
+        width: calc(100% - 80px);
+        padding: 8px;
+    }
+
+    button {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
+

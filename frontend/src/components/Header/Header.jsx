@@ -15,7 +15,7 @@ export default function Header() {
         const token = localStorage.getItem('access_token');
         const tokenTimestamp = parseInt(localStorage.getItem('token_timestamp'), 10);
         const now = Date.now();
-        const tokenLifetime = 90 * 60 * 1000; // 90 минут в миллисекундах
+        const tokenLifetime = 90 * 60 * 1000;
 
         if (token && (now - tokenTimestamp < tokenLifetime)) {
             setAuthStatus(true);
@@ -28,7 +28,7 @@ export default function Header() {
     }, []);
 
     const fetchUserProfile = (token) => {
-        axios.get('https://ve1.po2014.fvds.ru:8000/api/v2/users/profile', {
+        axios.get('http://127.0.0.1:8000/api/v2/users/profile', {
             headers: {
                 'accept': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -41,7 +41,7 @@ export default function Header() {
         })
         .catch(error => {
             console.error('Error fetching user profile:', error);
-            localStorage.removeItem('access_token'); // Удаляем токен если есть проблемы с аутентификацией
+            localStorage.removeItem('access_token');
             localStorage.removeItem('token_timestamp');
             setAuthStatus(false);
         });
@@ -51,7 +51,7 @@ export default function Header() {
         if (!authStatus) {
             setShowForm(showForm !== 'login' ? 'login' : null);
         } else {
-            navigate('/profile'); // Navigating to profile page
+            navigate('/profile');
         }
     };
 

@@ -97,7 +97,7 @@
     display: flex;
     gap: 10px;
     padding: 30px;
-    background: #252525;
+    background: rgba(37, 37, 37, 0);
     align-items: center;
     justify-content: center;
     border-radius: 10px;
@@ -141,6 +141,7 @@
 .unique-popular-series {
     color: white;
     display: flex;
+    font-size: 20px;
     justify-content: center;
     padding-top: 20px;
     text-align: center;

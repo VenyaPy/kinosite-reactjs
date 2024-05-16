@@ -14,7 +14,7 @@ export default function Main() {
         >
             <div className="search-container">
                 <div className="image-container">
-                    <img className="image" src="https://i.ibb.co/m6RLjND/123211223323132.jpg" alt="some" />
+                    <img className="image" src="https://i.ibb.co/S38d90S/6666666-2.jpg" alt="some" />
                     <Finder />
                 </div>
                 <div className="popular-films">

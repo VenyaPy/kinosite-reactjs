@@ -15,6 +15,7 @@ from backend.app.models.images.router import router_user
 from backend.app.models.mainpage.router import main_router
 from backend.app.models.section.router import section_router
 from backend.app.models.category.router import category_router
+from backend.app.models.rooms.router import room_router
 
 app = FastAPI(
     title="Совместный просмотр фильмов",
@@ -25,7 +26,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://kinowild.ru"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],  # Разрешить все методы
     allow_headers=["*"],  # Разрешить все заголовки
@@ -38,6 +39,7 @@ app.include_router(router_user)
 app.include_router(section_router)
 app.include_router(category_router)
 app.include_router(router_search)
+app.include_router(room_router)
 
 
 

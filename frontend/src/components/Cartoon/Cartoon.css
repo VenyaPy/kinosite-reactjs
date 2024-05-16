@@ -97,7 +97,7 @@
     display: flex;
     gap: 10px;
     padding: 30px;
-    background: #252525;
+    background: rgba(37, 37, 37, 0);
     align-items: center;
     justify-content: center;
     border-radius: 10px;
@@ -139,6 +139,7 @@
 }
 
 .unique-popular-cartoon {
+    font-size: 20px;
     color: white;
     display: flex;
     justify-content: center;

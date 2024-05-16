@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
 import "./Player.css";
 import Loading from "../Loading/Loading.jsx";
 import parse from 'html-react-parser';
-import { useParams } from "react-router-dom";
 import Share from "../Share/Share.jsx";
 
 export default function Player() {
@@ -18,6 +18,28 @@ export default function Player() {
     const [error, setError] = useState('');
     const playerRef = useRef(null);
     const scriptLoaded = useRef(false);
+    const navigate = useNavigate(); // Используйте useNavigate
+
+    useEffect(() => {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            fetchUserProfile(token);
+        }
+    }, []);
+
+    const fetchUserProfile = (token) => {
+        axios.get('http://127.0.0.1:8000/api/v2/users/profile', {
+            headers: {
+                'accept': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching user profile:', error);
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('token_timestamp');
+        });
+    };
 
     useEffect(() => {
         setIsLoading(true);
@@ -48,7 +70,7 @@ export default function Player() {
             console.log('Loading Kinobox script...');
             const script = document.createElement('script');
             script.src = "https://kinobox.tv/kinobox.min.js";
-            script.async = true;  // Загружаем скрипт асинхронно
+            script.async = true;
             script.onload = () => {
                 scriptLoaded.current = true;
                 if (playerRef.current) {
@@ -95,6 +117,27 @@ export default function Player() {
         setReviews(updatedReviews);
     };
 
+    const handleSharedView = () => {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            axios.post('http://127.0.0.1:8000/room/create_room', { movieId }, {
+                headers: {
+                    'accept': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                const roomId = response.data.message;
+                navigate(`/shared/${roomId}`);
+            })
+            .catch(error => {
+                console.error('Error creating room:', error);
+            });
+        } else {
+            console.error('User not authenticated');
+        }
+    };
+
     if (error) {
         return <div>{error}</div>;
     }
@@ -117,6 +160,7 @@ export default function Player() {
                 </div>
             </div>
             <div ref={playerRef} className="kinobox_player"></div>
+            <button onClick={handleSharedView}>Совместный просмотр</button>
             <Share/>
             {reviews.length > 0 && (
                 <div className="reviews-container">

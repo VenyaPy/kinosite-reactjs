@@ -17,11 +17,11 @@ body {
     padding-top: 70px; /* Размер должен соответствовать высоте .header */
     padding-bottom: 50px; /* Добавлен нижний внутренний отступ для отделения содержимого от нижней части контейнера */
     margin: 0 auto;
-    background-color: #252525;
+    background-image: url('https://i.ibb.co/gPTGzkv/file-cover-1.png');
     max-width: 80%;html {
     font-family: 'Montserrat', sans-serif;
     font-size: 17px;
-    background: linear-gradient(135deg, #FFDEE9, #B5FFFC); /* Светлый градиент для фона */
+    background-color: #1F1F1F;
     margin: 0;
     padding: 0;
 }
@@ -29,7 +29,7 @@ body {
 body {
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #FFDEE9, #B5FFFC); /* Светлый градиент для фона */
+    background-color: #1F1F1F;
     overflow-x: hidden; /* Запрещаем горизонтальную прокрутку */
 }
 

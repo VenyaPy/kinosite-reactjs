@@ -5,54 +5,55 @@
     transform: translate(-50%, -50%);
     display: flex;
     align-items: center;
-    background: linear-gradient(145deg, #1e1e1e, #2d2d2d);
-    border-radius: 25px; /* Уменьшено с 30px */
-    padding: 10px 15px; /* Уменьшено с 10px 15px */
+    background: #333;
+    border-radius: 25px;
+    padding: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     z-index: 2;
 }
 
 .find-text-films {
     color: white;
-    margin-bottom: 40px; /* Уменьшено с 50px */
+    margin-bottom: 40px;
 }
 
 .search-input-finder {
     border: none;
-    background: linear-gradient(145deg, #292929, #333);
+    background: #444;
     color: #ccc;
     outline: none;
-    padding: 15px 20px; /* Уменьшено с 20px 25px */
-    font-size: 16px; /* Уменьшено с 18px */
-    border-radius: 20px; /* Уменьшено с 30px */
-    width: 300px; /* Уменьшено с 350px */
+    padding: 15px 20px;
+    font-size: 16px;
+    border-radius: 25px 0 0 25px; /* Скругляем только левую сторону */
+    width: 300px;
     transition: width 0.4s ease-in-out;
 }
 
 .search-input-finder:focus {
-    width: 400px; /* Уменьшено с 500px */
-    background: #444;
+    width: 400px;
+    background: #555;
     color: #fff;
 }
 
 .search-button-finder {
-    background: #444;
+    background: #28a745; /* Более гармоничный зеленый */
     border: none;
-    font-size: 18px; /* Уменьшено с 20px */
+    font-size: 18px;
     cursor: pointer;
     color: #ffffff;
-    padding: 10px 15px; /* Уменьшено с 10px 15px */
-    border-radius: 50%;
-    margin-left: 10px; /* Уменьшено с 10px */
+    padding: 15px;
+    border-radius: 0 25px 25px 0; /* Скругляем только правую сторону */
     transition: background 0.3s ease, transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .search-button-finder:hover {
-    background: #555;
+    background: #218838; /* Темный оттенок зеленого при наведении */
     transform: scale(1.1);
 }
 
-/* Анимации и эффекты */
 .search-input-finder::placeholder {
     color: #888;
     transition: color 0.3s ease;
@@ -62,132 +63,10 @@
     color: #ccc;
 }
 
-.movies-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    gap: 15px; /* Уменьшено с 20px */
-    margin-top: 30px; /* Уменьшено с 50px */
-}
-
-.movie-item {
-    display: flex;
-    cursor: pointer;
-    flex-direction: row;
-    align-items: flex-start;
-    width: 60%; /* Уменьшено с 70% */
-    background-color: rgba(32, 32, 32, 0.96);
-    padding: 10px; /* Уменьшено с 15px */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.69);
-    transition: transform 0.2s ease;
-}
-
-.movie-item:hover {
-    transform: translateY(-5px);
-}
-
-.movie-item a {
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    width: 100%;
-}
-
-.movie-item img {
-    width: 150px; /* Уменьшено с 200px */
-    height: auto;
-    border-radius: 5px;
-    margin-right: 15px; /* Уменьшено с 20px */
-}
-
-.details {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.movie-item h3,
-.movie-item .year,
-.movie-item p {
-    margin: 0;
-    padding: 5px;
-    width: 100%;
-}
-
-.movie-item h3 {
-    font-size: 20px; /* Уменьшено с 24px */
-    color: #fff;
-    margin-bottom: 5px;
-}
-
-.movie-item .year {
-    font-size: 14px; /* Уменьшено с 16px */
-    color: #ccc;
-    margin-bottom: 5px;
-}
-
-.movie-item p {
-    font-size: 12px; /* Уменьшено с 14px */
-    color: #ccc;
-}
-
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.91);
-    z-index: 1000;
-}
-
-.modal-content {
-    position: relative;
-    background: rgba(27, 27, 27, 0.89);
-    padding: 15px; /* Уменьшено с 20px */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
-    width: 60%; /* Уменьшено с 70% */
-    max-height: 80vh;
-    overflow-y: auto;
-}
-
-.modal-content::-webkit-scrollbar {
-    display: none;
-}
-
-.modal-content {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-.close-modal {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    color: #fff;
-    cursor: pointer;
-}
-
-.modal-overlay.active {
-    display: flex;
-}
-
-.modal-overlay.inactive {
-    display: none;
-}
-
-
 @media (max-width: 768px) {
     .search-finder {
         top: 60%;
-        padding: 10px 15px;
+        padding: 10px;
     }
 
     .search-input-finder {
@@ -196,159 +75,14 @@
         width: 180px;
     }
 
-    .search-button-finder {
-        font-size: 15px;
-    }
-
-    .search-input-finder:focus {
-        width: 200px;
-    }
-
-    .loading {
-        z-index: 2000;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: #fff;
-    }
-
     .search-input-finder:focus {
         width: 230px;
-        border-color: #777; /* Светлее цвет рамки при фокусе */
+        background: #555;
+        color: #fff;
     }
 
     .search-button-finder {
-        padding-left: 10px;
-        background: none;
-        border: none;
         font-size: 15px;
-        cursor: pointer;
-        color: #ffffff; /* Белый цвет текста на кнопке */
-        outline: none;
-    }
-
-    .movies-list {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        gap: 20px;
-    }
-
-    .movie-item {
-        display: flex;
-        flex-direction: column; /* Убедитесь, что это значение установлено правильно */
-        align-items: center; /* Выравнивание элементов по верху */
-        width: 90%; /* Процент ширины относительно контейнера фильмов */
-        background-color: rgba(32, 32, 32, 0.96);
-        padding: 20px;
-        border-radius: 40px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.69);
-    }
-
-    .movie-item a {
-        text-decoration: none; /* Убрать подчеркивание для всей ссылки */
-        color: inherit; /* Наследовать цвет текста */
-        display: flex;
-        flex-direction: column; /* Изменено на вертикальное расположение */
-        width: 100%;
-        align-items: center; /* Центрирование содержимого по горизонтали */
-    }
-
-    .movie-item img {
-        width: 150px; /* Фиксированная ширина для изображения */
-        height: auto;
-        border-radius: 5px;
-        margin-bottom: 20px; /* Отступ между изображением и деталями фильма */
-    }
-
-    .details {
-        flex-grow: 1; /* Позволяет деталям занимать доступное пространство */
-        display: flex;
-        flex-direction: column; /* Элементы деталей выстраиваются вертикально */
-        align-items: center; /* Центрирование содержимого по горизонтали */
-    }
-
-    .movie-item h3,
-    .movie-item .year,
-    .movie-item p {
-        margin: 0;
-        padding: 5px;
-        width: 100%; /* Занимает всю ширину контейнера деталей */
-        text-align: center; /* Центрирование текста */
-    }
-
-    .movie-item h3 {
-        font-size: 15px;
-        color: #fff;
-        margin-bottom: 5px;
-        margin-top: 10px;
-    }
-
-    .movie-item .year {
-        font-size: 13px;
-        color: #ccc;
-        margin-bottom: 5px;
-    }
-
-    .movie-item p {
-        font-size: 13px;
-        color: #ccc;
-    }
-
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: rgba(0, 0, 0, 0.91);
-        z-index: 1000;
-    }
-
-    .modal-content {
-        position: relative;
-        background: rgba(27, 27, 27, 0.89);
-        padding: 25px;
-        border-radius: 35px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
-        width: 80%;
-        max-height: 90%;
-        overflow-x: hidden;
-    }
-
-    .modal-content::-webkit-scrollbar {
-        display: none; /* Скрытие полосы прокрутки для WebKit браузеров */
-    }
-
-    .modal-content {
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none; /* Firefox */
-    }
-
-    .find-text-films {
-        color: white;
-        margin-bottom: 20px;
-    }
-
-    .close-modal {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 24px;
-        color: #fff;
-        cursor: pointer;
-    }
-
-    .modal-overlay.active {
-        display: flex; /* Только когда активен */
-    }
-
-    .modal-overlay.inactive {
-        display: none; /* Скрыть, если не активен */
+        padding: 10px;
     }
 }

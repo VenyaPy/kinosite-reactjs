@@ -1,6 +1,6 @@
 from backend.app.dao.dao import BaseDAO
-from backend.app.models.session.model import Session
+from backend.app.models.rooms.model import Rooms
 
 
 class RoomDAO(BaseDAO):
-    model = Session
+    model = Rooms
