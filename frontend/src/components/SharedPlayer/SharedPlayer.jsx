@@ -1,54 +1,44 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import useWebSocket from 'react-use-websocket';
 import './SharedPlayer.css';
+import InviteLink from "../InviteLink/InviteLink.jsx";
 
 export default function SharedPlayer() {
-    const apiKey = import.meta.env.VITE_API_KEY;
     const apiKeyAlloha = import.meta.env.VITE_ALLOHA;
     const cdnApi = import.meta.env.VITE_DOMAIN;
+    const apiKey = import.meta.env.VITE_API_KEY;
 
     const { roomId } = useParams();
-    console.log('roomId:', roomId);
     const [movie, setMovie] = useState(null);
     const [movieId, setMovieId] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const playerRef = useRef(null);
-    const scriptLoaded = useRef(false);
 
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
+    const messagesEndRef = useRef(null);
 
-    const { sendMessage } = useWebSocket(`ws://localhost:8000/ws/${roomId}`, {
-        onOpen: () => console.log('WebSocket connection established'),
-        onMessage: (message) => handleWebSocketMessage(message),
-        onClose: () => console.log('WebSocket connection closed')
-    });
+    const wsRef = useRef(null);
+    const playerInstance = useRef(null);
 
     useEffect(() => {
         setIsLoading(true);
         const fetchRoomData = async () => {
             try {
-                console.log(`Fetching room data for roomId: ${roomId}`);
                 const roomResponse = await axios.get(`http://127.0.0.1:8000/api/v2/room/${roomId}`, {
                     headers: { 'accept': 'application/json' }
                 });
-                console.log('Room response:', roomResponse.data);
                 const movieId = roomResponse.data.movieId;
-
                 const movieIdInt = parseInt(movieId, 10);
                 if (isNaN(movieIdInt)) {
                     throw new Error(`Invalid movieId: ${movieId}`);
                 }
-
                 setMovieId(movieIdInt);
-
                 const movieResponse = await axios.get(`https://api.kinopoisk.dev/v1.4/movie/${movieIdInt}`, {
                     headers: { 'accept': 'application/json', 'X-API-KEY': apiKey }
                 });
-                console.log('Movie response:', movieResponse.data);
                 setMovie(movieResponse.data);
             } catch (err) {
                 setError(`Ошибка при получении данных фильма: ${err}`);
@@ -62,25 +52,76 @@ export default function SharedPlayer() {
     }, [roomId, apiKey]);
 
     useEffect(() => {
-        if (movie && !scriptLoaded.current) {
-            const script = document.createElement('script');
-            script.src = "https://kinobox.tv/kinobox.min.js";
-            script.async = true;
-            script.onload = () => {
-                scriptLoaded.current = true;
-                if (playerRef.current && window.kbox) {
-                    initializePlayer(movieId);
-                }
-            };
-            document.body.appendChild(script);
-        } else if (movie && scriptLoaded.current && playerRef.current && window.kbox) {
+        if (movie && window.kbox) {
             initializePlayer(movieId);
         }
-    }, [movie, movieId]);
+    }, [movie]);
+
+    useEffect(() => {
+        const ws = new WebSocket(`ws://127.0.0.1:8000/ws/${roomId}`);
+        wsRef.current = ws;
+
+        ws.onopen = () => {
+            console.log('Connected to WebSocket');
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'chat') {
+                setMessages((prevMessages) => [...prevMessages, data]);
+            } else if (data.type === 'sync') {
+                handleSyncAction(data);
+            }
+        };
+
+        ws.onclose = () => {
+            console.log('Disconnected from WebSocket');
+        };
+
+        return () => {
+            ws.close();
+        };
+    }, [roomId]);
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
+
+    const handlePlay = () => {
+        if (wsRef.current && playerInstance.current) {
+            wsRef.current.send(JSON.stringify({ type: 'sync', action: 'play', time: playerInstance.current.api('time') }));
+        }
+    };
+
+    const handlePause = () => {
+        if (wsRef.current && playerInstance.current) {
+            wsRef.current.send(JSON.stringify({ type: 'sync', action: 'pause', time: playerInstance.current.api('time') }));
+        }
+    };
+
+    const handleSeek = (time) => {
+        if (wsRef.current && playerInstance.current) {
+            wsRef.current.send(JSON.stringify({ type: 'sync', action: 'seek', time }));
+        }
+    };
+
+    const handleSyncAction = (data) => {
+        if (playerInstance.current) {
+            if (data.action === 'play') {
+                playerInstance.current.api('seek', data.time);
+                playerInstance.current.api('play');
+            } else if (data.action === 'pause') {
+                playerInstance.current.api('seek', data.time);
+                playerInstance.current.api('pause');
+            } else if (data.action === 'seek') {
+                playerInstance.current.api('seek', data.time);
+            }
+        }
+    };
 
     const initializePlayer = (movieId) => {
         if (playerRef.current && movieId && window.kbox) {
-            const playerInstance = window.kbox(playerRef.current, {
+            playerInstance.current = window.kbox(playerRef.current, {
                 search: { kinopoisk: movieId },
                 menu: { enable: false },
                 players: {
@@ -97,11 +138,11 @@ export default function SharedPlayer() {
                 }
             });
 
-            // Проверка, создан ли playerInstance
-            if (playerInstance) {
-                // Добавление слушателей событий для воспроизведения и паузы
-                playerInstance.addEventListener('play', handlePlay);
-                playerInstance.addEventListener('pause', handlePause);
+            if (playerInstance.current) {
+                playerInstance.current.api('play');
+                playerInstance.current.addEventListener('play', handlePlay);
+                playerInstance.current.addEventListener('pause', handlePause);
+                playerInstance.current.addEventListener('seeked', handleSeek);
             } else {
                 console.error("Player instance is undefined.");
             }
@@ -110,36 +151,11 @@ export default function SharedPlayer() {
         }
     };
 
-    const handleWebSocketMessage = (message) => {
-        const parsedMessage = JSON.parse(message.data);
-        if (parsedMessage.type === 'chat') {
-            setMessages((prevMessages) => [...prevMessages, parsedMessage.message]);
-        } else if (parsedMessage.type === 'sync') {
-            // Обработка синхронизации времени воспроизведения
-            if (playerRef.current) {
-                playerRef.current.currentTime = parsedMessage.time;
-                if (parsedMessage.action === 'play') {
-                    playerRef.current.play();
-                } else if (parsedMessage.action === 'pause') {
-                    playerRef.current.pause();
-                }
-            }
-        }
-    };
-
     const handleSendMessage = () => {
-        if (message.trim()) {
-            sendMessage(JSON.stringify({ type: 'chat', message }));
+        if (wsRef.current && message.trim()) {
+            wsRef.current.send(JSON.stringify({ type: 'chat', message }));
             setMessage('');
         }
-    };
-
-    const handlePlay = () => {
-        sendMessage(JSON.stringify({ type: 'sync', action: 'play', time: playerRef.current.currentTime }));
-    };
-
-    const handlePause = () => {
-        sendMessage(JSON.stringify({ type: 'sync', action: 'pause', time: playerRef.current.currentTime }));
     };
 
     if (error) {
@@ -152,27 +168,33 @@ export default function SharedPlayer() {
 
     return (
         <div className="shared-player-container">
-            <div className="movie-details">
+            <div className="shared-player-movie-details">
                 <img src={movie.poster.previewUrl} alt={movie.name} />
                 <div>
-                    <h2>{movie.name}</h2>
-                    <p>{movie.description}</p>
+                    <h2 className="shared-player-title">{movie.name}</h2>
+                    <p className="shared-player-description">{movie.description}</p>
                 </div>
             </div>
-            <div ref={playerRef} className="kinobox_player"></div>
-            <div className="chat-container">
-                <div className="messages">
+            <div ref={playerRef} className="shared-player-kinobox_player"></div>
+            <InviteLink roomId={roomId} />
+            <div className="shared-player-chat-container">
+                <div className="shared-player-messages">
                     {messages.map((msg, index) => (
-                        <div key={index} className="message">{msg}</div>
+                        <div key={index} className="shared-player-message">{msg.message}</div>
                     ))}
+                    <div ref={messagesEndRef} />
                 </div>
-                <input
-                    type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                />
-                <button onClick={handleSendMessage}>Send</button>
+                <div className="shared-player-input-container">
+                    <input
+                        type="text"
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                        className="shared-player-input"
+                        placeholder="Type a message..."
+                    />
+                    <button onClick={handleSendMessage} className="shared-player-button">Send</button>
+                </div>
             </div>
         </div>
     );

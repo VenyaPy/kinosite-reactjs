@@ -64,6 +64,28 @@
     margin-top: 30px;
 }
 
+/* Стиль кнопки "Совместный просмотр" */
+.share-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 30px;
+    margin-bottom: 60px;
+}
+
+.share-button:hover {
+    background-color: #45a049;
+}
+
+.share-button:active {
+    background-color: #3e8e41;
+}
+
 /* Стиль отзывов */
 .review-text {
     font-size: 24px;
@@ -173,6 +195,11 @@
     .kinobox_player {
         height: 200px; /* Уменьшаем высоту плеера для мобильной версии */
         padding-bottom: 0;
+    }
+
+    .share-button {
+        padding: 10px 20px;
+        font-size: 16px;
     }
 
     .reviews-container {

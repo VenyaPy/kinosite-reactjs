@@ -1,4 +1,5 @@
-.search-finder {
+/* Основные стили */
+.search-finder-unique {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -12,12 +13,12 @@
     z-index: 2;
 }
 
-.find-text-films {
+.find-text-films-unique {
     color: white;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
-.search-input-finder {
+.search-input-finder-unique {
     border: none;
     background: #444;
     color: #ccc;
@@ -29,13 +30,13 @@
     transition: width 0.4s ease-in-out;
 }
 
-.search-input-finder:focus {
+.search-input-finder-unique:focus {
     width: 400px;
     background: #555;
     color: #fff;
 }
 
-.search-button-finder {
+.search-button-finder-unique {
     background: #28a745; /* Более гармоничный зеленый */
     border: none;
     font-size: 18px;
@@ -49,40 +50,129 @@
     justify-content: center;
 }
 
-.search-button-finder:hover {
+.search-button-finder-unique:hover {
     background: #218838; /* Темный оттенок зеленого при наведении */
     transform: scale(1.1);
 }
 
-.search-input-finder::placeholder {
+.search-input-finder-unique::placeholder {
     color: #888;
     transition: color 0.3s ease;
 }
 
-.search-input-finder:focus::placeholder {
+.search-input-finder-unique:focus::placeholder {
     color: #ccc;
 }
 
 @media (max-width: 768px) {
-    .search-finder {
+    .search-finder-unique {
         top: 60%;
         padding: 10px;
     }
 
-    .search-input-finder {
+    .search-input-finder-unique {
         padding: 10px 15px;
         font-size: 15px;
         width: 180px;
     }
 
-    .search-input-finder:focus {
+    .search-input-finder-unique:focus {
         width: 230px;
         background: #555;
         color: #fff;
     }
 
-    .search-button-finder {
+    .search-button-finder-unique {
         font-size: 15px;
         padding: 10px;
     }
+}
+
+.loading-unique {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modal-overlay-unique {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+}
+
+.modal-content-unique {
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 800px;
+    color: #e0e0e0;
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.close-modal-unique {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.movies-list-unique {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.movies-list-scroll-unique {
+    max-height: 60vh; /* Максимальная высота для прокрутки */
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.movie-item-unique {
+    display: flex;
+    align-items: center;
+    background: #292929;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.movie-item-unique:hover {
+    background: #333;
+}
+
+.movie-poster-unique {
+    width: 150px; /* Увеличиваем размер изображений */
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.details-unique {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.year-unique {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 5px;
 }

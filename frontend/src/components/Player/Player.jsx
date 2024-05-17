@@ -9,16 +9,16 @@ import Share from "../Share/Share.jsx";
 export default function Player() {
     const apiKeyAlloha = import.meta.env.VITE_ALLOHA;
     const cdnApi = import.meta.env.VITE_DOMAIN;
+    const apiKey = import.meta.env.VITE_API_KEY;
 
     const { movieId } = useParams();
-    const apiKey = import.meta.env.VITE_API_KEY;
     const [movie, setMovie] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const playerRef = useRef(null);
     const scriptLoaded = useRef(false);
-    const navigate = useNavigate(); // Используйте useNavigate
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('access_token');
@@ -160,8 +160,7 @@ export default function Player() {
                 </div>
             </div>
             <div ref={playerRef} className="kinobox_player"></div>
-            <button onClick={handleSharedView}>Совместный просмотр</button>
-            <Share/>
+            <button onClick={handleSharedView} className="share-button">Совместный просмотр</button>
             {reviews.length > 0 && (
                 <div className="reviews-container">
                     <h3 className="review-text">Отзывы:</h3>

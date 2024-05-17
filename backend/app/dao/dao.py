@@ -24,9 +24,6 @@ ScopedSession = async_scoped_session(async_session_maker, scopefunc=asyncio.curr
 Base = declarative_base()
 
 
-active_connections = {}
-
-
 class BaseDAO:
     model = None
 

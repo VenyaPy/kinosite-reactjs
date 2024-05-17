@@ -42,36 +42,38 @@ function Finder() {
 
     return (
         <>
-            <div className="search-finder">
+            <div className="search-finder-unique">
                 <input
                     type="text"
                     placeholder="Поиск фильмов..."
-                    className="search-input-finder"
+                    className="search-input-finder-unique"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     onKeyDown={handleKeyDown}
                 />
-                <button className="search-button-finder" onClick={handleSearch}>
+                <button className="search-button-finder-unique" onClick={handleSearch}>
                     <i className="fa fa-search"></i>
                 </button>
             </div>
-            {isLoading && <div className="loading"><Loading/></div>}
+            {isLoading && <div className="loading-unique"><Loading/></div>}
             {isModalOpen && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <span className="close-modal" onClick={closeModal}>&times;</span>
-                        <div className="movies-list">
-                            <h2 className="find-text-films">Найденные фильмы:</h2>
-                            {movies.map(movie => (
-                                <div key={movie.id} className="movie-item" onClick={() => handleClickMovie(movie.id)}>
-                                    <img src={movie.poster} alt={movie.name} />
-                                    <div className="details">
-                                        <h3>{movie.name}</h3>
-                                        <div className="year">{movie.year}</div>
-                                        <p>{movie.description || "Описание недоступно"}</p>
+                <div className="modal-overlay-unique">
+                    <div className="modal-content-unique">
+                        <span className="close-modal-unique" onClick={closeModal}>&times;</span>
+                        <div className="movies-list-unique">
+                            <h2 className="find-text-films-unique">Найденные фильмы:</h2>
+                            <div className="movies-list-scroll-unique">
+                                {movies.map(movie => (
+                                    <div key={movie.id} className="movie-item-unique" onClick={() => handleClickMovie(movie.id)}>
+                                        <img src={movie.poster} alt={movie.name} className="movie-poster-unique" />
+                                        <div className="details-unique">
+                                            <h3>{movie.name}</h3>
+                                            <div className="year-unique">{movie.year}</div>
+                                            <p>{movie.description || "Описание недоступно"}</p>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
