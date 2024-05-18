@@ -1,5 +1,5 @@
 import './Finder.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Loading from "../Loading/Loading.jsx";
@@ -10,6 +10,18 @@ function Finder() {
     const [movies, setMovies] = useState([]);
     const [isModalOpen, setModalOpen] = useState(false);
     const [isLoading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (isModalOpen) {
+            document.documentElement.classList.add('no-scroll');
+        } else {
+            document.documentElement.classList.remove('no-scroll');
+        }
+
+        return () => {
+            document.documentElement.classList.remove('no-scroll');
+        };
+    }, [isModalOpen]);
 
     const handleSearch = async () => {
         if (!query) return;

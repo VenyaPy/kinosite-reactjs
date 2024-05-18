@@ -43,9 +43,8 @@
 
 .shared-player-title {
     font-size: 28px;
-    margin-bottom: 10px;
+    margin-bottom: 50px;
     text-align: left;
-    margin: 0;
 }
 
 .shared-player-description {
@@ -187,3 +186,4 @@
         padding: 10px;
     }
 }
+

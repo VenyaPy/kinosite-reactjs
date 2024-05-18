@@ -4,7 +4,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import "./Player.css";
 import Loading from "../Loading/Loading.jsx";
 import parse from 'html-react-parser';
-import Share from "../Share/Share.jsx";
 
 export default function Player() {
     const apiKeyAlloha = import.meta.env.VITE_ALLOHA;
@@ -16,6 +15,7 @@ export default function Player() {
     const [reviews, setReviews] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [userId, setUserId] = useState(null); // New state for user ID
     const playerRef = useRef(null);
     const scriptLoaded = useRef(false);
     const navigate = useNavigate();
@@ -24,6 +24,8 @@ export default function Player() {
         const token = localStorage.getItem('access_token');
         if (token) {
             fetchUserProfile(token);
+        } else {
+            setUserId(null);
         }
     }, []);
 
@@ -34,10 +36,16 @@ export default function Player() {
                 'Authorization': `Bearer ${token}`
             }
         })
+        .then(response => {
+            if (response.data.id) {
+                setUserId(response.data.id); // Save user ID
+            }
+        })
         .catch(error => {
             console.error('Error fetching user profile:', error);
             localStorage.removeItem('access_token');
             localStorage.removeItem('token_timestamp');
+            setUserId(null);
         });
     };
 
@@ -54,6 +62,10 @@ export default function Player() {
                 });
                 setMovie(movieResponse.data);
                 setReviews(reviewsResponse.data.docs.map(review => ({ ...review, isOpen: false })));
+                // Send movie data to backend
+                if (userId) {
+                    sendMovieToHistory(userId, movieResponse.data);
+                }
             } catch (err) {
                 setError(`Ошибка при получении данных фильма: ${err}`);
                 console.error(err);
@@ -63,7 +75,25 @@ export default function Player() {
         };
 
         fetchMovieAndReviews();
-    }, [movieId, apiKey]);
+    }, [movieId, apiKey, userId]);
+
+    const sendMovieToHistory = (userId, movie) => {
+        axios.post(`http://127.0.0.1:8000/api/v2/history/move_history`, null, {
+            params: {
+                id_user: userId,
+                id_film: movie.id,
+                name: movie.name,
+                description: movie.description,
+                poster_url: movie.poster.previewUrl
+            },
+            headers: {
+                'accept': 'application/json'
+            }
+        })
+        .catch(error => {
+            console.error('Error sending movie to history:', error);
+        });
+    };
 
     useEffect(() => {
         if (movie && !scriptLoaded.current) {
@@ -134,7 +164,7 @@ export default function Player() {
                 console.error('Error creating room:', error);
             });
         } else {
-            console.error('User not authenticated');
+            alert('Вам нужно войти в аккаунт, чтобы использовать функцию совместного просмотра');
         }
     };
 
@@ -153,10 +183,10 @@ export default function Player() {
                 <div>
                     <h2>{movie.name}</h2>
                     <p>{movie.description}</p>
-                    <p className="p-m">Рейтинг: Кинопоиск - {movie.rating.kp}, IMDb - {movie.rating.imdb}</p>
-                    <p className="p-m">Длина: {movie.movieLength} минут</p>
-                    <p className="p-m">Жанр: {movie.genres.map(genre => genre.name).join(', ')}</p>
-                    <p className="p-m">Страна: {movie.countries.map(country => country.name).join(', ')}</p>
+                    <p className="p-m"><strong>Рейтинг:</strong> Кинопоиск - {movie.rating.kp}, IMDb - {movie.rating.imdb}</p>
+                    {movie.movieLength && <p className="p-m"><strong>Длина:</strong> {movie.movieLength} минут</p>}
+                    <p className="p-m"><strong>Жанр:</strong> {movie.genres.map(genre => genre.name).join(', ')}</p>
+                    <p className="p-m"><strong>Страна:</strong> {movie.countries.map(country => country.name).join(', ')}</p>
                 </div>
             </div>
             <div ref={playerRef} className="kinobox_player"></div>

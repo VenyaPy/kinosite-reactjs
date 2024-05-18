@@ -51,7 +51,6 @@ const AnimatedRoutes = () => {
           <Route path="/series" element={<Series />} />
           <Route path="/anime" element={<Anime />} />
           <Route path="/cartoon" element={<Cartoon />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/player/:movieId" element={<Player />} />
           <Route path="/shared/:roomId" element={<SharedPlayer />} /> {/* Добавляем маршрут для SharedPlayer */}
         </Routes>

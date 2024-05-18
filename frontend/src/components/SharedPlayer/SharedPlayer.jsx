@@ -23,20 +23,39 @@ export default function SharedPlayer() {
     const wsRef = useRef(null);
     const playerInstance = useRef(null);
 
+    const [username, setUsername] = useState('');
+
     useEffect(() => {
-        setIsLoading(true);
+        const fetchUserProfile = async () => {
+            const token = localStorage.getItem('access_token');
+            if (token) {
+                try {
+                    const response = await axios.get('http://127.0.0.1:8000/api/v2/users/profile', {
+                        headers: {
+                            'accept': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    setUsername(response.data.username);
+                } catch (err) {
+                    console.error('Error fetching user profile:', err);
+                }
+            }
+        };
+
+        fetchUserProfile();
+    }, []);
+
+    useEffect(() => {
         const fetchRoomData = async () => {
+            setIsLoading(true);
             try {
                 const roomResponse = await axios.get(`http://127.0.0.1:8000/api/v2/room/${roomId}`, {
                     headers: { 'accept': 'application/json' }
                 });
                 const movieId = roomResponse.data.movieId;
-                const movieIdInt = parseInt(movieId, 10);
-                if (isNaN(movieIdInt)) {
-                    throw new Error(`Invalid movieId: ${movieId}`);
-                }
-                setMovieId(movieIdInt);
-                const movieResponse = await axios.get(`https://api.kinopoisk.dev/v1.4/movie/${movieIdInt}`, {
+                setMovieId(movieId);
+                const movieResponse = await axios.get(`https://api.kinopoisk.dev/v1.4/movie/${movieId}`, {
                     headers: { 'accept': 'application/json', 'X-API-KEY': apiKey }
                 });
                 setMovie(movieResponse.data);
@@ -52,10 +71,88 @@ export default function SharedPlayer() {
     }, [roomId, apiKey]);
 
     useEffect(() => {
-        if (movie && window.kbox) {
-            initializePlayer(movieId);
+        if (movie && movieId) {
+            loadKinoboxScript();
         }
-    }, [movie]);
+    }, [movie, movieId]);
+
+    const loadKinoboxScript = () => {
+        if (!window.kbox) {
+            const script = document.createElement('script');
+            script.src = "https://kinobox.tv/kinobox.min.js";
+            script.async = true;
+            script.onload = () => {
+                console.log('Kinobox script loaded');
+                initializePlayer();
+            };
+            script.onerror = () => {
+                console.error('Kinobox script failed to load');
+            };
+            document.body.appendChild(script);
+        } else {
+            initializePlayer();
+        }
+    };
+
+    const initializePlayer = () => {
+        if (playerRef.current && movieId && window.kbox) {
+            console.log(`Initializing player with movieId: ${movieId}`);
+            playerInstance.current = window.kbox(playerRef.current, {
+                search: { kinopoisk: movieId },
+                menu: { enable: false },
+                players: {
+                    alloha: { enable: true, position: 1, domain: 'https://sansa.newplayjj.com:9443' },
+                    cdnmovies: { enable: true, position: 3, domain: 'https://cdnmovies-stream.online' },
+                    kodik: { enable: true, position: 4, domain: 'https://kodik.info/video/3007/d11f14905f287e1939c1875dc2ab9c6f/720p' },
+                    collaps: { enable: true, position: 2, domain: `https://api.delivembd.ws/embed/kp/${movieId}` }
+                },
+                params: {
+                    alloha: { token: apiKeyAlloha },
+                    cdnmovies: { fallback: true, domain: cdnApi },
+                    kodik: { fallback: true },
+                    collaps: { fallback: true },
+                },
+                vast: {
+                    skip: true,  // Отключение рекламы
+                }
+            });
+
+            if (playerInstance.current) {
+                playerInstance.current.api('play');
+                initializeIframeListeners();
+            } else {
+                console.error("Player instance is undefined.");
+            }
+        } else {
+            console.error("Player reference, movieId, or window.kbox is undefined.");
+        }
+    };
+
+    const initializeIframeListeners = () => {
+        const iframe = playerRef.current.querySelector('iframe');
+        if (iframe) {
+            iframe.addEventListener('load', () => {
+                console.log('Iframe loaded');
+                iframe.contentWindow.postMessage({ "api": "addEventListener", "event": "play" }, "*");
+                iframe.contentWindow.postMessage({ "api": "addEventListener", "event": "pause" }, "*");
+                iframe.contentWindow.postMessage({ "api": "addEventListener", "event": "seek" }, "*");
+            });
+
+            window.addEventListener("message", (event) => {
+                if (event.origin !== "https://sansa.newplayjj.com:9443") {
+                    return; // Ignore messages from other origins
+                }
+                const data = event.data;
+                console.log(`Received message from iframe: ${JSON.stringify(data)}`);
+                if (data.event === "play" || data.event === "pause" || data.event === "seek") {
+                    console.log(`Received event: ${data.event}, time: ${data.answer}`);
+                    wsRef.current.send(JSON.stringify({ type: 'sync', action: data.event, time: data.answer }));
+                }
+            });
+        } else {
+            console.error("Iframe not found inside playerRef.");
+        }
+    };
 
     useEffect(() => {
         const ws = new WebSocket(`ws://127.0.0.1:8000/ws/${roomId}`);
@@ -67,6 +164,7 @@ export default function SharedPlayer() {
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
+            console.log('WebSocket message received:', data); // Debug log
             if (data.type === 'chat') {
                 setMessages((prevMessages) => [...prevMessages, data]);
             } else if (data.type === 'sync') {
@@ -87,76 +185,68 @@ export default function SharedPlayer() {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-    const handlePlay = () => {
-        if (wsRef.current && playerInstance.current) {
-            wsRef.current.send(JSON.stringify({ type: 'sync', action: 'play', time: playerInstance.current.api('time') }));
-        }
-    };
-
-    const handlePause = () => {
-        if (wsRef.current && playerInstance.current) {
-            wsRef.current.send(JSON.stringify({ type: 'sync', action: 'pause', time: playerInstance.current.api('time') }));
-        }
-    };
-
-    const handleSeek = (time) => {
-        if (wsRef.current && playerInstance.current) {
-            wsRef.current.send(JSON.stringify({ type: 'sync', action: 'seek', time }));
-        }
-    };
-
     const handleSyncAction = (data) => {
-        if (playerInstance.current) {
+        console.log('Handling sync action:', data); // Debug log
+        const iframe = playerRef.current.querySelector('iframe');
+        if (iframe) {
             if (data.action === 'play') {
-                playerInstance.current.api('seek', data.time);
-                playerInstance.current.api('play');
+                iframe.contentWindow.postMessage({ "api": "seek", "set": data.time }, "*");
+                iframe.contentWindow.postMessage({ "api": "play" }, "*");
             } else if (data.action === 'pause') {
-                playerInstance.current.api('seek', data.time);
-                playerInstance.current.api('pause');
+                iframe.contentWindow.postMessage({ "api": "seek", "set": data.time }, "*");
+                iframe.contentWindow.postMessage({ "api": "pause" }, "*");
             } else if (data.action === 'seek') {
-                playerInstance.current.api('seek', data.time);
+                iframe.contentWindow.postMessage({ "api": "seek", "set": data.time }, "*");
+            } else if (data.action === 'sync-time') {
+                iframe.contentWindow.postMessage({ "api": "seek", "set": data.time }, "*");
             }
-        }
-    };
-
-    const initializePlayer = (movieId) => {
-        if (playerRef.current && movieId && window.kbox) {
-            playerInstance.current = window.kbox(playerRef.current, {
-                search: { kinopoisk: movieId },
-                menu: { enable: false },
-                players: {
-                    alloha: { enable: true, position: 1, domain: 'https://sansa.newplayjj.com:9443' },
-                    cdnmovies: { enable: true, position: 3, domain: 'https://cdnmovies-stream.online' },
-                    kodik: { enable: true, position: 4, domain: 'https://kodik.info/video/3007/d11f14905f287e1939c1875dc2ab9c6f/720p' },
-                    collaps: { enable: true, position: 2, domain: `https://api.delivembd.ws/embed/kp/${movieId}` }
-                },
-                params: {
-                    alloha: { token: apiKeyAlloha },
-                    cdnmovies: { fallback: true, domain: cdnApi },
-                    kodik: { fallback: true },
-                    collaps: { fallback: true },
-                }
-            });
-
-            if (playerInstance.current) {
-                playerInstance.current.api('play');
-                playerInstance.current.addEventListener('play', handlePlay);
-                playerInstance.current.addEventListener('pause', handlePause);
-                playerInstance.current.addEventListener('seeked', handleSeek);
-            } else {
-                console.error("Player instance is undefined.");
-            }
-        } else {
-            console.error("Player reference or movieId or window.kbox is undefined.");
         }
     };
 
     const handleSendMessage = () => {
         if (wsRef.current && message.trim()) {
-            wsRef.current.send(JSON.stringify({ type: 'chat', message }));
+            console.log('Sending chat message:', { username, message }); // Debug log
+            wsRef.current.send(JSON.stringify({ type: 'chat', username, message }));
             setMessage('');
         }
     };
+
+    const handleSyncTime = () => {
+        if (wsRef.current && playerInstance.current) {
+            const currentTime = playerInstance.current.api('time');
+            console.log('Sending sync-time action with time:', currentTime); // Debug log
+            wsRef.current.send(JSON.stringify({ type: 'sync', action: 'sync-time', time: currentTime }));
+        }
+    };
+
+    useEffect(() => {
+        if (playerRef.current) {
+            const handleUserInteraction = (ev) => {
+                console.log(`User ${ev.type} on player`, ev);
+                wsRef.current.send(JSON.stringify({ type: 'sync', action: ev.type, time: Date.now() }));
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        playerRef.current.addEventListener('click', handleUserInteraction);
+                        playerRef.current.addEventListener('dblclick', handleUserInteraction);
+                        playerRef.current.addEventListener('touchstart', handleUserInteraction);
+                    } else {
+                        playerRef.current.removeEventListener('click', handleUserInteraction);
+                        playerRef.current.removeEventListener('dblclick', handleUserInteraction);
+                        playerRef.current.removeEventListener('touchstart', handleUserInteraction);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            observer.observe(playerRef.current);
+
+            return () => {
+                observer.disconnect();
+            };
+        }
+    }, []);
 
     if (error) {
         return <div>{error}</div>;
@@ -173,14 +263,19 @@ export default function SharedPlayer() {
                 <div>
                     <h2 className="shared-player-title">{movie.name}</h2>
                     <p className="shared-player-description">{movie.description}</p>
+                    <p className="shared-player-info"><strong>Рейтинг:</strong> Кинопоиск - {movie.rating.kp}, IMDb - {movie.rating.imdb}</p>
+                    {movie.movieLength && <p className="shared-player-info"><strong>Длина:</strong> {movie.movieLength} минут</p>}
+                    <p className="shared-player-info"><strong>Жанр:</strong> {movie.genres.map(genre => genre.name).join(', ')}</p>
+                    <p className="shared-player-info"><strong>Страна:</strong> {movie.countries.map(country => country.name).join(', ')}</p>
+                    <InviteLink roomId={roomId} />
                 </div>
             </div>
-            <div ref={playerRef} className="shared-player-kinobox_player"></div>
-            <InviteLink roomId={roomId} />
+            <div ref={playerRef} className="kinobox_player" data-kinobox="auto" data-kinopoisk={movieId}></div>
+            <button onClick={handleSyncTime} className="sync-button">Синхронизировать время</button>
             <div className="shared-player-chat-container">
                 <div className="shared-player-messages">
                     {messages.map((msg, index) => (
-                        <div key={index} className="shared-player-message">{msg.message}</div>
+                        <div key={index} className="shared-player-message"><strong>{msg.username}:</strong> {msg.message}</div>
                     ))}
                     <div ref={messagesEndRef} />
                 </div>

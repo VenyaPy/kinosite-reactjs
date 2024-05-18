@@ -64,30 +64,6 @@
     color: #ccc;
 }
 
-@media (max-width: 768px) {
-    .search-finder-unique {
-        top: 60%;
-        padding: 10px;
-    }
-
-    .search-input-finder-unique {
-        padding: 10px 15px;
-        font-size: 15px;
-        width: 180px;
-    }
-
-    .search-input-finder-unique:focus {
-        width: 230px;
-        background: #555;
-        color: #fff;
-    }
-
-    .search-button-finder-unique {
-        font-size: 15px;
-        padding: 10px;
-    }
-}
-
 .loading-unique {
     position: absolute;
     top: 60%;
@@ -105,19 +81,19 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 3;
+    z-index: 10000;
 }
 
 .modal-content-unique {
     background: #1e1e1e;
-    padding: 20px;
+    padding: 40px; /* Увеличиваем padding */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     width: 90%;
-    max-width: 800px;
+    max-width: 1000px; /* Увеличиваем максимальную ширину */
     color: #e0e0e0;
     position: relative;
-    max-height: 80vh;
+    height: 90vh;
     overflow-y: auto;
 }
 
@@ -138,9 +114,15 @@
 }
 
 .movies-list-scroll-unique {
-    max-height: 60vh; /* Максимальная высота для прокрутки */
+    max-height: 80vh; /* Максимальная высота для прокрутки */
     overflow-y: auto;
     padding-right: 10px;
+    scrollbar-width: none; /* Firefox */
+}
+
+.movies-list-scroll-unique::-webkit-scrollbar {
+    width: 0; /* Safari and Chrome */
+    display: none;
 }
 
 .movie-item-unique {
@@ -152,6 +134,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: background 0.3s;
+    margin-bottom: 10px; /* Добавляем разделение между фильмами */
 }
 
 .movie-item-unique:hover {
@@ -175,4 +158,58 @@
     font-size: 14px;
     color: #aaa;
     margin-bottom: 5px;
+}
+
+/* Запрещаем прокрутку основной страницы, когда открыто модальное окно */
+.no-scroll {
+    overflow: hidden;
+}
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+    .search-finder-unique {
+        top: 60%;
+        padding: 10px;
+    }
+
+    .search-input-finder-unique {
+        padding: 10px 15px;
+        font-size: 15px;
+        width: 180px;
+    }
+
+    .search-input-finder-unique:focus {
+        width: 230px;
+        background: #555;
+        color: #fff;
+    }
+
+    .search-button-finder-unique {
+        font-size: 15px;
+        padding: 10px;
+    }
+
+    .modal-content-unique {
+        padding: 20px; /* Уменьшаем padding для мобильной версии */
+        width: 90%;
+        max-width: 90%; /* Уменьшаем максимальную ширину для мобильной версии */
+        margin-top: 60px; /* Добавляем отступ сверху для header */
+        margin-left: 5%; /* Добавляем отступ слева и справа */
+        margin-right: 5%;
+    }
+
+    .movie-item-unique {
+        flex-direction: column; /* Фильмы располагаются столбиком */
+        align-items: flex-start; /* Выровняем элементы по началу */
+    }
+
+    .movie-poster-unique {
+        width: 100%; /* Изображения занимают всю ширину */
+        max-width: 150px; /* Максимальная ширина изображений */
+        margin-bottom: 10px; /* Добавим отступ снизу */
+    }
+
+    .details-unique {
+        margin-left: 0; /* Убираем отступ для мобильной версии */
+    }
 }

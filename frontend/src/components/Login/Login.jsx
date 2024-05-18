@@ -3,7 +3,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import './Login.css';
 
-export default function Login({ toggleForm, setAuthStatus }) {
+export default function Login({ toggleForm, setAuthStatus, fetchUserProfile }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -20,11 +20,12 @@ export default function Login({ toggleForm, setAuthStatus }) {
                 }
             });
             localStorage.setItem('access_token', response.data.access_token);
-            localStorage.setItem('token_timestamp', Date.now()); // Сохраняем текущее время в миллисекундах
+            localStorage.setItem('token_timestamp', Date.now());
             setAuthStatus(true);
+            fetchUserProfile(response.data.access_token); // Вызываем fetchUserProfile сразу после логина
             toggleForm(null); // Закрываем форму после успешного входа
         } catch (error) {
-            setError('Неверный логин или пароль'); // Упрощаем обработку ошибок
+            setError('Неверный логин или пароль');
         }
     };
 
@@ -51,5 +52,6 @@ export default function Login({ toggleForm, setAuthStatus }) {
 
 Login.propTypes = {
     toggleForm: PropTypes.func.isRequired,
-    setAuthStatus: PropTypes.func.isRequired
+    setAuthStatus: PropTypes.func.isRequired,
+    fetchUserProfile: PropTypes.func.isRequired
 };

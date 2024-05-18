@@ -19,6 +19,7 @@ from backend.app.models.mainpage.router import main_router
 from backend.app.models.section.router import section_router
 from backend.app.models.category.router import category_router
 from backend.app.models.rooms.router import room_router
+from backend.app.models.history.router import history_router
 
 app = FastAPI(
     title="Совместный просмотр фильмов",
@@ -44,6 +45,7 @@ app.include_router(section_router)
 app.include_router(category_router)
 app.include_router(router_search)
 app.include_router(room_router)
+app.include_router(history_router)
 
 
 

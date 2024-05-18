@@ -1,65 +1,231 @@
-.profile {
-    color: #ffffff;
-    background-color: #252525;
-    font-family: 'Arial', sans-serif;
-    padding: 20px;
-    max-width: 600px;
-    margin: 50px auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+body {
+    background-color: #1c1c1c;
+    color: #f0f0f0;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.profile-content {
     text-align: center;
 }
 
-.profile h1 {
-    color: #e0e0e0;
-    font-size: 2em;
-    margin-bottom: 20px;
+.profile-content h1, .profile-content h2 {
+    color: #f0f0f0;
+    font-size: 1.5em;
+    margin-bottom: 30px;
 }
 
-.profile p {
-    font-size: 1.2em;
+.profile-content h2 {
+    margin-top: 80px;
+}
+
+.profile-content p {
+    font-size: 1.1em;
     margin: 10px 0;
-    width: 100%; /* Обеспечиваем, что параграфы занимают всю доступную ширину */
+    width: 100%;
+    color: #b0b0b0;
 }
 
-.profile p strong {
-    color: #76c7c0; /* Светлый аквамариновый цвет для ключевых слов */
+.unique-movie-info p {
+    font-size: 16px;
 }
 
-.profile img {
+.profile-content p strong {
+    color: #76c7c0;
+}
+
+.profile-image {
     width: 150px;
     height: 150px;
-    border-radius: 50%; /* Круглое изображение */
+    border-radius: 50%;
     margin-top: 20px;
-    border: 3px solid #76c7c0; /* Рамка в цвет ключевых слов */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    border: 4px solid #76c7c0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
+.some {
+    margin-top: 100px;
+}
+
+.unique-movies-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    margin: 0 auto;
+
+    width: 100%;
+}
+
+.unique-movie {
+    position: relative;
+    cursor: pointer;
+    width: 250px;
+    height: 375px;
+    overflow: hidden;
+    display: block;
+    background-color: #000;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 10px;
+}
+
+.unique-movie:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+}
+
+.unique-movie-poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+}
+
+.unique-movie-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s linear;
+    pointer-events: none;
+}
+
+.unique-movie:hover .unique-movie-overlay {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.unique-movie-info {
+    text-align: center;
+    width: 100%;
+}
+
+.unique-movie-title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.unique-movie-description {
+    font-size: 0.9em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Стили модального окна */
+.modal-overlay-unique {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.modal-content-unique {
+    background: #2c2c2c; /* Восстанавливаем цвет фона */
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 1000px;
+    color: #e0e0e0;
+    position: relative;
+    height: 90vh;
+    overflow-y: auto;
+    text-align: center; /* Центрируем содержимое */
+}
+
+/* Скрываем видимый скролл */
+.modal-content-unique::-webkit-scrollbar {
+    display: none;
+}
+
+.modal-content-unique {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.close-modal-unique {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #fff;
+}
+
+/* Запрещаем прокрутку основной страницы, когда открыто модальное окно */
+.no-scroll {
+    overflow: hidden;
+}
+
+/* Мобильная версия */
 @media (max-width: 768px) {
-    .profile {
-        padding: 15px;
+    .profile-content {
+        padding: 20px;
         margin: 20px auto;
         max-width: 90%;
-        margin-bottom: 60px;
     }
 
-    .profile h1 {
-        font-size: 1.5em;
+    .profile-content h1, .profile-content h2 {
+        font-size: 1.8em;
         margin-bottom: 15px;
     }
 
-    .profile p {
+    .profile-content p {
         font-size: 1em;
         margin: 8px 0;
     }
 
-    .profile img {
+    .profile-image {
         width: 120px;
         height: 120px;
         margin-top: 15px;
+    }
+
+    .unique-movies-section {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 10px;
+        margin: 0 auto;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .unique-movie {
+        width: 100%;
+        height: auto;
+        margin-bottom: 15px;
+    }
+
+    .unique-movie-title {
+        font-size: 1.2em;
+    }
+
+    .unique-movie-description {
+        font-size: 0.8em;
     }
 }

@@ -4,12 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Register from '../Register/Register.jsx';
 import Login from '../Login/Login.jsx';
+import Profile from '../Profile/Profile.jsx'; // Импортируем компонент Profile
 
 export default function Header() {
     const navigate = useNavigate();
     const [authStatus, setAuthStatus] = useState(false);
     const [showForm, setShowForm] = useState(null);
     const [username, setUsername] = useState('');
+    const [isProfileOpen, setIsProfileOpen] = useState(false); // Состояние для отображения Profile
 
     useEffect(() => {
         const token = localStorage.getItem('access_token');
@@ -19,13 +21,19 @@ export default function Header() {
 
         if (token && (now - tokenTimestamp < tokenLifetime)) {
             setAuthStatus(true);
-            fetchUserProfile(token);
         } else {
             localStorage.removeItem('access_token');
             localStorage.removeItem('token_timestamp');
             setAuthStatus(false);
         }
     }, []);
+
+    useEffect(() => {
+        if (authStatus) {
+            const token = localStorage.getItem('access_token');
+            fetchUserProfile(token);
+        }
+    }, [authStatus]);
 
     const fetchUserProfile = (token) => {
         axios.get('http://127.0.0.1:8000/api/v2/users/profile', {
@@ -48,11 +56,15 @@ export default function Header() {
     };
 
     const handleLoginClick = () => {
-        if (!authStatus) {
-            setShowForm(showForm !== 'login' ? 'login' : null);
+        if (authStatus) {
+            setIsProfileOpen(true); // Открываем Profile, если пользователь авторизован
         } else {
-            navigate('/profile');
+            setShowForm(showForm !== 'login' ? 'login' : null);
         }
+    };
+
+    const handleCloseProfile = () => {
+        setIsProfileOpen(false);
     };
 
     return (
@@ -78,9 +90,10 @@ export default function Header() {
                     {authStatus && <span className="auth-text">{username}</span>}
                     {!authStatus && <span className="auth-text">Войти</span>}
                 </div>
-                {showForm === 'login' && <Login toggleForm={setShowForm} setAuthStatus={setAuthStatus} />}
+                {showForm === 'login' && <Login toggleForm={setShowForm} setAuthStatus={setAuthStatus} fetchUserProfile={fetchUserProfile} />}
                 {showForm === 'register' && <Register toggleForm={setShowForm} />}
             </div>
+            {isProfileOpen && <Profile closeModal={handleCloseProfile} />} {/* Отображаем Profile, если isProfileOpen true */}
         </div>
     );
 }
