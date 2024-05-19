@@ -16,7 +16,7 @@ export default function InviteLink({ roomId }) {
 
     return (
         <div className="button-share">
-            <button onClick={handleCopyLink} className="share-button">Ссылка для друга</button>
+            <button onClick={handleCopyLink} className="share-button-invite">Ссылка для друга</button>
         </div>
     );
 }

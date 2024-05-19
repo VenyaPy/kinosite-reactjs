@@ -30,7 +30,6 @@ const App = () => {
           <Register toggleForm={handleCloseRegister} />
         </div>
       )}
-      <Footer />
     </Router>
   );
 };

@@ -27,7 +27,7 @@
 }
 
 .movie-details img {
-    width: 350px; /* Уменьшаем размер постера */
+    width: 300px; /* Уменьшаем размер постера */
     height: auto;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
@@ -90,9 +90,9 @@
 .review-text {
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: 20px;
-    text-align: left; /* Выравнивание заголовка отзывов по левому краю */
-    margin: 0;
+    margin-bottom: 50px;
+    text-align: center; /* Выравнивание заголовка отзывов по левому краю */
+
 }
 
 .reviews-container {

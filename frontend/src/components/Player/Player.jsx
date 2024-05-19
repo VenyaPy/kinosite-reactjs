@@ -21,6 +21,10 @@ export default function Player() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
+    useEffect(() => {
         const token = localStorage.getItem('access_token');
         if (token) {
             fetchUserProfile(token);

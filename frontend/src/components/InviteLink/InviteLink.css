@@ -2,19 +2,19 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-top: 50px;
-    margin-bottom: 0;
 }
 
-.share-button {
+.share-button-invite {
     background-color: #4caf50;
     color: white;
     border: none;
-    padding: 10px 20px;
-    font-size: 18px;
+    padding: 7px 15px;
+    font-size: 17px;
     border-radius: 8px;
     cursor: pointer;
-    margin-top: 50px;
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 10px;
     transition: background-color 0.3s;
 }
 

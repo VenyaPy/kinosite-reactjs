@@ -6,7 +6,6 @@ import InviteLink from "../InviteLink/InviteLink.jsx";
 
 export default function SharedPlayer() {
     const apiKeyAlloha = import.meta.env.VITE_ALLOHA;
-    const cdnApi = import.meta.env.VITE_DOMAIN;
     const apiKey = import.meta.env.VITE_API_KEY;
 
     const { roomId } = useParams();
@@ -19,10 +18,10 @@ export default function SharedPlayer() {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
     const messagesEndRef = useRef(null);
+    const inputRef = useRef(null);
+    const scrollPositionRef = useRef(0);
 
     const wsRef = useRef(null);
-    const playerInstance = useRef(null);
-
     const [username, setUsername] = useState('');
 
     useEffect(() => {
@@ -97,60 +96,51 @@ export default function SharedPlayer() {
     const initializePlayer = () => {
         if (playerRef.current && movieId && window.kbox) {
             console.log(`Initializing player with movieId: ${movieId}`);
-            playerInstance.current = window.kbox(playerRef.current, {
+            window.kbox(playerRef.current, {
                 search: { kinopoisk: movieId },
                 menu: { enable: false },
                 players: {
-                    alloha: { enable: true, position: 1, domain: 'https://sansa.newplayjj.com:9443' },
-                    cdnmovies: { enable: true, position: 3, domain: 'https://cdnmovies-stream.online' },
-                    kodik: { enable: true, position: 4, domain: 'https://kodik.info/video/3007/d11f14905f287e1939c1875dc2ab9c6f/720p' },
-                    collaps: { enable: true, position: 2, domain: `https://api.delivembd.ws/embed/kp/${movieId}` }
+                    alloha: { enable: true, position: 1, domain: 'https://sansa.newplayjj.com:9443' }
                 },
                 params: {
-                    alloha: { token: apiKeyAlloha },
-                    cdnmovies: { fallback: true, domain: cdnApi },
-                    kodik: { fallback: true },
-                    collaps: { fallback: true },
+                    alloha: { token: apiKeyAlloha }
                 },
                 vast: {
                     skip: true,  // Отключение рекламы
                 }
             });
 
-            if (playerInstance.current) {
-                playerInstance.current.api('play');
-                initializeIframeListeners();
-            } else {
-                console.error("Player instance is undefined.");
-            }
+            // Добавим небольшой таймаут для ожидания создания iframe
+            setTimeout(() => {
+                const iframe = document.querySelector('.kinobox_player iframe');
+                if (iframe) {
+                    document.getElementById('play').addEventListener('click', () => {
+                        sendControlMessage('play');
+                    });
+
+                    document.getElementById('pause').addEventListener('click', () => {
+                        sendControlMessage('pause');
+                    });
+
+                    document.getElementById('sync').addEventListener('click', () => {
+                        console.log('Sync button clicked');
+                        iframe.contentWindow.postMessage({ api: 'time' }, "*");
+                        window.addEventListener('message', function handleTimeResponse(event) {
+                            if (event.data && event.data.event === 'time') {
+                                const currentTime = event.data.answer; // Use the correct field for the time
+                                console.log('Current playback time:', currentTime);
+                                if (wsRef.current) {
+                                    wsRef.current.send(JSON.stringify({ type: 'control', command: `play:url[seek:${currentTime}]` }));
+                                    console.log('Sync message sent via WebSocket');
+                                }
+                                window.removeEventListener('message', handleTimeResponse); // Clean up listener
+                            }
+                        });
+                    });
+                }
+            }, 1000);
         } else {
             console.error("Player reference, movieId, or window.kbox is undefined.");
-        }
-    };
-
-    const initializeIframeListeners = () => {
-        const iframe = playerRef.current.querySelector('iframe');
-        if (iframe) {
-            iframe.addEventListener('load', () => {
-                console.log('Iframe loaded');
-                iframe.contentWindow.postMessage({ "api": "addEventListener", "event": "play" }, "*");
-                iframe.contentWindow.postMessage({ "api": "addEventListener", "event": "pause" }, "*");
-                iframe.contentWindow.postMessage({ "api": "addEventListener", "event": "seek" }, "*");
-            });
-
-            window.addEventListener("message", (event) => {
-                if (event.origin !== "https://sansa.newplayjj.com:9443") {
-                    return; // Ignore messages from other origins
-                }
-                const data = event.data;
-                console.log(`Received message from iframe: ${JSON.stringify(data)}`);
-                if (data.event === "play" || data.event === "pause" || data.event === "seek") {
-                    console.log(`Received event: ${data.event}, time: ${data.answer}`);
-                    wsRef.current.send(JSON.stringify({ type: 'sync', action: data.event, time: data.answer }));
-                }
-            });
-        } else {
-            console.error("Iframe not found inside playerRef.");
         }
     };
 
@@ -167,8 +157,8 @@ export default function SharedPlayer() {
             console.log('WebSocket message received:', data); // Debug log
             if (data.type === 'chat') {
                 setMessages((prevMessages) => [...prevMessages, data]);
-            } else if (data.type === 'sync') {
-                handleSyncAction(data);
+            } else if (data.type === 'control') {
+                handleControlMessage(data.command);
             }
         };
 
@@ -185,24 +175,6 @@ export default function SharedPlayer() {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-    const handleSyncAction = (data) => {
-        console.log('Handling sync action:', data); // Debug log
-        const iframe = playerRef.current.querySelector('iframe');
-        if (iframe) {
-            if (data.action === 'play') {
-                iframe.contentWindow.postMessage({ "api": "seek", "set": data.time }, "*");
-                iframe.contentWindow.postMessage({ "api": "play" }, "*");
-            } else if (data.action === 'pause') {
-                iframe.contentWindow.postMessage({ "api": "seek", "set": data.time }, "*");
-                iframe.contentWindow.postMessage({ "api": "pause" }, "*");
-            } else if (data.action === 'seek') {
-                iframe.contentWindow.postMessage({ "api": "seek", "set": data.time }, "*");
-            } else if (data.action === 'sync-time') {
-                iframe.contentWindow.postMessage({ "api": "seek", "set": data.time }, "*");
-            }
-        }
-    };
-
     const handleSendMessage = () => {
         if (wsRef.current && message.trim()) {
             console.log('Sending chat message:', { username, message }); // Debug log
@@ -211,42 +183,35 @@ export default function SharedPlayer() {
         }
     };
 
-    const handleSyncTime = () => {
-        if (wsRef.current && playerInstance.current) {
-            const currentTime = playerInstance.current.api('time');
-            console.log('Sending sync-time action with time:', currentTime); // Debug log
-            wsRef.current.send(JSON.stringify({ type: 'sync', action: 'sync-time', time: currentTime }));
+    const handleControlMessage = (command) => {
+        const iframe = document.querySelector('.kinobox_player iframe'); // Получаем элемент iframe
+        if (iframe) {
+            const match = command.match(/play:url\[seek:(\d+(\.\d+)?)\]/);
+            if (match) {
+                const time = match[1];
+                console.log('Syncing to time:', time);
+                iframe.contentWindow.postMessage({ api: 'seek', time: time }, "*");
+                iframe.contentWindow.postMessage({ api: 'play' }, "*");
+            } else {
+                iframe.contentWindow.postMessage({ api: command }, "*");
+            }
         }
     };
 
-    useEffect(() => {
-        if (playerRef.current) {
-            const handleUserInteraction = (ev) => {
-                console.log(`User ${ev.type} on player`, ev);
-                wsRef.current.send(JSON.stringify({ type: 'sync', action: ev.type, time: Date.now() }));
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        playerRef.current.addEventListener('click', handleUserInteraction);
-                        playerRef.current.addEventListener('dblclick', handleUserInteraction);
-                        playerRef.current.addEventListener('touchstart', handleUserInteraction);
-                    } else {
-                        playerRef.current.removeEventListener('click', handleUserInteraction);
-                        playerRef.current.removeEventListener('dblclick', handleUserInteraction);
-                        playerRef.current.removeEventListener('touchstart', handleUserInteraction);
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            observer.observe(playerRef.current);
-
-            return () => {
-                observer.disconnect();
-            };
+    const sendControlMessage = (command) => {
+        if (wsRef.current) {
+            wsRef.current.send(JSON.stringify({ type: 'control', command }));
         }
-    }, []);
+        handleControlMessage(command);
+    };
+
+    const handleFocus = () => {
+        inputRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    };
+
+    const handleInput = () => {
+        // Empty function if you don't need additional behavior
+    };
 
     if (error) {
         return <div>{error}</div>;
@@ -258,37 +223,43 @@ export default function SharedPlayer() {
 
     return (
         <div className="shared-player-container">
-            <div className="shared-player-movie-details">
-                <img src={movie.poster.previewUrl} alt={movie.name} />
-                <div>
-                    <h2 className="shared-player-title">{movie.name}</h2>
-                    <p className="shared-player-description">{movie.description}</p>
-                    <p className="shared-player-info"><strong>Рейтинг:</strong> Кинопоиск - {movie.rating.kp}, IMDb - {movie.rating.imdb}</p>
-                    {movie.movieLength && <p className="shared-player-info"><strong>Длина:</strong> {movie.movieLength} минут</p>}
-                    <p className="shared-player-info"><strong>Жанр:</strong> {movie.genres.map(genre => genre.name).join(', ')}</p>
-                    <p className="shared-player-info"><strong>Страна:</strong> {movie.countries.map(country => country.name).join(', ')}</p>
-                    <InviteLink roomId={roomId} />
+            <div className="shared-player-content">
+                <div className="shared-player-kinobox">
+                    <div ref={playerRef} className="kinobox_player" data-kinobox="auto" data-kinopoisk={movieId}></div>
+                    <div className="shared-player-controls">
+                        <button id="play"><i className="fa-solid fa-play"></i></button>
+                        <button id="pause"><i className="fa-solid fa-pause"></i></button>
+                        <button id="sync">Синхронизировать</button>
+                    </div>
+                    <h5 className="use-text">Для совместного просмотра пользуйся кнопками. Приятного просмотра 🍿</h5>
+                    <p className="manual-text">Переключение сезонов и серий работает только вручную</p>
                 </div>
-            </div>
-            <div ref={playerRef} className="kinobox_player" data-kinobox="auto" data-kinopoisk={movieId}></div>
-            <button onClick={handleSyncTime} className="sync-button">Синхронизировать время</button>
-            <div className="shared-player-chat-container">
-                <div className="shared-player-messages">
-                    {messages.map((msg, index) => (
-                        <div key={index} className="shared-player-message"><strong>{msg.username}:</strong> {msg.message}</div>
-                    ))}
-                    <div ref={messagesEndRef} />
-                </div>
-                <div className="shared-player-input-container">
-                    <input
-                        type="text"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                        className="shared-player-input"
-                        placeholder="Type a message..."
-                    />
-                    <button onClick={handleSendMessage} className="shared-player-button">Send</button>
+                <div className="shared-player-chat-container">
+                    <InviteLink />
+                    <div className="shared-player-messages" style={{ height: '800px' }}>
+                        {messages.length === 0 ? (
+                            <div className="no-messages">Пока тут нет сообщений. Напиши первый!</div>
+                        ) : (
+                            messages.map((msg, index) => (
+                                <div key={index} className="shared-player-message"><strong>{msg.username}:</strong> {msg.message}</div>
+                            ))
+                        )}
+                        <div ref={messagesEndRef} />
+                    </div>
+                    <div className="shared-player-input-container">
+                        <input
+                            ref={inputRef}
+                            type="text"
+                            value={message}
+                            onFocus={handleFocus}
+                            onInput={handleInput}
+                            onChange={(e) => setMessage(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                            className="shared-player-input"
+                            placeholder="Написать сообщение..."
+                        />
+                        <button onClick={handleSendMessage} className="shared-player-button"><i className="fa-solid fa-paper-plane"></i></button>
+                    </div>
                 </div>
             </div>
         </div>
