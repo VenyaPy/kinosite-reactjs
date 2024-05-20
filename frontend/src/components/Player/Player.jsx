@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import "./Player.css";
 import Loading from "../Loading/Loading.jsx";
 import parse from 'html-react-parser';
+import { motion } from "framer-motion";
 
 export default function Player() {
     const apiKeyAlloha = import.meta.env.VITE_ALLOHA;
@@ -15,7 +16,8 @@ export default function Player() {
     const [reviews, setReviews] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    const [userId, setUserId] = useState(null); // New state for user ID
+    const [userId, setUserId] = useState(null);
+    const [isSwiped, setIsSwiped] = useState(false);
     const playerRef = useRef(null);
     const scriptLoaded = useRef(false);
     const navigate = useNavigate();
@@ -42,7 +44,7 @@ export default function Player() {
         })
         .then(response => {
             if (response.data.id) {
-                setUserId(response.data.id); // Save user ID
+                setUserId(response.data.id);
             }
         })
         .catch(error => {
@@ -57,7 +59,6 @@ export default function Player() {
         setIsLoading(true);
         const fetchMovieAndReviews = async () => {
             try {
-                console.log('Fetching movie and reviews...');
                 const movieResponse = await axios.get(`https://api.kinopoisk.dev/v1.4/movie/${movieId}`, {
                     headers: { 'accept': 'application/json', 'X-API-KEY': apiKey }
                 });
@@ -66,7 +67,6 @@ export default function Player() {
                 });
                 setMovie(movieResponse.data);
                 setReviews(reviewsResponse.data.docs.map(review => ({ ...review, isOpen: false })));
-                // Send movie data to backend
                 if (userId) {
                     sendMovieToHistory(userId, movieResponse.data);
                 }
@@ -101,7 +101,6 @@ export default function Player() {
 
     useEffect(() => {
         if (movie && !scriptLoaded.current) {
-            console.log('Loading Kinobox script...');
             const script = document.createElement('script');
             script.src = "https://kinobox.tv/kinobox.min.js";
             script.async = true;
@@ -110,7 +109,6 @@ export default function Player() {
                 if (playerRef.current) {
                     initializePlayer(movieId);
                 }
-                console.log('Kinobox script loaded.');
             };
             document.body.appendChild(script);
         } else if (movie && scriptLoaded.current && playerRef.current) {
@@ -151,25 +149,30 @@ export default function Player() {
         setReviews(updatedReviews);
     };
 
-    const handleSharedView = () => {
-        const token = localStorage.getItem('access_token');
-        if (token) {
-            axios.post('http://127.0.0.1:8000/room/create_room', { movieId }, {
-                headers: {
-                    'accept': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            .then(response => {
-                const roomId = response.data.message;
-                navigate(`/shared/${roomId}`);
-            })
-            .catch(error => {
-                console.error('Error creating room:', error);
-            });
-        } else {
-            alert('Вам нужно войти в аккаунт, чтобы использовать функцию совместного просмотра');
-        }
+    const handleSwipe = () => {
+        setIsSwiped(true);
+        setTimeout(() => {
+            const token = localStorage.getItem('access_token');
+            if (token) {
+                axios.post('http://127.0.0.1:8000/room/create_room', { movieId }, {
+                    headers: {
+                        'accept': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    const roomId = response.data.message;
+                    navigate(`/shared/${roomId}`);
+                })
+                .catch(error => {
+                    console.error('Error creating room:', error);
+                    setIsSwiped(false); // Возвращаем положение кнопки в начальное состояние при ошибке
+                });
+            } else {
+                alert('Вам нужно войти в аккаунт, чтобы использовать функцию совместного просмотра');
+                setIsSwiped(false); // Возвращаем положение кнопки в начальное состояние при ошибке
+            }
+        }, 1000);
     };
 
     if (error) {
@@ -181,37 +184,62 @@ export default function Player() {
     }
 
     return (
-        <div className="player-container">
-            <div className="movie-details">
-                <img src={movie.poster.previewUrl} alt={movie.name} />
-                <div>
-                    <h2>{movie.name}</h2>
-                    <p>{movie.description}</p>
-                    <p className="p-m"><strong>Рейтинг:</strong> Кинопоиск - {movie.rating.kp}, IMDb - {movie.rating.imdb}</p>
-                    {movie.movieLength && <p className="p-m"><strong>Длина:</strong> {movie.movieLength} минут</p>}
-                    <p className="p-m"><strong>Жанр:</strong> {movie.genres.map(genre => genre.name).join(', ')}</p>
-                    <p className="p-m"><strong>Страна:</strong> {movie.countries.map(country => country.name).join(', ')}</p>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            className="projects-container"
+        >
+            <div className="player-container">
+                <div className="movie-details">
+                    <img src={movie.poster.previewUrl} alt={movie.name} />
+                    <div>
+                        <h2>{movie.name}</h2>
+                        <p>{movie.description}</p>
+                        <p className="p-m"><strong>Рейтинг:</strong> Кинопоиск - {movie.rating.kp}, IMDb - {movie.rating.imdb}</p>
+                        {movie.movieLength && <p className="p-m"><strong>Длина:</strong> {movie.movieLength} минут</p>}
+                        <p className="p-m"><strong>Жанр:</strong> {movie.genres.map(genre => genre.name).join(', ')}</p>
+                        <p className="p-m"><strong>Страна:</strong> {movie.countries.map(country => country.name).join(', ')}</p>
+                    </div>
                 </div>
-            </div>
-            <div ref={playerRef} className="kinobox_player"></div>
-            <button onClick={handleSharedView} className="share-button">Совместный просмотр</button>
-            {reviews.length > 0 && (
-                <div className="reviews-container">
-                    <h3 className="review-text">Отзывы:</h3>
-                    {reviews.map((review, index) => (
-                        <div key={review.id} className={`review ${review.isOpen ? 'open' : ''}`}>
-                            <div className="review-header">
-                                <span className="review-author">{review.author}</span>
-                                <span className="review-date">{new Date(review.date).toLocaleDateString()}</span>
+                <div ref={playerRef} className="kinobox_player"></div>
+                <div className="switch-container">
+                    <span className="switch-label">Включить совместный просмотр</span>
+                    <motion.label className="switch">
+                        <input
+                            type="checkbox"
+                            checked={isSwiped}
+                            onChange={handleSwipe}
+                            style={{ display: 'none' }}
+                        />
+                        <motion.div className="switch-inner">
+                            <motion.div
+                                className="switch-thumb"
+                                animate={{x: isSwiped ? 23 : 0}}
+                                transition={{duration: 0.6}}
+                            />
+                        </motion.div>
+                    </motion.label>
+                </div>
+                {reviews.length > 0 && (
+                    <div className="reviews-container">
+                        <h3 className="review-text">Отзывы:</h3>
+                        {reviews.map((review, index) => (
+                            <div key={review.id} className={`review ${review.isOpen ? 'open' : ''}`}>
+                                <div className="review-header">
+                                    <span className="review-author">{review.author}</span>
+                                    <span className="review-date">{new Date(review.date).toLocaleDateString()}</span>
+                                </div>
+                                <p>{review.isOpen ? parse(review.review) : parse(`${review.review.substring(0, 200)}...`)}</p>
+                                <button className="toggle-button" onClick={() => toggleReviewVisibility(index)}>
+                                    {review.isOpen ? 'Свернуть' : 'Развернуть отзыв'}
+                                </button>
                             </div>
-                            <p>{review.isOpen ? parse(review.review) : parse(`${review.review.substring(0, 200)}...`)}</p>
-                            <button className="toggle-button" onClick={() => toggleReviewVisibility(index)}>
-                                {review.isOpen ? 'Свернуть' : 'Развернуть отзыв'}
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </motion.div>
     );
 }

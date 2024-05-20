@@ -79,6 +79,7 @@ export default function Header() {
                         <li className="section" onClick={() => navigate('/series')}>Сериалы</li>
                         <li className="section" onClick={() => navigate('/cartoon')}>Мультфильмы</li>
                         <li className="section" onClick={() => navigate('/anime')}>Аниме</li>
+                        <li className="section" onClick={() => navigate('/rooms')}>Комнаты</li>
                     </ul>
                 </div>
                 <div className="login" onClick={handleLoginClick}>

@@ -64,7 +64,7 @@
   font-size: 14px;
   margin: 8px;
   color: #8c8c8c;
-  height: 3.8em; /* Примерно для 3 строк текста */
+  height: 3.5em; /* Примерно для 3 строк текста */
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;

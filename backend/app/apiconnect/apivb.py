@@ -1,3 +1,4 @@
+import logging
 import re
 from backend.app.config import APIConfig
 import aiohttp
@@ -88,4 +89,38 @@ class KinopoiskCategory:
                 film['poster'] = film.get('poster', {}).get('previewUrl', None)
 
         return films_data
+
+
+class KinopoiskId:
+    api_key = APIConfig.api_key
+    headers = {
+        "X-API-KEY": api_key,
+        "accept": "application/json"
+    }
+
+    @classmethod
+    async def kinopoisk_api(cls, id):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url=f"https://api.kinopoisk.dev/v1.4/movie/{id}", headers=cls.headers) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    films_data = data.get('docs', [])
+
+                    if not films_data:
+                        if 'id' in data:
+                            data['watch_url'] = f'https://kinowild.ru/player?{data["id"]}'
+                            data['id'] = f"{data['id']}"
+                            data['poster'] = data['poster']['previewUrl'] if isinstance(data['poster'], dict) else data[
+                                'poster']
+                        return data
+                    else:
+                        for film in films_data:
+                            film['id'] = str(film['id'])
+                            film['watch_url'] = f'https://kinowild.ru/player?{film["id"]}'
+                            film['poster'] = film.get('poster', {}).get('previewUrl', None)
+
+                    return films_data
+                else:
+                    return {}
+
 

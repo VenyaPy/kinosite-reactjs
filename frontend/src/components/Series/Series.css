@@ -20,6 +20,7 @@
     background-color: #000;
     text-decoration: none;
     transition: transform 0.3s ease;
+    border-radius: 10px; /* Добавлено для закругленных углов */
 }
 
 .unique-series:hover {
@@ -33,6 +34,7 @@
     height: 100%;
     object-fit: cover;
     transition: opacity 0.3s ease;
+    border-radius: 10px; /* Добавлено для закругленных углов */
 }
 
 .unique-series-overlay {
@@ -52,6 +54,7 @@
     opacity: 0;
     transition: visibility 0s, opacity 0.3s linear;
     pointer-events: none; /* Добавлено для предотвращения проблем с прокруткой */
+    border-radius: 10px; /* Добавлено для закругленных углов */
 }
 
 .unique-series:hover .unique-series-overlay {
@@ -169,6 +172,7 @@
         width: 100%;
         height: auto; /* Убираем фиксированную высоту для мобильной версии */
         margin-bottom: 15px;
+        border-radius: 10px; /* Добавлено для закругленных углов */
     }
 
     .unique-series-title {

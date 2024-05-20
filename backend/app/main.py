@@ -1,8 +1,9 @@
+import asyncio
+import logging
 from typing import List
 
 import uvicorn
 from fastapi import FastAPI
-from sqladmin import Admin
 
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
@@ -11,6 +12,7 @@ from starlette.middleware.cors import CORSMiddleware
 from redis import asyncio as aioredis
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
+from backend.app.models.rooms.roomdao import RoomDAO
 from backend.app.models.users.router import router_auth
 from backend.app.models.search.router import router_search
 from backend.app.models.admin.auth import auth_backend
@@ -18,7 +20,7 @@ from backend.app.models.images.router import router_user
 from backend.app.models.mainpage.router import main_router
 from backend.app.models.section.router import section_router
 from backend.app.models.category.router import category_router
-from backend.app.models.rooms.router import room_router
+from backend.app.models.rooms.router import room_router, rooms_router
 from backend.app.models.history.router import history_router
 
 app = FastAPI(
@@ -46,6 +48,7 @@ app.include_router(category_router)
 app.include_router(router_search)
 app.include_router(room_router)
 app.include_router(history_router)
+app.include_router(rooms_router)
 
 
 
@@ -60,6 +63,7 @@ class ConnectionManager:
     def __init__(self):
         self.active_connections: List[WebSocket] = []
         self.room_connections: dict[str, List[WebSocket]] = {}
+        self.disconnection_timers: dict[str, asyncio.Task] = {}
 
     async def connect(self, websocket: WebSocket, room_id: str):
         await websocket.accept()
@@ -68,15 +72,32 @@ class ConnectionManager:
             self.room_connections[room_id] = []
         self.room_connections[room_id].append(websocket)
 
-    def disconnect(self, websocket: WebSocket, room_id: str):
+        # Отменить таймер на удаление комнаты, если пользователь переподключился
+        if room_id in self.disconnection_timers:
+            self.disconnection_timers[room_id].cancel()
+            del self.disconnection_timers[room_id]
+
+    async def disconnect(self, websocket: WebSocket, room_id: str):
         self.active_connections.remove(websocket)
         self.room_connections[room_id].remove(websocket)
         if not self.room_connections[room_id]:
             del self.room_connections[room_id]
+            # Установить таймер на удаление комнаты через 10 секунд
+            self.disconnection_timers[room_id] = asyncio.create_task(self.schedule_delete_room(room_id))
+
+    async def schedule_delete_room(self, room_id: str):
+        await asyncio.sleep(10)
+        await self.delete_room(room_id)
+        del self.disconnection_timers[room_id]
+
+    async def delete_room(self, room_id: str):
+        await RoomDAO.delete_rooms(room_id=room_id)
+        logging.info(f"Room {room_id} deleted from database")
 
     async def broadcast(self, message: str, room_id: str):
         for connection in self.room_connections.get(room_id, []):
             await connection.send_text(message)
+
 
 
 manager = ConnectionManager()
@@ -90,7 +111,8 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
             data = await websocket.receive_text()
             await manager.broadcast(data, room_id)
     except WebSocketDisconnect:
-        manager.disconnect(websocket, room_id)
+        await manager.disconnect(websocket, room_id)
+
 
 
 

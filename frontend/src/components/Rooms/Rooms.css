@@ -1,0 +1,118 @@
+/* Основные стили для комнат */
+.projects-container-room {
+    padding: 20px;
+}
+
+.rooms-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: #f0f0f0;
+}
+
+.no-rooms-message {
+    text-align: center;
+    margin-top: 30%;
+    font-size: 1.2em;
+    color: #aaa;
+}
+
+
+.h2-rooms {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.h2-rooms h2 {
+    font-size: 2em;
+    color: #f0f0f0;
+}
+
+.p-rooms p {
+    font-size: 1.0em;
+    color: #aaa;
+}
+
+.item-room-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.unique-room {
+    position: relative;
+    cursor: pointer;
+    width: 300px;
+    height: 450px;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.unique-room:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.unique-room-poster {
+    width: 100%;
+    height: auto;
+    flex-grow: 1;
+    object-fit: cover;
+}
+
+.room-info {
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.room-title {
+    font-size: 1.3em;
+    color: #f0f0f0;
+    margin-bottom: 5px;
+}
+
+.room-members {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1em;
+    color: #f0f0f0;
+}
+
+.room-members svg {
+    margin-right: 5px; /* Место для иконки глаза */
+    fill: #f0f0f0;
+}
+
+/* Мобильная версия */
+@media (max-width: 900px) {
+    .item-room-container {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 10px;
+    }
+
+    .unique-room {
+        width: 100%;
+        height: auto;
+    }
+
+    .room-title {
+        font-size: 1.2em;
+    }
+}

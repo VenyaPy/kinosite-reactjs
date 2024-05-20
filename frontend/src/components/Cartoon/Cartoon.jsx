@@ -22,7 +22,7 @@ export default function Cartoon() {
     const years = Array.from({ length: 45 }, (_, i) => 2024 - i);
     const ratings = ["1-2", "3-4", "5-7", "7-8", "9-10"];
     const genres = ["драма", "комедия", "мелодрама", "ужасы", "фэнтези", "боевик", "семейный", "приключения", "детектив", "триллер", "фантастика", "документальный", "биография", "для взрослых", "короткометражка", "криминал"];
-    const countries = ["США", "Великобритания", "Франция", "Германия", "Италия", "Канада", "Австралия", "Индия", "Япония", "Южная Корея", "Испания", "Россия", "Китай", "Швеция", "Бразилия"];
+    const countries = ["США", "СССР", "Великобритания", "Франция", "Германия", "Италия", "Канада", "Австралия", "Индия", "Япония", "Южная Корея", "Испания", "Россия", "Китай", "Швеция", "Бразилия"];
     const studios = ["Netflix", "HBO", "Apple TV+", "Disney+", "Amazon Prime Video"];
 
     function shuffleArray(array) {
@@ -38,7 +38,7 @@ export default function Cartoon() {
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
             `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=cartoon` :
-            `https://ve1.po2014.fvds.ru:8000/api/v2/cartoon`;
+            `http://127.0.0.1:8000/api/v2/cartoonnnn`;
 
         if (year) url += `&year=${year}`;
         if (rating) url += `&rating.imdb=${rating}`;

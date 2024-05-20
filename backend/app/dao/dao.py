@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from fastapi import WebSocket
 
@@ -12,7 +13,7 @@ from sqlalchemy.orm import declarative_base
 DATABASE_URL = "sqlite+aiosqlite:////home/venya/PycharmProjects/kinosite-react/backend/app/database/kinobase.db"
 
 
-engine = create_async_engine(DATABASE_URL)
+engine = create_async_engine(DATABASE_URL, echo=True)
 
 async_session_maker = async_sessionmaker(
     bind=engine,
@@ -48,6 +49,17 @@ class BaseDAO:
             except (SQLAlchemyError, Exception) as e:
                 print(f"Error finding all data in table {cls.model.__tablename__}: {e}")
                 return None
+
+    @classmethod
+    async def get_all(cls):
+        async with ScopedSession() as session:
+            try:
+                query = select(cls.model)
+                result = await session.execute(query)
+                rooms = result.scalars().all()
+                return rooms
+            except (SQLAlchemyError, Exception) as e:
+                return []
 
     @classmethod
     async def add(cls, **data):
@@ -86,15 +98,16 @@ class BaseDAO:
                 room = await cls.find_one_or_none(room_id=room_id)
                 if room:
                     current_members = room.members.split(',') if room.members else []
-                    new_members = current_members + [data['members']]
-                    query = (
-                        update(cls.model).
-                        where(cls.model.room_id == room_id).
-                        values(members=','.join(new_members))
-                    )
-                    result = await session.execute(query)
-                    await session.commit()
-                    return result.rowcount
+                    if data['members'] not in current_members:
+                        new_members = current_members + [str(data['members'])]
+                        query = (
+                            update(cls.model).
+                            where(cls.model.room_id == room_id).
+                            values(members=','.join(new_members))
+                        )
+                        result = await session.execute(query)
+                        await session.commit()
+                        return result.rowcount
                 else:
                     return None
             except (SQLAlchemyError, Exception) as e:
@@ -108,6 +121,18 @@ class BaseDAO:
             try:
                 query = delete(cls.model).filter_by(**filter_by)
                 await session.execute(query)
+                await session.commit()
+            except (SQLAlchemyError, Exception) as e:
+                await session.rollback()
+                print(f"Error deleting data in table {cls.model.__tablename__}: {e}")
+                return None
+
+    @classmethod
+    async def delete_rooms(cls, room_id: str):
+        async with ScopedSession() as session:
+            try:
+                stmt = delete(cls.model).where(cls.model.room_id == room_id)
+                await session.execute(stmt)
                 await session.commit()
             except (SQLAlchemyError, Exception) as e:
                 await session.rollback()

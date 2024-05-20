@@ -81,14 +81,14 @@ async def anime_section():
         print(e)
 
 
-@section_router.get("/cartoon",
+@section_router.get("/cartoonnnn",
                      response_model=List[Selection],
                      summary="Раздел мультфильмов")
 @cache(expire=36000)
 async def carton_section():
     try:
         movie_data = await KinopoiskCategory.kinopoisk_api(
-            url='https://api.kinopoisk.dev/v1.4/movie?page=1&limit=150&type=cartoon'
+            url='https://api.kinopoisk.dev/v1.4/movie?page=1&limit=100&type=cartoon&rating.imdb=5-10&countries.name=%21%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D1%8F&countries.name=%21%D0%A1%D0%A1%D0%A1%D0%A0'
         )
 
         if not movie_data:

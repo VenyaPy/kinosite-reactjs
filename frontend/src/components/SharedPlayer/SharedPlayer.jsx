@@ -2,10 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './SharedPlayer.css';
+import { motion } from "framer-motion";
 import InviteLink from "../InviteLink/InviteLink.jsx";
+import Loading from "../Loading/Loading.jsx";
 
 export default function SharedPlayer() {
     const apiKeyAlloha = import.meta.env.VITE_ALLOHA;
+    const cdnApi = import.meta.env.VITE_DOMAIN;
     const apiKey = import.meta.env.VITE_API_KEY;
 
     const { roomId } = useParams();
@@ -13,13 +16,13 @@ export default function SharedPlayer() {
     const [movieId, setMovieId] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [isAuthenticated, setIsAuthenticated] = useState(false); // Новое состояние для отслеживания авторизации
     const playerRef = useRef(null);
 
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
-    const scrollPositionRef = useRef(0);
 
     const wsRef = useRef(null);
     const [username, setUsername] = useState('');
@@ -36,38 +39,61 @@ export default function SharedPlayer() {
                         }
                     });
                     setUsername(response.data.username);
+                    setIsAuthenticated(true); // Пользователь авторизован
                 } catch (err) {
                     console.error('Error fetching user profile:', err);
+                    setIsAuthenticated(false);
                 }
+            } else {
+                setIsAuthenticated(false);
             }
         };
 
         fetchUserProfile();
     }, []);
 
-    useEffect(() => {
-        const fetchRoomData = async () => {
-            setIsLoading(true);
+    const joinRoom = async () => {
+        const token = localStorage.getItem('access_token');
+        if (token) {
             try {
-                const roomResponse = await axios.get(`http://127.0.0.1:8000/api/v2/room/${roomId}`, {
-                    headers: { 'accept': 'application/json' }
+                await axios.post(`http://127.0.0.1:8000/api/v2/room/join_room/${roomId}`, {}, {
+                    headers: {
+                        'accept': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
-                const movieId = roomResponse.data.movieId;
-                setMovieId(movieId);
-                const movieResponse = await axios.get(`https://api.kinopoisk.dev/v1.4/movie/${movieId}`, {
-                    headers: { 'accept': 'application/json', 'X-API-KEY': apiKey }
-                });
-                setMovie(movieResponse.data);
             } catch (err) {
-                setError(`Ошибка при получении данных фильма: ${err}`);
-                console.error(err);
-            } finally {
-                setIsLoading(false);
+                console.error('Error joining room:', err);
             }
-        };
+        }
+    };
 
-        fetchRoomData();
-    }, [roomId, apiKey]);
+    const fetchRoomData = async () => {
+        setIsLoading(true);
+        try {
+            const roomResponse = await axios.get(`http://127.0.0.1:8000/api/v2/room/${roomId}`, {
+                headers: { 'accept': 'application/json' }
+            });
+            const movieId = roomResponse.data.movieId;
+            setMovieId(movieId);
+            const movieResponse = await axios.get(`https://api.kinopoisk.dev/v1.4/movie/${movieId}`, {
+                headers: { 'accept': 'application/json', 'X-API-KEY': apiKey }
+            });
+            setMovie(movieResponse.data);
+        } catch (err) {
+            setError(`Ошибка при получении данных фильма: ${err}`);
+            console.error(err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            joinRoom();
+            fetchRoomData();
+        }
+    }, [isAuthenticated, roomId, apiKey]);
 
     useEffect(() => {
         if (movie && movieId) {
@@ -82,31 +108,33 @@ export default function SharedPlayer() {
             script.async = true;
             script.onload = () => {
                 console.log('Kinobox script loaded');
-                initializePlayer();
+                initializePlayer(movieId); // Передаем movieId
             };
             script.onerror = () => {
                 console.error('Kinobox script failed to load');
             };
             document.body.appendChild(script);
         } else {
-            initializePlayer();
+            initializePlayer(movieId); // Передаем movieId
         }
     };
 
-    const initializePlayer = () => {
-        if (playerRef.current && movieId && window.kbox) {
-            console.log(`Initializing player with movieId: ${movieId}`);
+    const initializePlayer = (movieId) => {
+        if (playerRef.current && movieId) {
             window.kbox(playerRef.current, {
                 search: { kinopoisk: movieId },
                 menu: { enable: false },
                 players: {
-                    alloha: { enable: true, position: 1, domain: 'https://sansa.newplayjj.com:9443' }
+                    alloha: { enable: true, position: 1, domain: 'https://sansa.newplayjj.com:9443' },
+                    cdnmovies: { enable: true, position: 3, domain: 'https://cdnmovies-stream.online' },
+                    kodik: { enable: true, position: 4, domain: 'https://kodik.info/video/3007/d11f14905f287e1939c1875dc2ab9c6f/720p' },
+                    collaps: { enable: true, position: 2, domain: `https://api.delivembd.ws/embed/kp/${movieId}` }
                 },
                 params: {
-                    alloha: { token: apiKeyAlloha }
-                },
-                vast: {
-                    skip: true,  // Отключение рекламы
+                    alloha: { token: apiKeyAlloha },
+                    cdnmovies: { fallback: true, domain: cdnApi },
+                    kodik: { fallback: true },
+                    collaps: { fallback: true },
                 }
             });
 
@@ -140,36 +168,38 @@ export default function SharedPlayer() {
                 }
             }, 1000);
         } else {
-            console.error("Player reference, movieId, or window.kbox is undefined.");
+            console.error("Player reference or movieId is undefined.");
         }
     };
 
     useEffect(() => {
-        const ws = new WebSocket(`ws://127.0.0.1:8000/ws/${roomId}`);
-        wsRef.current = ws;
+        if (isAuthenticated) {
+            const ws = new WebSocket(`ws://127.0.0.1:8000/ws/${roomId}`);
+            wsRef.current = ws;
 
-        ws.onopen = () => {
-            console.log('Connected to WebSocket');
-        };
+            ws.onopen = () => {
+                console.log('Connected to WebSocket');
+            };
 
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            console.log('WebSocket message received:', data); // Debug log
-            if (data.type === 'chat') {
-                setMessages((prevMessages) => [...prevMessages, data]);
-            } else if (data.type === 'control') {
-                handleControlMessage(data.command);
-            }
-        };
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                console.log('WebSocket message received:', data); // Debug log
+                if (data.type === 'chat') {
+                    setMessages((prevMessages) => [...prevMessages, data]);
+                } else if (data.type === 'control') {
+                    handleControlMessage(data.command);
+                }
+            };
 
-        ws.onclose = () => {
-            console.log('Disconnected from WebSocket');
-        };
+            ws.onclose = () => {
+                console.log('Disconnected from WebSocket');
+            };
 
-        return () => {
-            ws.close();
-        };
-    }, [roomId]);
+            return () => {
+                ws.close();
+            };
+        }
+    }, [roomId, isAuthenticated]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -217,51 +247,73 @@ export default function SharedPlayer() {
         return <div>{error}</div>;
     }
 
-    if (isLoading || !movie) {
-        return <div>Loading...</div>;
+    if (!isAuthenticated) {
+        return (
+            <div className="auth-message">
+                Для того чтобы смотреть фильмы с другом, войдите в аккаунт, и обновите страницу 🍿
+            </div>
+        );
+    }
+
+    if (!movie || isLoading) {
+        return <Loading />;
     }
 
     return (
-        <div className="shared-player-container">
-            <div className="shared-player-content">
-                <div className="shared-player-kinobox">
-                    <div ref={playerRef} className="kinobox_player" data-kinobox="auto" data-kinopoisk={movieId}></div>
-                    <div className="shared-player-controls">
-                        <button id="play"><i className="fa-solid fa-play"></i></button>
-                        <button id="pause"><i className="fa-solid fa-pause"></i></button>
-                        <button id="sync">Синхронизировать</button>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            className="projects-container"
+        >
+            <div className="shared-player-container">
+                <div className="shared-player-content">
+                    <div className="shared-player-kinobox">
+                        <div ref={playerRef} className="kinobox_player" data-kinobox="auto"
+                             data-kinopoisk={movieId}></div>
+                        <div className="shared-player-controls">
+                            <button id="play"><i className="fa-solid fa-play"></i></button>
+                            <button id="pause"><i className="fa-solid fa-pause"></i></button>
+                            <button id="sync">Синхронизировать</button>
+                        </div>
+                        <h5 className="use-text">Для совместного просмотра пользуйся кнопками. Приятного просмотра
+                            🍿</h5>
+                        <p className="manual-text">
+                          <span className="first-sentence">Кнопки совместного просмотра не поддерживаются некоторыми плеерами.</span><br/>
+                          Сезоны и серии переключаются вручную.
+                                                </p>
+
                     </div>
-                    <h5 className="use-text">Для совместного просмотра пользуйся кнопками. Приятного просмотра 🍿</h5>
-                    <p className="manual-text">Переключение сезонов и серий работает только вручную</p>
-                </div>
-                <div className="shared-player-chat-container">
-                    <InviteLink />
-                    <div className="shared-player-messages" style={{ height: '800px' }}>
-                        {messages.length === 0 ? (
-                            <div className="no-messages">Пока тут нет сообщений. Напиши первый!</div>
-                        ) : (
-                            messages.map((msg, index) => (
-                                <div key={index} className="shared-player-message"><strong>{msg.username}:</strong> {msg.message}</div>
-                            ))
-                        )}
-                        <div ref={messagesEndRef} />
-                    </div>
-                    <div className="shared-player-input-container">
-                        <input
-                            ref={inputRef}
-                            type="text"
-                            value={message}
-                            onFocus={handleFocus}
-                            onInput={handleInput}
-                            onChange={(e) => setMessage(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                            className="shared-player-input"
-                            placeholder="Написать сообщение..."
-                        />
-                        <button onClick={handleSendMessage} className="shared-player-button"><i className="fa-solid fa-paper-plane"></i></button>
+                    <div className="shared-player-chat-container">
+                        <InviteLink roomId={roomId}/>
+                        <div className="shared-player-messages" style={{ height: '800px' }}>
+                            {messages.length === 0 ? (
+                                <div className="no-messages">Пока тут нет сообщений. Напиши первый!</div>
+                            ) : (
+                                messages.map((msg, index) => (
+                                    <div key={index} className="shared-player-message"><strong>{msg.username}:</strong> {msg.message}</div>
+                                ))
+                            )}
+                            <div ref={messagesEndRef} />
+                        </div>
+                        <div className="shared-player-input-container">
+                            <input
+                                ref={inputRef}
+                                type="text"
+                                value={message}
+                                onFocus={handleFocus}
+                                onInput={handleInput}
+                                onChange={(e) => setMessage(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                                className="shared-player-input"
+                                placeholder="Написать сообщение..."
+                            />
+                            <button onClick={handleSendMessage} className="shared-player-button"><i className="fa-solid fa-paper-plane"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }

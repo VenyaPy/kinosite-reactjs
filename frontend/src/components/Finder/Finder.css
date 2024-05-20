@@ -151,11 +151,16 @@
 .details-unique {
     margin-left: 20px;
     display: flex;
+    align-items: flex-start;
+    text-align: left;
     flex-direction: column;
+    width: 80%;
 }
+
 
 .year-unique {
     font-size: 14px;
+    align-items: flex-start;
     color: #aaa;
     margin-bottom: 5px;
 }

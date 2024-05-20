@@ -13,6 +13,7 @@ import SharedPlayer from "../SharedPlayer/SharedPlayer.jsx"; // Импортир
 import Cartoon from "../Cartoon/Cartoon.jsx";
 import Register from "../Register/Register.jsx";
 import Profile from "../Profile/Profile.jsx";
+import Rooms from "../Rooms/Rooms.jsx";
 
 const App = () => {
   const [showRegister, setShowRegister] = React.useState(false);
@@ -50,8 +51,9 @@ const AnimatedRoutes = () => {
           <Route path="/series" element={<Series />} />
           <Route path="/anime" element={<Anime />} />
           <Route path="/cartoon" element={<Cartoon />} />
+          <Route path="/rooms" element={<Rooms />} />
           <Route path="/player/:movieId" element={<Player />} />
-          <Route path="/shared/:roomId" element={<SharedPlayer />} /> {/* Добавляем маршрут для SharedPlayer */}
+          <Route path="/shared/:roomId" element={<SharedPlayer />} />
         </Routes>
       </CSSTransition>
     </TransitionGroup>

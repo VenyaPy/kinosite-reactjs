@@ -222,6 +222,17 @@
     background-color: #45a049;
 }
 
+    .auth-message {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-size: 1.5em;
+        color: #fff;
+        text-align: center;
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
 /* Мобильная версия */
 @media (max-width: 768px) {
     .shared-player-container {
@@ -272,6 +283,9 @@
         flex-direction: column;
         height: auto; /* Adjust for mobile */
     }
+
+
+
 
     .shared-player-input {
         width: 100%;
