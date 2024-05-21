@@ -188,6 +188,9 @@ export default function SharedPlayer() {
                     setMessages((prevMessages) => [...prevMessages, data]);
                 } else if (data.type === 'control') {
                     handleControlMessage(data.command);
+                } else if (data.type === 'movie') {
+                    setMovieId(data.movieId);
+                    fetchMovieData(data.movieId);
                 }
             };
 
@@ -241,6 +244,27 @@ export default function SharedPlayer() {
 
     const handleInput = () => {
         // Empty function if you don't need additional behavior
+    };
+
+    const fetchMovieData = async (movieId) => {
+        try {
+            const movieResponse = await axios.get(`https://api.kinopoisk.dev/v1.4/movie/${movieId}`, {
+                headers: { 'accept': 'application/json', 'X-API-KEY': apiKey }
+            });
+            setMovie(movieResponse.data);
+            loadKinoboxScript();
+        } catch (err) {
+            setError(`Ошибка при получении данных фильма: ${err}`);
+            console.error(err);
+        }
+    };
+
+    const handleMovieSelection = (selectedMovieId) => {
+        if (wsRef.current) {
+            wsRef.current.send(JSON.stringify({ type: 'movie', movieId: selectedMovieId }));
+        }
+        setMovieId(selectedMovieId);
+        fetchMovieData(selectedMovieId);
     };
 
     if (error) {

@@ -22,6 +22,8 @@ from backend.app.models.section.router import section_router
 from backend.app.models.category.router import category_router
 from backend.app.models.rooms.router import room_router, rooms_router
 from backend.app.models.history.router import history_router
+from backend.app.models.youtube.dao import YouTubeDAO
+from backend.app.models.youtube.router import youtube_router
 
 app = FastAPI(
     title="Совместный просмотр фильмов",
@@ -49,6 +51,7 @@ app.include_router(router_search)
 app.include_router(room_router)
 app.include_router(history_router)
 app.include_router(rooms_router)
+app.include_router(youtube_router)
 
 
 
@@ -72,7 +75,6 @@ class ConnectionManager:
             self.room_connections[room_id] = []
         self.room_connections[room_id].append(websocket)
 
-        # Отменить таймер на удаление комнаты, если пользователь переподключился
         if room_id in self.disconnection_timers:
             self.disconnection_timers[room_id].cancel()
             del self.disconnection_timers[room_id]
@@ -82,7 +84,6 @@ class ConnectionManager:
         self.room_connections[room_id].remove(websocket)
         if not self.room_connections[room_id]:
             del self.room_connections[room_id]
-            # Установить таймер на удаление комнаты через 10 секунд
             self.disconnection_timers[room_id] = asyncio.create_task(self.schedule_delete_room(room_id))
 
     async def schedule_delete_room(self, room_id: str):
@@ -98,8 +99,6 @@ class ConnectionManager:
         for connection in self.room_connections.get(room_id, []):
             await connection.send_text(message)
 
-
-
 manager = ConnectionManager()
 
 
@@ -114,6 +113,54 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
         await manager.disconnect(websocket, room_id)
 
 
+class YouTubeConnectionManager:
+    def __init__(self):
+        self.active_connections: List[WebSocket] = []
+        self.room_connections: dict[str, List[WebSocket]] = {}
+        self.disconnection_timers: dict[str, asyncio.Task] = {}
+
+    async def connect(self, websocket: WebSocket, youtube_room_id: str):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+        if youtube_room_id not in self.room_connections:
+            self.room_connections[youtube_room_id] = []
+        self.room_connections[youtube_room_id].append(websocket)
+
+        if youtube_room_id in self.disconnection_timers:
+            self.disconnection_timers[youtube_room_id].cancel()
+            del self.disconnection_timers[youtube_room_id]
+
+    async def disconnect(self, websocket: WebSocket, youtube_room_id: str):
+        self.active_connections.remove(websocket)
+        self.room_connections[youtube_room_id].remove(websocket)
+        if not self.room_connections[youtube_room_id]:
+            del self.room_connections[youtube_room_id]
+            self.disconnection_timers[youtube_room_id] = asyncio.create_task(self.schedule_delete_room(youtube_room_id))
+
+    async def schedule_delete_room(self, youtube_room_id: str):
+        await asyncio.sleep(10)
+        await self.delete_room(youtube_room_id)
+        del self.disconnection_timers[youtube_room_id]
+
+    async def delete_room(self, youtube_room_id: str):
+        await YouTubeDAO.delete_youtube_rooms(youtube_room_id=youtube_room_id)
+        logging.info(f"Room {youtube_room_id} deleted from database")
+
+    async def broadcast(self, message: str, youtube_room_id: str):
+        for connection in self.room_connections.get(youtube_room_id, []):
+            await connection.send_text(message)
+
+youtube_manager = YouTubeConnectionManager()
+
+@app.websocket("/ws/yt/{youtube_room_id}")
+async def youtube_websocket_endpoint(websocket: WebSocket, youtube_room_id: str):
+    await youtube_manager.connect(websocket, youtube_room_id)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            await youtube_manager.broadcast(data, youtube_room_id)
+    except WebSocketDisconnect:
+        await youtube_manager.disconnect(websocket, youtube_room_id)
 
 
 if __name__ == "__main__":

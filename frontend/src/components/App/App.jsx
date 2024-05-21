@@ -4,16 +4,15 @@ import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-route
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Header from "../Header/Header.jsx";
 import Main from "../Main/Main.jsx";
-import Footer from "../Footer/Footer.jsx";
 import Films from "../Films/Films.jsx";
 import Series from "../Series/Series.jsx";
 import Anime from "../Anime/Anime.jsx";
 import Player from "../Player/Player.jsx";
-import SharedPlayer from "../SharedPlayer/SharedPlayer.jsx"; // Импортируем SharedPlayer
+import SharedPlayer from "../SharedPlayer/SharedPlayer.jsx";
 import Cartoon from "../Cartoon/Cartoon.jsx";
 import Register from "../Register/Register.jsx";
-import Profile from "../Profile/Profile.jsx";
 import Rooms from "../Rooms/Rooms.jsx";
+import Youtube from "../Youtube/Youtube.jsx";
 
 const App = () => {
   const [showRegister, setShowRegister] = React.useState(false);
@@ -52,6 +51,7 @@ const AnimatedRoutes = () => {
           <Route path="/anime" element={<Anime />} />
           <Route path="/cartoon" element={<Cartoon />} />
           <Route path="/rooms" element={<Rooms />} />
+          <Route path="/youtube/:roomId" element={<Youtube />} />
           <Route path="/player/:movieId" element={<Player />} />
           <Route path="/shared/:roomId" element={<SharedPlayer />} />
         </Routes>

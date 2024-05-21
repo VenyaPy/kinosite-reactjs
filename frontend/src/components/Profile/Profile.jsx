@@ -4,6 +4,7 @@ import axios from 'axios';
 import Loading from "../Loading/Loading.jsx";
 import './Profile.css';
 
+// eslint-disable-next-line react/prop-types
 export default function Profile({ closeModal }) {
     const navigate = useNavigate(); // Используем хук useNavigate
     const [userData, setUserData] = useState({

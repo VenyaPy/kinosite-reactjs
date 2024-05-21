@@ -38,10 +38,10 @@ export default function Cartoon() {
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
             `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=cartoon` :
-            `http://127.0.0.1:8000/api/v2/cartoonnnn`;
+            `http://127.0.0.1:8000/api/v2/carcoon`;
 
         if (year) url += `&year=${year}`;
-        if (rating) url += `&rating.imdb=${rating}`;
+        if (rating) url += `&rating.kp=${rating}`;
         if (genre) url += `&genres.name=${encodeURIComponent(genre)}`;
         if (country) url += `&countries.name=${encodeURIComponent(country)}`;
         if (studio) url += `&networks.items.name=${encodeURIComponent(studio)}`; // Добавлено условие для студии

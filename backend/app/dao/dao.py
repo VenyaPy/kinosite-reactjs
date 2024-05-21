@@ -116,6 +116,30 @@ class BaseDAO:
                 return None
 
     @classmethod
+    async def update_youtube_room(cls, youtube_room_id: str, **data):
+        async with ScopedSession() as session:
+            try:
+                room = await cls.find_one_or_none(youtube_room_id=youtube_room_id)
+                if room:
+                    current_members = room.members.split(',') if room.members else []
+                    if data['members'] not in current_members:
+                        new_members = current_members + [str(data['members'])]
+                        query = (
+                            update(cls.model).
+                            where(cls.model.youtube_room_id == youtube_room_id).
+                            values(members=','.join(new_members))
+                        )
+                        result = await session.execute(query)
+                        await session.commit()
+                        return result.rowcount
+                else:
+                    return None
+            except (SQLAlchemyError, Exception) as e:
+                await session.rollback()
+                print(f"Error updating data in table {cls.model.__tablename__}: {e}")
+                return None
+
+    @classmethod
     async def delete(cls, **filter_by):
         async with ScopedSession() as session:
             try:
@@ -132,6 +156,18 @@ class BaseDAO:
         async with ScopedSession() as session:
             try:
                 stmt = delete(cls.model).where(cls.model.room_id == room_id)
+                await session.execute(stmt)
+                await session.commit()
+            except (SQLAlchemyError, Exception) as e:
+                await session.rollback()
+                print(f"Error deleting data in table {cls.model.__tablename__}: {e}")
+                return None
+
+    @classmethod
+    async def delete_youtube_rooms(cls, youtube_room_id: str):
+        async with ScopedSession() as session:
+            try:
+                stmt = delete(cls.model).where(cls.model.youtube_room_id == youtube_room_id)
                 await session.execute(stmt)
                 await session.commit()
             except (SQLAlchemyError, Exception) as e:

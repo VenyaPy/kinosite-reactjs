@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import './Rooms.css';
 import Loading from '../Loading/Loading'; // Импортируем компонент Loading
@@ -8,6 +9,7 @@ export default function Rooms() {
     const [rooms, setRooms] = useState([]);
     const [countRooms, setCountRooms] = useState(false);
     const [isLoading, setIsLoading] = useState(true); // Добавляем состояние для отслеживания загрузки
+    const navigate = useNavigate();
 
     const fetchRooms = useCallback(() => {
         let url = "http://127.0.0.1:8000/api/v2/rooms/all_rooms";
@@ -28,6 +30,26 @@ export default function Rooms() {
             setIsLoading(false); // Завершаем загрузку в случае ошибки
         });
     }, []);
+
+    const createYouTubeRoom = async () => {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            try {
+                const response = await axios.post('http://127.0.0.1:8000/api/v2/youtube_room/create_room', {}, {
+                    headers: {
+                        'accept': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const youtubeRoomId = response.data.video_id;
+                navigate(`/youtube/${youtubeRoomId}`);
+            } catch (error) {
+                console.error('Error creating YouTube room:', error);
+            }
+        } else {
+            alert('Вам нужно войти в аккаунт, чтобы использовать функцию создания комнаты YouTube');
+        }
+    };
 
     useEffect(() => {
         fetchRooms();
@@ -52,6 +74,7 @@ export default function Rooms() {
                         <p>Присоединяйся, знакомься, и смотри фильмы вместе!</p>
                     </div>
                 </div>
+                <button onClick={createYouTubeRoom} className="create-room-button">Создать YouTube Комнату</button>
                 {countRooms ? (
                     <div className="item-room-container">
                         {rooms.map(room => (
