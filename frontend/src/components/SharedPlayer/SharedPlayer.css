@@ -106,6 +106,7 @@
     color: grey;
     text-align: center;
     padding: 20px;
+    margin-top: 20vh;
 }
 
 
@@ -169,6 +170,25 @@
     scrollbar-width: none;
 }
 
+.user-list {
+    background: #333;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    color: #e0e0e0;
+}
+
+.user-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.user-list li {
+    margin-bottom: 5px;
+}
+
 .shared-player-message {
     background-color: #333;
     padding: 10px 15px;
@@ -222,16 +242,41 @@
     background-color: #45a049;
 }
 
-    .auth-message {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        font-size: 1.5em;
-        color: #fff;
-        text-align: center;
-        background-color: rgba(0, 0, 0, 0.8);
-    }
+.auth-container-m {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    background-color: #000;
+    color: #fff;
+    min-height: 100vh; /* Высота экрана */
+}
+
+.auth-message-m {
+    font-size: 1.5em;
+    color: #f0f0f0;
+    margin-bottom: 40px; /* Добавляем отступ снизу */
+    flex: 0 0 auto; /* Предотвращаем растягивание элемента */
+    max-width: 80%; /* Ограничиваем ширину для лучшего отображения */
+}
+
+.auth-image-m {
+    font-size: 2em;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+    margin-top: 10px; /* Добавляем отступ сверху */
+}
+
+.auth-image-m:hover {
+    transform: scale(1.2);
+    color: #ff0;
+}
+
+
+
 
 /* Мобильная версия */
 @media (max-width: 768px) {

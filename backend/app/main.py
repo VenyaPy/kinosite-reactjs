@@ -1,9 +1,10 @@
 import asyncio
+import json
 import logging
 from typing import List
 
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
@@ -13,6 +14,8 @@ from redis import asyncio as aioredis
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from backend.app.models.rooms.roomdao import RoomDAO
+from backend.app.models.users.dependencies import get_current_user
+from backend.app.models.users.model import Users
 from backend.app.models.users.router import router_auth
 from backend.app.models.search.router import router_search
 from backend.app.models.admin.auth import auth_backend
@@ -118,6 +121,7 @@ class YouTubeConnectionManager:
         self.active_connections: List[WebSocket] = []
         self.room_connections: dict[str, List[WebSocket]] = {}
         self.disconnection_timers: dict[str, asyncio.Task] = {}
+        self.room_states: dict[str, dict] = {}
 
     async def connect(self, websocket: WebSocket, youtube_room_id: str):
         await websocket.accept()
@@ -126,9 +130,10 @@ class YouTubeConnectionManager:
             self.room_connections[youtube_room_id] = []
         self.room_connections[youtube_room_id].append(websocket)
 
-        if youtube_room_id in self.disconnection_timers:
-            self.disconnection_timers[youtube_room_id].cancel()
-            del self.disconnection_timers[youtube_room_id]
+        # Send current room state to the new connection
+        if youtube_room_id in self.room_states:
+            state = self.room_states[youtube_room_id]
+            await websocket.send_text(json.dumps({'type': 'control', 'videoId': state['videoId'], 'currentTime': state['currentTime']}))
 
     async def disconnect(self, websocket: WebSocket, youtube_room_id: str):
         self.active_connections.remove(websocket)
@@ -143,12 +148,16 @@ class YouTubeConnectionManager:
         del self.disconnection_timers[youtube_room_id]
 
     async def delete_room(self, youtube_room_id: str):
-        await YouTubeDAO.delete_youtube_rooms(youtube_room_id=youtube_room_id)
+        if youtube_room_id in self.room_states:
+            del self.room_states[youtube_room_id]
         logging.info(f"Room {youtube_room_id} deleted from database")
 
     async def broadcast(self, message: str, youtube_room_id: str):
         for connection in self.room_connections.get(youtube_room_id, []):
             await connection.send_text(message)
+
+    async def update_room_state(self, youtube_room_id: str, state: dict):
+        self.room_states[youtube_room_id] = state
 
 youtube_manager = YouTubeConnectionManager()
 
@@ -158,6 +167,9 @@ async def youtube_websocket_endpoint(websocket: WebSocket, youtube_room_id: str)
     try:
         while True:
             data = await websocket.receive_text()
+            message = json.loads(data)
+            if message['type'] == 'control' and 'currentTime' in message:
+                await youtube_manager.update_room_state(youtube_room_id, message)
             await youtube_manager.broadcast(data, youtube_room_id)
     except WebSocketDisconnect:
         await youtube_manager.disconnect(websocket, youtube_room_id)

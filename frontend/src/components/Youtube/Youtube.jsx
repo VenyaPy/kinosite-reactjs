@@ -95,17 +95,61 @@ export default function Youtube() {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
+    useEffect(() => {
+        const handlePlayerEvent = (event) => {
+            console.log("Player event received:", event.data);
+            if (event.data.event === 'play' || event.data.event === 'pause' || event.data.event === 'seek') {
+                if (wsRef.current) {
+                    wsRef.current.send(JSON.stringify({ type: 'control', command: event.data.event }));
+                }
+            }
+        };
+
+        window.addEventListener("message", handlePlayerEvent);
+
+        return () => {
+            window.removeEventListener("message", handlePlayerEvent);
+        };
+    }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (!event.target.closest('.yt-shared-player-container')) {
+                setVideos([]);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     const searchVideos = async () => {
         const apiKey = 'AIzaSyCv2HQx-pt-eq45aA1blGWTJskP9gxFcMk';
         setIsLoading(true);
         console.log("Searching videos for query:", query);
+
+        const youtubeLinkRegex = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/;
+        if (youtubeLinkRegex.test(query)) {
+            const videoId = extractVideoId(query);
+            if (videoId) {
+                const video = { id: { videoId } };
+                selectVideo(video);
+            } else {
+                setError('Invalid YouTube link.');
+                setIsLoading(false);
+            }
+            return;
+        }
+
         try {
             const response = await axios.get(`https://www.googleapis.com/youtube/v3/search`, {
                 params: {
                     part: 'snippet',
                     q: query,
                     type: 'video',
-                    maxResults: 50, // Запрашиваем 50 результатов
+                    maxResults: 50,
                     key: apiKey
                 }
             });
@@ -119,11 +163,17 @@ export default function Youtube() {
         }
     };
 
+    const extractVideoId = (url) => {
+        const regExp = /^.*((m\.)?youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|youtu\.be\/|\/v\/|\/e\/|\/u\/\w\/|embed\?clip=|clip_id=|clip\=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length == 11) ? match[2] : null;
+    };
+
     const selectVideo = (video) => {
         console.log("Video selected:", video);
         setSelectedVideo(video);
-        setQuery('');  // Clear the search input
-        setVideos([]); // Clear the search results
+        setQuery('');
+        setVideos([]);
         if (wsRef.current) {
             wsRef.current.send(JSON.stringify({ type: 'control', videoId: video.id.videoId }));
             console.log('Sending control message with videoId:', video.id.videoId);
@@ -133,7 +183,7 @@ export default function Youtube() {
 
     const initializePlayer = (videoUrl) => {
         console.log("Initializing player with video URL:", videoUrl);
-        const iframe = document.getElementById('player-iframe');
+        const iframe = document.getElementById('yt-player-iframe');
         if (iframe) {
             iframe.src = `/playerjs.html?file=${videoUrl}`;
         }
@@ -159,7 +209,7 @@ export default function Youtube() {
 
     const handleSync = () => {
         console.log("Handle sync clicked");
-        const iframe = document.getElementById('player-iframe');
+        const iframe = document.getElementById('yt-player-iframe');
         if (iframe) {
             console.log('Requesting current time from iframe');
             iframe.contentWindow.postMessage({ api: 'time' }, "*");
@@ -188,7 +238,7 @@ export default function Youtube() {
     };
 
     const handleControlMessage = (data) => {
-        const iframe = document.getElementById('player-iframe');
+        const iframe = document.getElementById('yt-player-iframe');
         console.log("Handling control message:", data);
         if (iframe) {
             if (data.type === 'video') {
@@ -215,10 +265,12 @@ export default function Youtube() {
     }
 
     if (!isAuthenticated) {
-        console.log("User is not authenticated");
         return (
-            <div className="auth-message">
-                Пожалуйста, войдите в систему, чтобы присоединиться к комнате и смотреть видео вместе.
+            <div className="yt-auth-container">
+                <div className="yt-auth-message">
+                    Для того чтобы смотреть фильмы с другом, войдите в аккаунт, и обновите страницу 🍿
+                </div>
+                <i className="fa-solid fa-rotate-right yt-auth-image" onClick={() => window.location.reload()}></i>
             </div>
         );
     }
@@ -234,56 +286,57 @@ export default function Youtube() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
-            className="projects-container"
+            className="yt-projects-container"
         >
-            <div className="shared-player-container">
-                <div className="shared-player-content">
-                    <div className="shared-player-kinobox">
-                        <div className="youtube-search">
+            <div className="yt-shared-player-container">
+                <div className="yt-shared-player-content">
+                    <div className="yt-shared-player-kinobox">
+                        <div className="yt-youtube-search">
                             <input
                                 type="text"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
-                                placeholder="Search YouTube videos..."
-                                className="youtube-search-input"
+                                placeholder="Поиск YouTube видео или вставьте ссылку..."
+                                className="yt-youtube-search-input"
+                                onKeyDown={(e) => e.key === 'Enter' && searchVideos()}
                             />
-                            <button onClick={searchVideos} className="youtube-search-button">Search</button>
+                            <button onClick={searchVideos} className="yt-youtube-search-button"><i className="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                         {videos.length > 0 && (
-                            <div className="youtube-results">
+                            <div className="yt-youtube-results">
                                 {videos.map((video) => (
-                                    <div key={video.id.videoId} onClick={() => selectVideo(video)} className="youtube-result-item">
+                                    <div key={video.id.videoId} onClick={() => selectVideo(video)} className="yt-youtube-result-item">
                                         <img src={video.snippet.thumbnails.default.url} alt={video.snippet.title} />
                                         <p>{video.snippet.title}</p>
                                     </div>
                                 ))}
                             </div>
                         )}
-                        <iframe id="player-iframe" frameBorder="0" allowFullScreen></iframe>
-                        <div className="shared-player-controls">
-                            <button id="play" onClick={handlePlay}><i className="fa-solid fa-play"></i></button>
-                            <button id="pause" onClick={handlePause}><i className="fa-solid fa-pause"></i></button>
-                            <button id="sync" onClick={handleSync}>Синхронизировать</button>
+                        <iframe id="yt-player-iframe" frameBorder="0" allowFullScreen style={{ backgroundColor: 'black' }}></iframe>
+                        <div className="yt-shared-player-controls">
+                            <button id="yt-play" onClick={handlePlay}><i className="fa-solid fa-play"></i></button>
+                            <button id="yt-pause" onClick={handlePause}><i className="fa-solid fa-pause"></i></button>
+                            <button id="yt-sync" onClick={handleSync}>Синхронизировать</button>
                         </div>
-                        <h5 className="use-text">Для совместного просмотра пользуйся кнопками. Приятного просмотра 🍿</h5>
-                        <p className="manual-text">
-                            <span className="first-sentence">Кнопки совместного просмотра не поддерживаются некоторыми плеерами.</span><br />
+                        <h5 className="yt-use-text">Для совместного просмотра пользуйся кнопками. Приятного просмотра 🍿</h5>
+                        <p className="yt-manual-text">
+                            <span className="yt-first-sentence">Кнопки совместного просмотра не поддерживаются некоторыми плеерами.</span><br />
                             Сезоны и серии переключаются вручную.
                         </p>
                     </div>
-                    <div className="shared-player-chat-container">
+                    <div className="yt-shared-player-chat-container">
                         <InviteLink roomId={roomId} />
-                        <div className="shared-player-messages" style={{ height: '800px' }}>
+                        <div className="yt-shared-player-messages" style={{ height: '800px' }}>
                             {messages.length === 0 ? (
-                                <div className="no-messages">Пока тут нет сообщений. Напиши первый!</div>
+                                <div className="yt-no-messages">Пока тут нет сообщений. Напиши первый!</div>
                             ) : (
                                 messages.map((msg, index) => (
-                                    <div key={index} className="shared-player-message"><strong>{msg.username}:</strong> {msg.message}</div>
+                                    <div key={index} className="yt-shared-player-message"><strong>{msg.username}:</strong> {msg.message}</div>
                                 ))
                             )}
                             <div ref={messagesEndRef} />
                         </div>
-                        <div className="shared-player-input-container">
+                        <div className="yt-shared-player-input-container">
                             <input
                                 ref={inputRef}
                                 type="text"
@@ -291,10 +344,10 @@ export default function Youtube() {
                                 onFocus={() => inputRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" })}
                                 onChange={(e) => setMessage(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                                className="shared-player-input"
+                                className="yt-shared-player-input"
                                 placeholder="Написать сообщение..."
                             />
-                            <button onClick={handleSendMessage} className="shared-player-button"><i className="fa-solid fa-paper-plane"></i></button>
+                            <button onClick={handleSendMessage} className="yt-shared-player-button"><i className="fa-solid fa-paper-plane"></i></button>
                         </div>
                     </div>
                 </div>

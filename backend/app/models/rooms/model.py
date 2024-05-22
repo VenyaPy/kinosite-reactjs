@@ -9,11 +9,13 @@ class Rooms(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     room_id = Column(String, unique=True, nullable=False)
     members = Column(Text, nullable=False)
-    movieId = Column(Text)  # Используем movieId как в таблице
+    movieId = Column(Text)
+    username = Column(Text)
 
     def to_dict(self):
         return {
             'room_id': self.room_id,
             'movieId': self.movieId,
             'members': self.members.split(',') if self.members else [],
+            'username': self.username  # Добавляем username в словарь
         }

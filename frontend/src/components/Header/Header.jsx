@@ -17,10 +17,16 @@ export default function Header() {
         const token = localStorage.getItem('access_token');
         const tokenTimestamp = parseInt(localStorage.getItem('token_timestamp'), 10);
         const now = Date.now();
-        const tokenLifetime = 90 * 60 * 1000;
+        const tokenLifetime = 5 * 90 * 60 * 1000; // Увеличиваем время жизни токена в 3 раза
 
         if (token && (now - tokenTimestamp < tokenLifetime)) {
             setAuthStatus(true);
+            const remainingTime = tokenLifetime - (now - tokenTimestamp);
+            setTimeout(() => {
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('token_timestamp');
+                setAuthStatus(false);
+            }, remainingTime);
         } else {
             localStorage.removeItem('access_token');
             localStorage.removeItem('token_timestamp');
