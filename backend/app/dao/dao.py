@@ -175,4 +175,44 @@ class BaseDAO:
                 print(f"Error deleting data in table {cls.model.__tablename__}: {e}")
                 return None
 
+    @classmethod
+    async def get_reviews_by_movie_id(cls, movie_id: str):
+        async with ScopedSession() as session:
+            try:
+                query = select(cls.model).filter_by(movie_id=movie_id)
+                result = await session.execute(query)
+                return result.scalar_one_or_none()
+            except (SQLAlchemyError, Exception) as e:
+                print(f"Error finding data in table {cls.model.__tablename__}: {e}")
+                return None
+
+    @classmethod
+    async def add_new_review(cls, **data):
+        async with ScopedSession() as session:
+            try:
+                query = insert(cls.model).values(**data)
+                await session.execute(query)
+                await session.commit()
+            except (SQLAlchemyError, Exception) as e:
+                await session.rollback()
+                print(f"Database Exc: Cannot insert data into table: {e}")
+                return None
+        
+    
+    @classmethod
+    async def update_review(cls, movie_id: str, **data):
+        async with ScopedSession() as session:
+            try:
+                query = (
+                    update(cls.model).
+                    where(cls.model.movie_id == movie_id).
+                    values(**data)
+                )
+                result = await session.execute(query)
+                await session.commit()
+                return result.rowcount
+            except (SQLAlchemyError, Exception) as e:
+                await session.rollback()
+                print(f"Error updating data in table {cls.model.__tablename__}: {e}")
+                return None
 

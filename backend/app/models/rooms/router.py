@@ -29,12 +29,21 @@ connections = {}
 
 
 @room_router.post("/create_room", summary="Создание комнаты")
-async def create_room(request: CreateRoomRequest, current_user: Users = Depends(get_current_user)):
+async def create_room(
+        request: CreateRoomRequest,
+        current_user: Users = Depends(get_current_user)
+):
     if current_user:
         uuid_room = str(uuid4())
-        await RoomDAO.add(room_id=uuid_room, movieId=request.movieId, members=current_user.id, username=current_user.username)
+        await RoomDAO.add(
+            room_id=uuid_room,
+            movieId=request.movieId,
+            members=current_user.id,
+            username=current_user.username
+        )
         return {"message": f"{uuid_room}"}
     return {"error": "User not authenticated"}
+
 
 @room_router.post("/users/get_username")
 async def get_user(current_user: Users = Depends(get_current_user)):

@@ -13,8 +13,8 @@ export default function Main() {
             className="projects-container"
         >
             <div className="search-container">
-                <div className="image-container">
-                    <img className="image" src="https://i.ibb.co/S38d90S/6666666-2.jpg" alt="some" />
+                <div className="image-container-g">
+                    <img className="image-ge" src="https://i.ibb.co/S38d90S/6666666-2.jpg" alt="some" />
                     <Finder />
                 </div>
                 <div className="popular-films">

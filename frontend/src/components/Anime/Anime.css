@@ -92,6 +92,7 @@
 
 .unique-anime-filters-container {
     width: 100%;
+    margin-top: 50px;
     overflow: hidden;
     transition: max-height 0.3s ease-out;
 }

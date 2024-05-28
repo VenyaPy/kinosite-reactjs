@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import "./Player.css";
 import Loading from "../Loading/Loading.jsx";
-import parse from 'html-react-parser';
 import { motion } from "framer-motion";
 
 export default function Player() {
@@ -13,7 +12,6 @@ export default function Player() {
 
     const { movieId } = useParams();
     const [movie, setMovie] = useState(null);
-    const [reviews, setReviews] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [userId, setUserId] = useState(null);
@@ -21,6 +19,50 @@ export default function Player() {
     const playerRef = useRef(null);
     const scriptLoaded = useRef(false);
     const navigate = useNavigate();
+
+    const [reviewSubmitted, setReviewSubmitted] = useState(false)
+    const [ratingCounts, setRatingCounts]  = useState({
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0
+    })
+
+    const submitRating = async (movieId, score) => {
+        try {
+            const response = await axios.post(`http://127.0.0.1:8000/api/v2/review`, null, {
+                params: {
+                    movie_id: movieId,
+                    score: score
+                }
+            });
+            console.log('Оценка отправлена:', response.data);
+            await fetchRatingCounts(movieId); // Обновление рейтингов после отправки оценки
+        } catch (error) {
+            console.error('Ошибка при отправке комментария:', error);
+        }
+    };
+
+    const fetchRatingCounts = (movieId) => {
+        axios.get(`http://127.0.0.1:8000/api/v2/get_review`, {
+            params: { movie_id: movieId }
+        })
+        .then(response => {
+            const counts = response.data.counts;
+            setRatingCounts(counts);
+        })
+        .catch(error => {
+            console.error('Ошибка при получении оценок:', error);
+        });
+    };
+
+    useEffect(() => {
+        if (movieId) {
+            fetchRatingCounts(movieId);
+        }
+    }, [movieId])
+
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -34,6 +76,12 @@ export default function Player() {
             setUserId(null);
         }
     }, []);
+
+
+    const handleReviewClick = (rating) => {
+        submitRating(movieId, rating);
+        setReviewSubmitted(true);
+    };
 
     const fetchUserProfile = (token) => {
         axios.get('http://127.0.0.1:8000/api/v2/users/profile', {
@@ -62,11 +110,7 @@ export default function Player() {
                 const movieResponse = await axios.get(`https://api.kinopoisk.dev/v1.4/movie/${movieId}`, {
                     headers: { 'accept': 'application/json', 'X-API-KEY': apiKey }
                 });
-                const reviewsResponse = await axios.get(`https://api.kinopoisk.dev/v1.4/review?page=1&limit=20&movieId=${movieId}`, {
-                    headers: { 'accept': 'application/json', 'X-API-KEY': apiKey }
-                });
                 setMovie(movieResponse.data);
-                setReviews(reviewsResponse.data.docs.map(review => ({ ...review, isOpen: false })));
                 if (userId) {
                     sendMovieToHistory(userId, movieResponse.data);
                 }
@@ -139,15 +183,6 @@ export default function Player() {
         }
     };
 
-    const toggleReviewVisibility = index => {
-        const updatedReviews = reviews.map((review, i) => {
-            if (i === index) {
-                return { ...review, isOpen: !review.isOpen };
-            }
-            return review;
-        });
-        setReviews(updatedReviews);
-    };
 
     const handleSwipe = () => {
         setIsSwiped(true);
@@ -182,6 +217,8 @@ export default function Player() {
     if (!movie || isLoading) {
         return <Loading />;
     }
+
+
 
     return (
         <motion.div
@@ -222,23 +259,29 @@ export default function Player() {
                         </motion.div>
                     </motion.label>
                 </div>
-                {reviews.length > 0 && (
-                    <div className="reviews-container">
-                        <h3 className="review-text">Отзывы:</h3>
-                        {reviews.map((review, index) => (
-                            <div key={review.id} className={`review ${review.isOpen ? 'open' : ''}`}>
-                                <div className="review-header">
-                                    <span className="review-author">{review.author}</span>
-                                    <span className="review-date">{new Date(review.date).toLocaleDateString()}</span>
-                                </div>
-                                <p>{review.isOpen ? parse(review.review) : parse(`${review.review.substring(0, 200)}...`)}</p>
-                                <button className="toggle-button" onClick={() => toggleReviewVisibility(index)}>
-                                    {review.isOpen ? 'Свернуть' : 'Развернуть отзыв'}
-                                </button>
+                <div>
+                    {reviewSubmitted ? (
+                            <div className="thank-you-message">
+                                Спасибо за ваш отзыв!
                             </div>
-                        ))}
-                    </div>
-                )}
+                        ) : (
+                            <div className="review-container-uni">
+                                <h3 className="review-text-uni">Понравился ли вам фильм?</h3>
+                                <div className="emoji-rating">
+                                    <span className="emoji" data-rating="1"
+                                          onClick={() => handleReviewClick(1)}>😢 {ratingCounts[1]}</span>
+                                    <span className="emoji" data-rating="2"
+                                          onClick={() => handleReviewClick(2)}>😟 {ratingCounts[2]}</span>
+                                    <span className="emoji" data-rating="3"
+                                          onClick={() => handleReviewClick(3)}>😐 {ratingCounts[3]}</span>
+                                    <span className="emoji" data-rating="4"
+                                          onClick={() => handleReviewClick(4)}>🙂 {ratingCounts[4]}</span>
+                                    <span className="emoji" data-rating="5"
+                                          onClick={() => handleReviewClick(5)}>😃 {ratingCounts[5]}</span>
+                                </div>
+                            </div>
+                    )}
+                </div>
             </div>
         </motion.div>
     );

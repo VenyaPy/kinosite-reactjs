@@ -6,19 +6,32 @@ from backend.app.models.history.dao import MovieDAO
 from backend.app.models.history.model import MovieHistory
 from backend.app.models.history.schema import MovieHistoryResponse
 
+
 history_router = APIRouter(
     prefix="/history",
-    tags=["История"]
+    tags=["История просмотров"]
 )
 
 
 @history_router.post("/move_history")
-async def move_history(id_user: int, id_film: int, name: str, description: str, poster_url: str):
-    repeat = await MovieDAO.find_one_or_none(id_user=id_user, id_film=id_film)
+async def move_history(
+        id_user: int,
+        id_film: int,
+        name: str,
+        description: str,
+        poster_url: str
+):
+    repeat = await MovieDAO.find_one_or_none(id_user=id_user,
+                                             id_film=id_film)
     if not repeat:
-        result = await MovieDAO.add(id_user=id_user, name=name, description=description, poster_url=poster_url, id_film=id_film)
+        result = await MovieDAO.add(id_user=id_user,
+                                    name=name,
+                                    description=description,
+                                    poster_url=poster_url,
+                                    id_film=id_film)
         if result is None:
-            raise HTTPException(status_code=500, detail="Error adding movie history")
+            raise HTTPException(status_code=500,
+                                detail="Error adding movie history")
         return {"id": result}
     else:
         return {"detail": "Movie already in history"}

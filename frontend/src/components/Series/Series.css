@@ -93,6 +93,7 @@
 .unique-series-filters-container {
     width: 100%;
     overflow: hidden;
+    margin-top: 50px;
     transition: max-height 0.3s ease-out;
 }
 

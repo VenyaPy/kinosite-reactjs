@@ -17,7 +17,6 @@ export default function Cartoon() {
     const [studio, setStudio] = useState('');
     const [isFiltered, setIsFiltered] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [showFilters, setShowFilters] = useState(false); // Изначально скрытые фильтры
 
     const years = Array.from({ length: 45 }, (_, i) => 2024 - i);
     const ratings = ["1-2", "3-4", "5-7", "7-8", "9-10"];
@@ -89,10 +88,6 @@ export default function Cartoon() {
         fetchMovies();
     };
 
-    const toggleFilters = () => {
-        setShowFilters(!showFilters);
-    };
-
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -105,10 +100,7 @@ export default function Cartoon() {
                 <Loading />
             ) : (
                 <div>
-                    <button className="filter-toggle-button" onClick={toggleFilters}>
-                        {showFilters ? "Скрыть фильтры" : "Показать фильтры"}
-                    </button>
-                    <div className="unique-cartoon-filters-container" style={{ maxHeight: showFilters ? '1000px' : '0' }}>
+                    <div className="unique-cartoon-filters-container">
                         <div className="unique-cartoon-filters">
                             <select value={year} onChange={e => setYear(e.target.value)}>
                                 <option value="">Год</option>

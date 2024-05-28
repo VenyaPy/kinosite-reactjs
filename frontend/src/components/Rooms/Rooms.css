@@ -49,6 +49,12 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+@media (max-width: 1920px) {
+    .rooms-create-room-button {
+        font-size: 1em;
+    }
+}
+
 .rooms-create-room-button:hover {
     background-color: #0056b3;
     transform: translateY(-3px);
@@ -89,6 +95,14 @@
     flex-grow: 1;
     object-fit: cover;
 }
+
+@media (max-width: 1920px) {
+    .rooms-unique-room {
+        height: 400px;
+        width: 250px;
+    }
+}
+
 
 .rooms-room-info {
     padding: 10px;

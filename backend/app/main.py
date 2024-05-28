@@ -25,8 +25,8 @@ from backend.app.models.section.router import section_router
 from backend.app.models.category.router import category_router
 from backend.app.models.rooms.router import room_router, rooms_router
 from backend.app.models.history.router import history_router
-from backend.app.models.youtube.dao import YouTubeDAO
 from backend.app.models.youtube.router import youtube_router
+from backend.app.models.review.router import review_router
 
 app = FastAPI(
     title="Совместный просмотр фильмов",
@@ -55,6 +55,7 @@ app.include_router(room_router)
 app.include_router(history_router)
 app.include_router(rooms_router)
 app.include_router(youtube_router)
+app.include_router(review_router)
 
 
 

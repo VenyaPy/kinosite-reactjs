@@ -88,8 +88,14 @@
 
 .unique-filters-container {
     width: 100%;
+    margin-top: 50px;
     overflow: hidden;
     transition: max-height 0.3s ease-out;
+}
+
+.projects-container {
+    display: flex;
+    margin-bottom: 40px;
 }
 
 .unique-filters {
@@ -145,6 +151,8 @@
     padding-top: 20px;
     text-align: center;
 }
+
+
 
 /* Мобильная версия */
 @media (max-width: 900px) {

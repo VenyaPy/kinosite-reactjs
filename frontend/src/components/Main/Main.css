@@ -3,14 +3,14 @@
     width: 100%;
 }
 
-.image-container {
+.image-container-g {
     display: flex;
     flex: 1;
     position: relative;
     overflow: hidden;
 }
 
-.image-container::after {
+.image-container-g::after {
     content: '';
     position: absolute;
     top: 0;
@@ -22,8 +22,8 @@
     z-index: 1; /* Устанавливаем z-index для градиента */
 }
 
-.image {
-    width: 90vw; /* Или другие значения, которые вам подходят */
+.image-ge {
+    width: 80vw; /* Или другие значения, которые вам подходят */
     display: block;
     margin: 0 auto; /* Центрируем изображение */
     z-index: 0;
