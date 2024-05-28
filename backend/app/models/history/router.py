@@ -14,16 +14,16 @@ history_router = APIRouter(
 
 
 @history_router.post("/move_history")
-async def move_history(
+async def add_movie_to_history(
         id_user: int,
         id_film: int,
         name: str,
         description: str,
         poster_url: str
 ):
-    repeat = await MovieDAO.find_one_or_none(id_user=id_user,
-                                             id_film=id_film)
-    if not repeat:
+    movie = await MovieDAO.find_one_or_none(id_user=id_user,
+                                            id_film=id_film)
+    if not movie:
         result = await MovieDAO.add(id_user=id_user,
                                     name=name,
                                     description=description,
@@ -31,10 +31,10 @@ async def move_history(
                                     id_film=id_film)
         if result is None:
             raise HTTPException(status_code=500,
-                                detail="Error adding movie history")
+                                detail="Ошибка при добавлении фильма")
         return {"id": result}
     else:
-        return {"detail": "Movie already in history"}
+        return {"detail": "Фильм уже в истории просмотров"}
 
 
 @history_router.get("/get_history", response_model=List[MovieHistoryResponse])
