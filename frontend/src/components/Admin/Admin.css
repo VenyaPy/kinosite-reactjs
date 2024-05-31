@@ -1,0 +1,36 @@
+.admin-container {
+    margin-top: 3%;
+
+}
+
+.admin-panel-h2 {
+    text-align: center;
+    padding-bottom: 1%;
+}
+
+.sections-admin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: white;
+}
+
+.ul-admin {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    flex-direction: row;
+    list-style-type: none; /* Убрать маркеры слева */
+}
+
+.li-admin {
+    padding: 20px;
+    list-style-type: none;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out; /* Добавляем плавную анимацию */
+}
+
+.li-admin:hover {
+    transform: scale(1.05); /* Увеличиваем элемент при наведении */
+}

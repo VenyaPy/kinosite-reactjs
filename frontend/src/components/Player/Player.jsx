@@ -22,11 +22,11 @@ export default function Player() {
 
     const [reviewSubmitted, setReviewSubmitted] = useState(false)
     const [ratingCounts, setRatingCounts]  = useState({
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 0
+        1: null,
+        2: null,
+        3: null,
+        4: null,
+        5: null
     })
 
     const submitRating = async (movieId, score) => {
@@ -44,17 +44,38 @@ export default function Player() {
         }
     };
 
-    const fetchRatingCounts = (movieId) => {
-        axios.get(`http://127.0.0.1:8000/api/v2/get_review`, {
-            params: { movie_id: movieId }
-        })
-        .then(response => {
-            const counts = response.data.counts;
-            setRatingCounts(counts);
-        })
-        .catch(error => {
+    const fetchRatingCounts = async (movieId) => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/api/v2/get_review`, {
+                params: { movie_id: movieId }
+            });
+            if (response.data && response.data.movie_id) {
+                setRatingCounts({
+                    1: response.data.rating_1 || null,
+                    2: response.data.rating_2 || null,
+                    3: response.data.rating_3 || null,
+                    4: response.data.rating_4 || null,
+                    5: response.data.rating_5 || null
+                });
+            } else {
+                setRatingCounts({
+                    1: null,
+                    2: null,
+                    3: null,
+                    4: null,
+                    5: null
+                });
+            }
+        } catch (error) {
             console.error('Ошибка при получении оценок:', error);
-        });
+            setRatingCounts({
+                1: null,
+                2: null,
+                3: null,
+                4: null,
+                5: null
+            });
+        }
     };
 
     useEffect(() => {
@@ -265,21 +286,31 @@ export default function Player() {
                                 Спасибо за ваш отзыв!
                             </div>
                         ) : (
-                            <div className="review-container-uni">
-                                <h3 className="review-text-uni">Понравился ли вам фильм?</h3>
+                        <div className="review-container-uni">
+                            <h3 className="review-text-uni">Понравился ли вам фильм?</h3>
                                 <div className="emoji-rating">
-                                    <span className="emoji" data-rating="1"
-                                          onClick={() => handleReviewClick(1)}>😢 {ratingCounts[1]}</span>
-                                    <span className="emoji" data-rating="2"
-                                          onClick={() => handleReviewClick(2)}>😟 {ratingCounts[2]}</span>
-                                    <span className="emoji" data-rating="3"
-                                          onClick={() => handleReviewClick(3)}>😐 {ratingCounts[3]}</span>
-                                    <span className="emoji" data-rating="4"
-                                          onClick={() => handleReviewClick(4)}>🙂 {ratingCounts[4]}</span>
-                                    <span className="emoji" data-rating="5"
-                                          onClick={() => handleReviewClick(5)}>😃 {ratingCounts[5]}</span>
+                                    <div className="emoji-container" onClick={() => handleReviewClick(1)}>
+                                        <span className="emoji" data-rating="1">😢</span>
+                                        <span className="rating-count">{ratingCounts[1]}</span>
+                                    </div>
+                                    <div className="emoji-container" onClick={() => handleReviewClick(2)}>
+                                        <span className="emoji" data-rating="2">😟</span>
+                                        <span className="rating-count">{ratingCounts[2]}</span>
+                                    </div>
+                                    <div className="emoji-container" onClick={() => handleReviewClick(3)}>
+                                        <span className="emoji" data-rating="3">😐</span>
+                                        <span className="rating-count">{ratingCounts[3]}</span>
+                                    </div>
+                                    <div className="emoji-container" onClick={() => handleReviewClick(4)}>
+                                        <span className="emoji" data-rating="4">🙂</span>
+                                        <span className="rating-count">{ratingCounts[4]}</span>
+                                    </div>
+                                    <div className="emoji-container" onClick={() => handleReviewClick(5)}>
+                                        <span className="emoji" data-rating="5">😃</span>
+                                        <span className="rating-count">{ratingCounts[5]}</span>
+                                    </div>
                                 </div>
-                            </div>
+                        </div>
                     )}
                 </div>
             </div>

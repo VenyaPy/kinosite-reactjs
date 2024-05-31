@@ -1,0 +1,43 @@
+.admin-yt-room-container {
+    width: 70%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.yt-room-card {
+    border: 1px solid #555555;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #2e2e2e;
+}
+
+.yt-room-card p {
+    margin: 5px 0;
+}
+
+.yt-room-card span {
+    font-weight: bold;
+}
+
+.btn-yt-admin {
+    background-color: #ff4b5c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-top: 10px;
+}
+
+.btn-yt-admin:hover {
+    background-color: #ff1e3b;
+    transform: translateY(-2px);
+}
+
+.btn-yt-admin:active {
+    background-color: #d40023;
+    transform: translateY(0);
+}

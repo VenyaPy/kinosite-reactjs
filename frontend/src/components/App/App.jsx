@@ -13,6 +13,7 @@ import Cartoon from "../Cartoon/Cartoon.jsx";
 import Register from "../Register/Register.jsx";
 import Rooms from "../Rooms/Rooms.jsx";
 import Youtube from "../Youtube/Youtube.jsx";
+import Admin from "../Admin/Admin.jsx";
 
 const App = () => {
   const [showRegister, setShowRegister] = React.useState(false);
@@ -54,6 +55,7 @@ const AnimatedRoutes = () => {
           <Route path="/youtube/:roomId" element={<Youtube />} />
           <Route path="/player/:movieId" element={<Player />} />
           <Route path="/shared/:roomId" element={<SharedPlayer />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </CSSTransition>
     </TransitionGroup>

@@ -13,12 +13,12 @@ from starlette.middleware.cors import CORSMiddleware
 from redis import asyncio as aioredis
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
+from backend.app.models.admin.router import admin_router
 from backend.app.models.rooms.roomdao import RoomDAO
 from backend.app.models.users.dependencies import get_current_user
 from backend.app.models.users.model import Users
 from backend.app.models.users.router import router_auth
 from backend.app.models.search.router import router_search
-from backend.app.models.admin.auth import auth_backend
 from backend.app.models.images.router import router_user
 from backend.app.models.mainpage.router import main_router
 from backend.app.models.section.router import section_router
@@ -56,6 +56,7 @@ app.include_router(history_router)
 app.include_router(rooms_router)
 app.include_router(youtube_router)
 app.include_router(review_router)
+app.include_router(admin_router)
 
 
 

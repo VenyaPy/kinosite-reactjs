@@ -51,6 +51,17 @@ class BaseDAO:
                 return None
 
     @classmethod
+    async def find_all_no_filters(cls):
+        async with ScopedSession() as session:
+            try:
+                query = select(cls.model)
+                result = await session.execute(query)
+                return result.scalars().all()
+            except (SQLAlchemyError, Exception) as e:
+                print(f"Error finding all data in table {cls.model.__tablename__}: {e}")
+                return None
+
+    @classmethod
     async def get_all(cls):
         async with ScopedSession() as session:
             try:

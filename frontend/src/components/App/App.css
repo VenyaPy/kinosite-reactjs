@@ -14,7 +14,7 @@ body {
 }
 
 .main-container {
-    padding-top: 70px; /* Размер должен соответствовать высоте .header */
+    padding-top: 50px; /* Размер должен соответствовать высоте .header */
     padding-bottom: 0; /* Добавлен нижний внутренний отступ для отделения содержимого от нижней части контейнера */
     margin: 0 auto;
     background-image: url('https://i.ibb.co/gPTGzkv/file-cover-1.png');
@@ -33,7 +33,7 @@ body {
     padding-bottom: 50px; /* Добавлен нижний внутренний отступ для отделения содержимого от нижней части контейнера */
     margin: 0 auto;
     background-color: #FFFFFF; /* Светлый фон для основного контейнера */
-    color: #333333; /* Темный цвет текста для контраста */
+    color: #ffffff; /* Темный цвет текста для контраста */
     max-width: 80%;
     min-height: 100vh;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легкая тень для глубины */

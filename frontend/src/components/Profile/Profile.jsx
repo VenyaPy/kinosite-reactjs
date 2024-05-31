@@ -35,7 +35,7 @@ export default function Profile({ closeModal }) {
         async function fetchUserData() {
             const token = localStorage.getItem('access_token');
             try {
-                const response = await axios.get('https://ve1.po2014.fvds.ru:8000/api/v2/users/profile', {
+                const response = await axios.get('http://127.0.0.1:8000/api/v2/users/profile', {
                     headers: {
                         'accept': 'application/json',
                         'Authorization': `Bearer ${token}`
@@ -76,6 +76,12 @@ export default function Profile({ closeModal }) {
         fetchUserHistory();
     }, [userId]);
 
+    const handleAdminClick = () => {
+        setIsModalOpen(false);
+        closeModal();
+        navigate('/admin');
+    };
+
     if (isLoading) return <Loading />;
     if (error) return <div>Error: {error}</div>;
 
@@ -104,6 +110,11 @@ export default function Profile({ closeModal }) {
                                 <p><strong>Статус:</strong> {userData.status}</p>
                                 <p><strong>Дата регистрации:</strong> {new Date(userData.date).toLocaleDateString()}</p>
                             </div>
+                            {userData.status === 'admin' && (
+                                <button className="admin-button" onClick={handleAdminClick}>
+                                    Перейти в админ панель
+                                </button>
+                            )}
                             <h2>История просмотров</h2>
                             <div className="unique-movies-section">
                                 {history.length === 0 ? (
