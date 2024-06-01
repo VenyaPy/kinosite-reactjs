@@ -1,4 +1,15 @@
 /* Основные стили */
+.projects-container-m {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1600px; /* Ограничиваем максимальную ширину контейнера */
+    margin: 0 auto;
+    padding: 20px;
+}
+
 .unique-anime-section {
     display: flex;
     flex-wrap: wrap;
@@ -151,6 +162,15 @@
     text-align: center;
 }
 
+.no-movies {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    font-size: 18px;
+    color: white;
+}
+
 /* Мобильная версия */
 @media (max-width: 900px) {
     html, body {
@@ -192,10 +212,12 @@
         flex-direction: column;
         padding: 10px;
         gap: 15px;
+        width: 100%; /* Устанавливаем ширину на 100% */
+        align-items: center; /* Центрируем элементы */
     }
 
     .unique-anime-filters select, .unique-anime-filters button {
-        width: 90%;
+        width: 90%; /* Ширина элементов */
         max-width: 100%;
     }
 
@@ -206,12 +228,12 @@
     button.filter-toggle-button {
         margin: 0 auto; /* Центрируем кнопку */
         text-align: center; /* Центрируем текст */
-        margin-top: 10px; /* Отступ сверху для мобильной версии */
+        margin-top: 0; /* Отступ сверху для мобильной версии */
         margin-bottom: 20px;
     }
 }
 
-button.filter-toggle-button {
+.filter-toggle-button {
     display: block;
     padding: 10px 20px;
     font-size: 16px;

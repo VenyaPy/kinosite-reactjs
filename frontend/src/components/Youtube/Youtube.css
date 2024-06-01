@@ -315,63 +315,101 @@
 }
 
 @media (max-width: 768px) {
+    .yt-youtube-result-item {
+        flex-direction: column; /* Изменение направления на столбцы */
+        align-items: flex-start; /* Выравнивание по началу */
+    }
+
+    .yt-youtube-result-item img {
+        width: 100%; /* Ширина 100% */
+        height: auto; /* Автоматическая высота */
+    }
+
+    .yt-youtube-result-item p {
+        width: 100%; /* Ширина 100% */
+        text-align: left; /* Выравнивание текста по левому краю */
+    }
+
     .yt-shared-player-container {
-        padding: 10px;
+        padding: 20px;
+        height: 80%; /* Занимать всю высоту экрана */
+        min-width: 100vw; /* Занимать всю ширину экрана */
+        border-radius: 0; /* Убрать скругления */
+        margin: 0; /* Убрать все margin */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #1F1F1F;
+    }
+
+    .yt-shared-player-chat-container {
+        height: 400px;
+    }
+
+    .yt-projects-container {
+        height: 100%;
+    }
+
+    #yt-player-iframe {
+        width: 100%;
+        height: 200px;
     }
 
     .yt-shared-player-content {
         flex-direction: column;
+        gap: 10px;
+        min-width: 100%; /* Занимать всю ширину контейнера */
     }
+
+    .yt-no-messages {
+        color: grey;
+        text-align: center;
+        padding: 20px;
+        margin-top: 10vh;
+    }
+
+    .yt-shared-player-kinobox {
+        width: 100%;
+    }
+
+    .yt-shared-player-chat-container {
+        min-width: 100%;
+        min-height: 400px;
+        padding: 10px;
+    }
+
 
     .yt-shared-player-movie-details {
         flex-direction: column;
         align-items: center;
+        padding: 0;
+        gap: 10px;
+    }
+
+    .projects-container {
+        min-width: 100%;
     }
 
     .yt-shared-player-movie-details img {
         width: 100%;
         max-width: 300px;
-        margin-bottom: 20px;
-    }
-
-    .yt-shared-player-title {
-        font-size: 24px;
-        text-align: center;
-        margin-bottom: 25px;
     }
 
     .yt-shared-player-description {
-        font-size: 14px;
         width: 100%;
-        text-align: center;
-        margin-bottom: 15px;
     }
 
-    .yt-shared-player-kinobox .kinobox_player {
-        height: 200px;
+    .yt-shared-player-controls button {
+        padding: 8px 16px;
     }
 
-    .yt-shared-player-chat-container {
-        padding: 10px;
-    }
-
-    .yt-shared-player-message {
-        padding: 10px;
-    }
-
-    .yt-shared-player-input-container {
-        flex-direction: column;
-        height: auto; /* Adjust for mobile */
-    }
 
     .yt-shared-player-input {
-        width: 100%;
-        margin-bottom: 10px;
+        margin-right: 5px;
     }
 
-    .yt-shared-player-button {
-        width: 100%;
-        font-size: 14px;
-        padding: 10px;
+    /* Скрыть элементы с классом .mobile-hide */
+    .yt-mobile-hide {
+        display: none;
     }
 }

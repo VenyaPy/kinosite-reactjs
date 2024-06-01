@@ -6,6 +6,13 @@
     margin-bottom: 60px;
 }
 
+@media (max-width: 768px) {
+    .button-share {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
 .share-button {
     background-color: #4caf50;
     color: white;

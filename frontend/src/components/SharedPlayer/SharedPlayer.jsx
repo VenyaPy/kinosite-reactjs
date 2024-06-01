@@ -304,22 +304,22 @@ export default function SharedPlayer() {
                 <div className="shared-player-content">
                     <div className="shared-player-kinobox">
                         <div ref={playerRef} className="kinobox_player" data-kinobox="auto"
-                            data-kinopoisk={movieId}></div>
+                             data-kinopoisk={movieId}></div>
                         <div className="shared-player-controls">
                             <button id="play"><i className="fa-solid fa-play"></i></button>
                             <button id="pause"><i className="fa-solid fa-pause"></i></button>
                             <button id="sync">Синхронизировать</button>
                         </div>
-                        <h5 className="use-text">Для совместного просмотра пользуйся кнопками. Приятного просмотра
-                            🍿</h5>
-                        <p className="manual-text">
-                            <span className="first-sentence">Кнопки совместного просмотра не поддерживаются некоторыми плеерами.</span><br />
+                        <h5 className="use-text mobile-hide">Для совместного просмотра пользуйся кнопками. Приятного
+                            просмотра 🍿</h5>
+                        <p className="manual-text mobile-hide">
+                            <span className="first-sentence">Кнопки совместного просмотра не поддерживаются некоторыми плеерами.</span><br/>
                             Сезоны и серии переключаются вручную.
                         </p>
                     </div>
                     <div className="shared-player-chat-container">
-                        <InviteLink roomId={roomId} />
-                        <div className="shared-player-messages" style={{ height: '800px' }}>
+                        <InviteLink roomId={roomId}/>
+                        <div className="shared-player-messages" style={{height: '800px'}}>
                             {messages.length === 0 ? (
                                 <div className="no-messages">Пока тут нет сообщений. Напишите первое!</div>
                             ) : (

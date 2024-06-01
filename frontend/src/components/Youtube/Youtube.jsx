@@ -318,9 +318,9 @@ export default function Youtube() {
                             <button id="yt-pause" onClick={handlePause}><i className="fa-solid fa-pause"></i></button>
                             <button id="yt-sync" onClick={handleSync}>Синхронизировать</button>
                         </div>
-                        <h5 className="yt-use-text">Для совместного просмотра пользуйся кнопками. Приятного просмотра 🍿</h5>
-                        <p className="yt-manual-text">
-                            <span className="yt-first-sentence">Кнопки совместного просмотра не поддерживаются некоторыми плеерами.</span><br />
+                        <h5 className="yt-use-text yt-mobile-hide">Для совместного просмотра пользуйся кнопками. Приятного просмотра 🍿</h5>
+                        <p className="yt-manual-text yt-mobile-hide">
+                            <span className="yt-first-sentence yt-mobile-hide">Кнопки совместного просмотра не поддерживаются некоторыми плеерами.</span><br />
                             Сезоны и серии переключаются вручную.
                         </p>
                     </div>

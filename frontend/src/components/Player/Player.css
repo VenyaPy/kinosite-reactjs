@@ -5,12 +5,11 @@
     align-items: center;
     width: 100%;
     max-width: 1200px;
-    margin: 40px auto;
-    padding: 40px;
+    margin: 0 auto;
+    padding: 0 40px; /* Убраны отступы сверху и снизу */
     gap: 20px;
     background-color: #1e1e1e;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
     color: #e0e0e0;
     box-sizing: border-box;
     padding-bottom: 100px;
@@ -121,26 +120,11 @@
 }
 
 .movie-details img {
-    width: 300px; /* Уменьшаем размер постера */
+    width: 300px; /* Возвращаем размер постера */
     height: auto;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     margin: 0 auto; /* Центрирование изображения */
-}
-
-@media (max-width: 1920px) {
-    .movie-details img {
-        width: 270px;
-    }
-
-    .movie-details h2 {
-        font-size: 24px;
-    }
-
-    .movie-details p {
-        font-size: 16px;
-    }
-
 }
 
 .movie-details div {
@@ -150,18 +134,17 @@
     margin: 0;
 }
 
-.movie-details .h2 {
-    font-size: 28px;
-    margin-bottom: 10px;
+.movie-details h2 {
+    font-size: 24px;
+    margin-bottom: 15px; /* Увеличиваем отступы текста */
     text-align: left; /* Выравнивание по левому краю */
     margin: 0;
 }
 
-
-.movie-details .p {
+.movie-details p {
     font-size: 16px;
     line-height: 1.5;
-    margin-bottom: 10px;
+    margin-bottom: 15px; /* Увеличиваем отступы текста */
     text-align: left; /* Выравнивание по левому краю */
     margin: 0;
 }
@@ -174,6 +157,32 @@
     margin-top: 30px;
 }
 
+.player-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    flex-direction: row; /* Кнопки располагаются в строку */
+}
+
+.player-buttons button {
+    padding: 8px 16px; /* Уменьшаем размер кнопок */
+    font-size: 14px; /* Уменьшаем размер текста */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #333;
+    color: #e0e0e0;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.player-buttons button.active {
+    background-color: #4caf50;
+}
+
+.player-buttons button:hover {
+    transform: scale(1.05);
+}
 
 .share-button:hover {
     background-color: #45a049;
@@ -188,8 +197,7 @@
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 50px;
-    text-align: center; /* Выравнивание заголовка отзывов по левому краю */
-
+    text-align: center; /* Выравнивание заголовка отзывов по центру */
 }
 
 .reviews-container {
@@ -260,65 +268,64 @@
 }
 
 .switch-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
     margin-bottom: 40px;
-  padding: 10px 20px;
-  border: 2px solid #4caf50;
-  border-radius: 50px;
-  background-color: #2a2a2a; /* Темный фон для контейнера */
+    padding: 10px 20px;
+    border: 2px solid #4caf50;
+    border-radius: 50px;
+    background-color: #2a2a2a; /* Темный фон для контейнера */
 }
 
 .switch-label {
-  color: #e0e0e0;
-  font-size: 16px;
+    color: #e0e0e0;
+    font-size: 16px;
 }
 
 .switch {
-  width: 60px;
-  height: 30px;
-  background: #333;
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  position: relative;
-  cursor: pointer;
+    width: 60px;
+    height: 30px;
+    background: #333;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
 }
 
 .switch-inner {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  padding: 5px;
-  box-sizing: border-box;
-  border-radius: 15px;
-  background: #333;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    box-sizing: border-box;
+    border-radius: 15px;
+    background: #333;
 }
 
 .switch-thumb {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  position: relative;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    position: relative;
 }
 
 input:checked ~ .switch-inner .switch-thumb {
-  background: #4caf50;
+    background: #4caf50;
 }
 
 input:not(:checked) ~ .switch-inner .switch-thumb {
-  background: #676767; /* Менее яркий красный */
+    background: #676767; /* Менее яркий красный */
 }
-
-
 
 /* Мобильная версия */
 @media (max-width: 768px) {
     .player-container {
         padding: 10px;
+        border-radius: 0; /* Убираем скругления */
     }
 
     .movie-details {
@@ -328,21 +335,21 @@ input:not(:checked) ~ .switch-inner .switch-thumb {
 
     .movie-details img {
         width: 100%; /* Постер будет занимать всю ширину */
-        max-width: 300px; /* Ограничиваем максимальную ширину */
-        margin-bottom: 20px;
+        max-width: 300px; /* Возвращаем размер постера */
+        margin-bottom: 20px; /* Увеличиваем отступ снизу */
     }
 
-    h2 {
-        font-size: 24px;
+    .movie-details h2 {
+        font-size: 22px;
         text-align: left; /* Выравнивание по левому краю */
-        margin-bottom: 25px;
+        margin-bottom: 30px; /* Увеличиваем отступ снизу */
     }
 
-    p {
+    .movie-details p {
         font-size: 14px;
         width: 100%;
         text-align: left; /* Выравнивание по левому краю */
-        margin-bottom: 15px;
+        margin-bottom: 10px; /* Увеличиваем отступ снизу */
     }
 
     .kinobox_player {
@@ -350,9 +357,14 @@ input:not(:checked) ~ .switch-inner .switch-thumb {
         padding-bottom: 0;
     }
 
-    .share-button {
-        padding: 10px 20px;
-        font-size: 16px;
+    .player-buttons {
+        flex-direction: row; /* Кнопки располагаются в строку */
+        gap: 5px; /* Уменьшаем отступ между кнопками */
+    }
+
+    .player-buttons button {
+        padding: 8px 16px; /* Уменьшаем размер кнопок */
+        font-size: 14px; /* Уменьшаем размер текста */
     }
 
     .reviews-container {
@@ -365,7 +377,7 @@ input:not(:checked) ~ .switch-inner .switch-thumb {
 
     .review-text {
         font-size: 20px;
-        text-align: center; /* Выравнивание по левому краю */
+        text-align: center; /* Выравнивание по центру */
         margin: 20px;
     }
 

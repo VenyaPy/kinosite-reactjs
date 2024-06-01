@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { motion } from "framer-motion";
 import Loading from "../Loading/Loading.jsx";
 import './Cartoon.css'
@@ -74,6 +73,10 @@ export default function Cartoon() {
         fetchMovies();
     }, [fetchMovies]);
 
+    useEffect(() => {
+        window.scrollTo(0, 0); // Прокрутка страницы к началу при загрузке компонента
+    }, []);
+
     const handleMovieClick = (id) => {
         navigate(`/player/${id}`); // Используем navigate для перенаправления на страницу проигрывателя
     };
@@ -94,7 +97,7 @@ export default function Cartoon() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
-            className="projects-container"
+            className="projects-container-m"
         >
             {isLoading ? (
                 <Loading />
@@ -128,25 +131,28 @@ export default function Cartoon() {
                     <div className="unique-popular-cartoon">
                         <h2>{isFiltered ? "Мультфильмы по вашим критериям" : "Популярные мультфильмы"}</h2>
                     </div>
-                    <div className="unique-cartoon-section">
-                        {movies.map(movie => (
-                            movie.poster && (
-                                <div onClick={() => handleMovieClick(movie.id)} key={movie.id} className="unique-cartoon">
-                                    <img src={movie.poster} alt={movie.name} className="unique-cartoon-poster"/>
-                                    <div className="unique-cartoon-overlay">
-                                        <i className="fa-solid fa-play unique-play-icon"></i>
-                                        <div className="unique-cartoon-info">
-                                            <div className="unique-cartoon-title">{movie.name}</div>
-                                            <div className="unique-cartoon-description">{movie.shortDescription || movie.description}</div>
+                    {movies.length === 0 ? (
+                        <div className="no-movies">Нет мультфильмов для отображения</div>
+                    ) : (
+                        <div className="unique-cartoon-section">
+                            {movies.map(movie => (
+                                movie.poster && (
+                                    <div onClick={() => handleMovieClick(movie.id)} key={movie.id} className="unique-cartoon">
+                                        <img src={movie.poster} alt={movie.name} className="unique-cartoon-poster"/>
+                                        <div className="unique-cartoon-overlay">
+                                            <i className="fa-solid fa-play unique-play-icon"></i>
+                                            <div className="unique-cartoon-info">
+                                                <div className="unique-cartoon-title">{movie.name}</div>
+                                                <div className="unique-cartoon-description">{movie.shortDescription || movie.description}</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )
-                        ))}
-                    </div>
+                                )
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
         </motion.div>
     );
 }
-

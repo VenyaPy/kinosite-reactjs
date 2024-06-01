@@ -4,6 +4,13 @@
     align-items: flex-start;
 }
 
+@media (max-width: 768px) {
+    .button-share {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
 .share-button-invite {
     background-color: #4caf50;
     color: white;
@@ -34,10 +41,6 @@
 
 /* Мобильная версия */
 @media (max-width: 768px) {
-    .button-share {
-        margin-top: 20px;
-        margin-bottom: 40px;
-    }
 
     .share-button {
         padding: 10px 20px;

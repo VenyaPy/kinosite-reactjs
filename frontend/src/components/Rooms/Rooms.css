@@ -20,7 +20,6 @@
     color: #aaa;
 }
 
-
 .rooms-header-container {
     text-align: center;
     margin-bottom: 20px;
@@ -103,7 +102,6 @@
     }
 }
 
-
 .rooms-room-info {
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.7);
@@ -135,18 +133,41 @@
 
 /* Мобильная версия */
 @media (max-width: 900px) {
+    .rooms-title {
+        font-size: 1.5em; /* Уменьшаем размер заголовка */
+        text-align: center; /* Выравниваем текст по центру */
+    }
+
+    .rooms-description {
+        font-size: 0.9em; /* Уменьшаем размер текста описания */
+        text-align: center; /* Выравниваем текст по центру */
+    }
+
+    .rooms-create-room-button {
+        padding: 10px 20px; /* Уменьшаем отступы */
+        font-size: 0.9em; /* Уменьшаем размер текста */
+    }
+
     .rooms-item-room-container {
         display: grid;
-        grid-template-columns: repeat(1, 1fr);
+        grid-template-columns: repeat(2, 1fr); /* По два элемента в ряд */
         gap: 10px;
+        padding: 10px;
+        margin: 0 auto; /* Центрируем содержимое */
+        width: calc(100% - 20px); /* Устанавливаем ширину с учетом padding */
+        box-sizing: border-box; /* Обеспечиваем включение отступов в общую ширину */
+        justify-content: center; /* Центрируем содержимое */
     }
 
     .rooms-unique-room {
         width: 100%;
-        height: auto;
+        height: auto; /* Убираем фиксированную высоту для мобильной версии */
+        margin-bottom: 15px;
+        margin-top: 20px;
+        border-radius: 10px; /* Добавлено для закругленных углов */
     }
 
     .rooms-room-title {
-        font-size: 1.2em;
+        font-size: 1em; /* Уменьшаем размер заголовка */
     }
 }

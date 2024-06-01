@@ -1,4 +1,10 @@
 /* Основные стили */
+.container-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
 .unique-series-section {
     display: flex;
     flex-wrap: wrap;
@@ -7,6 +13,7 @@
     padding: 20px;
     margin: 0 auto;
     width: 100%;
+    max-width: 1600px; /* Ограничиваем максимальную ширину контейнера */
     box-sizing: border-box; /* Обеспечиваем включение отступов в общую ширину */
 }
 
@@ -191,14 +198,18 @@
     .unique-series-filters {
         flex-direction: column; /* Меняем направление на колонку */
         padding: 10px;
-        gap: 15px;
-        width: 100%; /* Устанавливаем ширину на 100% */
+        gap: 10px; /* Уменьшаем отступы между элементами */
+        width: 90%; /* Устанавливаем ширину на 90% */
+        max-width: 100%; /* Ограничиваем максимальную ширину */
         align-items: center; /* Центрируем элементы */
+        margin: 0 auto; /* Центрируем фильтры */
     }
 
     .unique-series-filters select, .unique-series-filters button {
-        width: 90%; /* Ширина элементов */
+        width: 100%; /* Ширина элементов 100% */
         max-width: 100%;
+        padding: 8px 12px; /* Уменьшаем внутренние отступы */
+        font-size: 0.9em; /* Уменьшаем размер текста */
     }
 
     .unique-popular-series h2 {
@@ -232,4 +243,22 @@
 .filter-toggle-button:hover {
     background-color: #0056b3;
     transform: translateY(-2px);
+}
+
+/* Стили для мобильных устройств */
+@media (max-width: 768px) {
+    body, html {
+        touch-action: manipulation;
+    }
+
+    .main-container {
+        padding-top: 0; /* Меньше отступ сверху для мобильных устройств */
+        display: flex;
+        padding-bottom: 0; /* Убираем нижний отступ для мобильных устройств */
+        width: 100%; /* Убедимся, что контейнер на всю ширину */
+        max-width: 100%; /* Убедимся, что максимальная ширина также 100% */
+        min-height: 0;
+        margin: 0; /* Убираем внешние отступы */
+        border-radius: 0; /* Убираем скругленные углы для мобильных устройств */
+    }
 }

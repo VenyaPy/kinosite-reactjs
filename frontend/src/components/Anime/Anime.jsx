@@ -65,6 +65,10 @@ function Anime() {
         fetchSeries();
     }, [fetchSeries]);
 
+    useEffect(() => {
+        window.scrollTo(0, 0); // Прокрутка страницы к началу при загрузке компонента
+    }, []);
+
     const handleMovieClick = (id) => {
         navigate(`/player/${id}`);
     };
@@ -76,14 +80,13 @@ function Anime() {
         fetchSeries();
     };
 
-
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
-            className="projects-container"
+            className="projects-container-m"
         >
             {isLoading ? (
                 <Loading />
@@ -105,22 +108,26 @@ function Anime() {
                     <div className="unique-popular-anime">
                         <h2>{isFiltered ? "Аниме по вашим критериям" : "Популярные аниме"}</h2>
                     </div>
-                    <div className="unique-anime-section">
-                        {series.map(anime => (
-                            anime.poster && (
-                                <div onClick={() => handleMovieClick(anime.id)} key={anime.id} className="unique-anime">
-                                    <img src={anime.poster} alt={anime.name} className="unique-anime-poster"/>
-                                    <div className="unique-anime-overlay">
-                                        <i className="fa-solid fa-play unique-play-icon"></i>
-                                        <div className="unique-anime-info">
-                                            <div className="unique-anime-title">{anime.name}</div>
-                                            <div className="unique-anime-description">{anime.shortDescription || anime.description}</div>
+                    {series.length === 0 ? (
+                        <div className="no-movies">Нет аниме для отображения</div>
+                    ) : (
+                        <div className="unique-anime-section">
+                            {series.map(anime => (
+                                anime.poster && (
+                                    <div onClick={() => handleMovieClick(anime.id)} key={anime.id} className="unique-anime">
+                                        <img src={anime.poster} alt={anime.name} className="unique-anime-poster"/>
+                                        <div className="unique-anime-overlay">
+                                            <i className="fa-solid fa-play unique-play-icon"></i>
+                                            <div className="unique-anime-info">
+                                                <div className="unique-anime-title">{anime.name}</div>
+                                                <div className="unique-anime-description">{anime.shortDescription || anime.description}</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )
-                        ))}
-                    </div>
+                                )
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
         </motion.div>

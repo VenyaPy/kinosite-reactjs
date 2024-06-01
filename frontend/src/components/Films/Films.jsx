@@ -70,6 +70,10 @@ export default function Films() {
         fetchMovies();
     }, [fetchMovies]);
 
+    useEffect(() => {
+        window.scrollTo(0, 0); // Прокрутка страницы к началу при загрузке компонента
+    }, []);
+
     const handleMovieClick = (id) => {
         navigate(`/player/${id}`);
     };
@@ -84,14 +88,13 @@ export default function Films() {
         fetchMovies();
     };
 
-
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
-            className="projects-container"
+            className="projects-container-m"
         >
             {isLoading ? (
                 <Loading />
@@ -125,22 +128,26 @@ export default function Films() {
                     <div className="unique-popular-movie">
                         <h2>{isFiltered ? "Фильмы по вашим критериям" : "Популярные фильмы"}</h2>
                     </div>
-                    <div className="unique-movies-section">
-                        {movies.map(movie => (
-                            movie.poster && (
-                                <div onClick={() => handleMovieClick(movie.id)} key={movie.id} className="unique-movie">
-                                    <img src={movie.poster} alt={movie.name} className="unique-movie-poster"/>
-                                    <div className="unique-movie-overlay">
-                                        <i className="fa-solid fa-play unique-play-icon"></i>
-                                        <div className="unique-movie-info">
-                                            <div className="unique-movie-title">{movie.name}</div>
-                                            <div className="unique-movie-description">{movie.shortDescription || movie.description}</div>
+                    {movies.length === 0 ? (
+                        <div className="no-movies">Нет фильмов для отображения</div>
+                    ) : (
+                        <div className="unique-movies-section">
+                            {movies.map(movie => (
+                                movie.poster && (
+                                    <div onClick={() => handleMovieClick(movie.id)} key={movie.id} className="unique-movie">
+                                        <img src={movie.poster} alt={movie.name} className="unique-movie-poster"/>
+                                        <div className="unique-movie-overlay">
+                                            <i className="fa-solid fa-play unique-play-icon"></i>
+                                            <div className="unique-movie-info">
+                                                <div className="unique-movie-title">{movie.name}</div>
+                                                <div className="unique-movie-description">{movie.shortDescription || movie.description}</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )
-                        ))}
-                    </div>
+                                )
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
         </motion.div>

@@ -20,14 +20,15 @@ export default function Player() {
     const scriptLoaded = useRef(false);
     const navigate = useNavigate();
 
-    const [reviewSubmitted, setReviewSubmitted] = useState(false)
-    const [ratingCounts, setRatingCounts]  = useState({
+    const [reviewSubmitted, setReviewSubmitted] = useState(false);
+    const [ratingCounts, setRatingCounts] = useState({
         1: null,
         2: null,
         3: null,
         4: null,
         5: null
-    })
+    });
+    const [currentSource, setCurrentSource] = useState('alloha'); // Добавлено состояние для текущего источника
 
     const submitRating = async (movieId, score) => {
         try {
@@ -82,8 +83,7 @@ export default function Player() {
         if (movieId) {
             fetchRatingCounts(movieId);
         }
-    }, [movieId])
-
+    }, [movieId]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -97,7 +97,6 @@ export default function Player() {
             setUserId(null);
         }
     }, []);
-
 
     const handleReviewClick = (rating) => {
         submitRating(movieId, rating);
@@ -172,38 +171,39 @@ export default function Player() {
             script.onload = () => {
                 scriptLoaded.current = true;
                 if (playerRef.current) {
-                    initializePlayer(movieId);
+                    initializePlayer(movieId, currentSource);
                 }
             };
             document.body.appendChild(script);
         } else if (movie && scriptLoaded.current && playerRef.current) {
-            initializePlayer(movieId);
+            initializePlayer(movieId, currentSource);
         }
-    }, [movie, movieId]);
+    }, [movie, movieId, currentSource]);
 
-    const initializePlayer = (movieId) => {
+    const initializePlayer = (movieId, source) => {
         if (playerRef.current && movieId) {
             window.kbox(playerRef.current, {
                 search: { kinopoisk: movieId },
                 menu: { enable: false },
                 players: {
-                    alloha: { enable: true, position: 1, domain: 'https://sansa.newplayjj.com:9443' },
-                    cdnmovies: { enable: true, position: 3, domain: 'https://cdnmovies-stream.online' },
-                    kodik: { enable: true, position: 4, domain: 'https://kodik.info/video/3007/d11f14905f287e1939c1875dc2ab9c6f/720p' },
-                    collaps: { enable: true, position: 2, domain: `https://api.delivembd.ws/embed/kp/${movieId}` }
+                    alloha: { enable: source === 'alloha', position: 2, domain: 'https://sansa.newplayjj.com:9443' },
+                    cdnmovies: { enable: source === 'cdnmovies', position: 4, domain: 'https://cdnmovies-stream.online' },
+                    kodik: { enable: source === 'kodik', position: 5, domain: 'https://kodik.info/video/3007/d11f14905f287e1939c1875dc2ab9c6f/720p' },
+                    collaps: { enable: source === 'collaps', position: 1, domain: `https://api.delivembd.ws/embed/kp/${movieId}` },
+                    videocdn: { enable: source === 'videocdn', position: 3, domain: 'https://12537.svetacdn.in/gzIOdW6ZBYvH' }
                 },
                 params: {
                     alloha: { token: apiKeyAlloha },
                     cdnmovies: { fallback: true, domain: cdnApi },
                     kodik: { fallback: true },
                     collaps: { fallback: true },
+                    videocdn: { fallback: true }
                 }
             });
         } else {
             console.error("Player reference or movieId is undefined.");
         }
     };
-
 
     const handleSwipe = () => {
         setIsSwiped(true);
@@ -231,6 +231,13 @@ export default function Player() {
         }, 1000);
     };
 
+    const handleSourceChange = (source) => {
+        setCurrentSource(source);
+        if (playerRef.current) {
+            initializePlayer(movieId, source);
+        }
+    };
+
     if (error) {
         return <div>{error}</div>;
     }
@@ -238,8 +245,6 @@ export default function Player() {
     if (!movie || isLoading) {
         return <Loading />;
     }
-
-
 
     return (
         <motion.div
@@ -260,6 +265,20 @@ export default function Player() {
                         <p className="p-m"><strong>Жанр:</strong> {movie.genres.map(genre => genre.name).join(', ')}</p>
                         <p className="p-m"><strong>Страна:</strong> {movie.countries.map(country => country.name).join(', ')}</p>
                     </div>
+                </div>
+                <div className="player-buttons">
+                    <button onClick={() => handleSourceChange('alloha')}
+                            className={currentSource === 'alloha' ? 'active' : ''}>Плеер 1
+                    </button>
+                    <button onClick={() => handleSourceChange('collaps')}
+                            className={currentSource === 'collaps' ? 'active' : ''}>Плеер 2
+                    </button>
+                    <button onClick={() => handleSourceChange('videocdn')}
+                            className={currentSource === 'videocdn' ? 'active' : ''}>Плеер 3
+                    </button>
+                    <button onClick={() => handleSourceChange('cdnmovies')}
+                            className={currentSource === 'cdnmovies' ? 'active' : ''}>Плеер 4
+                    </button>
                 </div>
                 <div ref={playerRef} className="kinobox_player"></div>
                 <div className="switch-container">
@@ -282,34 +301,34 @@ export default function Player() {
                 </div>
                 <div>
                     {reviewSubmitted ? (
-                            <div className="thank-you-message">
-                                Спасибо за ваш отзыв!
-                            </div>
-                        ) : (
+                        <div className="thank-you-message">
+                            Спасибо за ваш отзыв!
+                        </div>
+                    ) : (
                         <div className="review-container-uni">
                             <h3 className="review-text-uni">Понравился ли вам фильм?</h3>
-                                <div className="emoji-rating">
-                                    <div className="emoji-container" onClick={() => handleReviewClick(1)}>
-                                        <span className="emoji" data-rating="1">😢</span>
-                                        <span className="rating-count">{ratingCounts[1]}</span>
-                                    </div>
-                                    <div className="emoji-container" onClick={() => handleReviewClick(2)}>
-                                        <span className="emoji" data-rating="2">😟</span>
-                                        <span className="rating-count">{ratingCounts[2]}</span>
-                                    </div>
-                                    <div className="emoji-container" onClick={() => handleReviewClick(3)}>
-                                        <span className="emoji" data-rating="3">😐</span>
-                                        <span className="rating-count">{ratingCounts[3]}</span>
-                                    </div>
-                                    <div className="emoji-container" onClick={() => handleReviewClick(4)}>
-                                        <span className="emoji" data-rating="4">🙂</span>
-                                        <span className="rating-count">{ratingCounts[4]}</span>
-                                    </div>
-                                    <div className="emoji-container" onClick={() => handleReviewClick(5)}>
-                                        <span className="emoji" data-rating="5">😃</span>
-                                        <span className="rating-count">{ratingCounts[5]}</span>
-                                    </div>
+                            <div className="emoji-rating">
+                                <div className="emoji-container" onClick={() => handleReviewClick(1)}>
+                                    <span className="emoji" data-rating="1">😢</span>
+                                    <span className="rating-count">{ratingCounts[1]}</span>
                                 </div>
+                                <div className="emoji-container" onClick={() => handleReviewClick(2)}>
+                                    <span className="emoji" data-rating="2">😟</span>
+                                    <span className="rating-count">{ratingCounts[2]}</span>
+                                </div>
+                                <div className="emoji-container" onClick={() => handleReviewClick(3)}>
+                                    <span className="emoji" data-rating="3">😐</span>
+                                    <span className="rating-count">{ratingCounts[3]}</span>
+                                </div>
+                                <div className="emoji-container" onClick={() => handleReviewClick(4)}>
+                                    <span className="emoji" data-rating="4">🙂</span>
+                                    <span className="rating-count">{ratingCounts[4]}</span>
+                                </div>
+                                <div className="emoji-container" onClick={() => handleReviewClick(5)}>
+                                    <span className="emoji" data-rating="5">😃</span>
+                                    <span className="rating-count">{ratingCounts[5]}</span>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>

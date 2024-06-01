@@ -74,6 +74,10 @@ export default function UniqueSeries() {
         fetchSeries();
     }, [fetchSeries]);
 
+    useEffect(() => {
+        window.scrollTo(0, 0); // Прокрутка страницы к началу при загрузке компонента
+    }, []);
+
     const handleSeriesClick = (id) => {
         navigate(`/player/${id}`);
     };
@@ -88,65 +92,66 @@ export default function UniqueSeries() {
         fetchSeries();
     };
 
-
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
-            className="projects-container"
+            className="container-wrapper" /* Обертка для центрирования и ограничения ширины */
         >
-            {isLoading ? (
-                <Loading />
-            ) : (
-                <div>
-                    <div className="unique-series-filters-container">
-                        <div className="unique-series-filters">
-                            <select value={year} onChange={e => setYear(e.target.value)}>
-                                <option value="">Год</option>
-                                {years.map(y => <option key={y} value={y}>{y}</option>)}
-                            </select>
-                            <select value={rating} onChange={e => setRating(e.target.value)}>
-                                <option value="">Рейтинг</option>
-                                {ratings.map(r => <option key={r} value={r}>{r}</option>)}
-                            </select>
-                            <select value={genre} onChange={e => setGenre(e.target.value)}>
-                                <option value="">Жанр</option>
-                                {genres.map(g => <option key={g} value={g}>{g}</option>)}
-                            </select>
-                            <select value={country} onChange={e => setCountry(e.target.value)}>
-                                <option value="">Страна</option>
-                                {countries.map(c => <option key={c} value={c}>{c}</option>)}
-                            </select>
-                            <select value={studio} onChange={e => setStudio(e.target.value)}>
-                                <option value="">Студия</option>
-                                {studios.map(s => <option key={s} value={s}>{s}</option>)}
-                            </select>
-                            <button onClick={resetFilters}>Сбросить фильтры</button>
+            <div className="projects-container">
+                {isLoading ? (
+                    <Loading />
+                ) : (
+                    <div>
+                        <div className="unique-series-filters-container">
+                            <div className="unique-series-filters">
+                                <select value={year} onChange={e => setYear(e.target.value)}>
+                                    <option value="">Год</option>
+                                    {years.map(y => <option key={y} value={y}>{y}</option>)}
+                                </select>
+                                <select value={rating} onChange={e => setRating(e.target.value)}>
+                                    <option value="">Рейтинг</option>
+                                    {ratings.map(r => <option key={r} value={r}>{r}</option>)}
+                                </select>
+                                <select value={genre} onChange={e => setGenre(e.target.value)}>
+                                    <option value="">Жанр</option>
+                                    {genres.map(g => <option key={g} value={g}>{g}</option>)}
+                                </select>
+                                <select value={country} onChange={e => setCountry(e.target.value)}>
+                                    <option value="">Страна</option>
+                                    {countries.map(c => <option key={c} value={c}>{c}</option>)}
+                                </select>
+                                <select value={studio} onChange={e => setStudio(e.target.value)}>
+                                    <option value="">Студия</option>
+                                    {studios.map(s => <option key={s} value={s}>{s}</option>)}
+                                </select>
+                                <button onClick={resetFilters}>Сбросить фильтры</button>
+                            </div>
                         </div>
-                    </div>
-                    <div className="unique-popular-series">
-                        <h2>{isFiltered ? "Сериалы по вашим критериям" : "Популярные сериалы"}</h2>
-                    </div>
-                    <div className="unique-series-section">
-                        {series.map(seria => (
-                            seria.poster && (
-                                <div onClick={() => handleSeriesClick(seria.id)} key={seria.id} className="unique-series">
-                                    <img src={seria.poster} alt={seria.name} className="unique-series-poster"/>
-                                    <div className="unique-series-overlay">
-                                        <i className="fa-solid fa-play unique-play-icon"></i>
-                                        <div className="unique-series-info">
-                                            <div className="unique-series-title">{seria.name}</div>
-                                            <div className="unique-series-description">{seria.shortDescription || seria.description}</div>
+                        <div className="unique-popular-series">
+                            <h2>{isFiltered ? "Сериалы по вашим критериям" : "Популярные сериалы"}</h2>
+                        </div>
+                        <div className="unique-series-section">
+                            {series.map(seria => (
+                                seria.poster && (
+                                    <div onClick={() => handleSeriesClick(seria.id)} key={seria.id} className="unique-series">
+                                        <img src={seria.poster} alt={seria.name} className="unique-series-poster"/>
+                                        <div className="unique-series-overlay">
+                                            <i className="fa-solid fa-play unique-play-icon"></i>
+                                            <div className="unique-series-info">
+                                                <div className="unique-series-title">{seria.name}</div>
+                                                <div className="unique-series-description">{seria.shortDescription || seria.description}</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )
-                        ))}
+                                )
+                            ))}
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </motion.div>
     );
 }
