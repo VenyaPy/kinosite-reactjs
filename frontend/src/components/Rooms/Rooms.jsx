@@ -12,7 +12,7 @@ export default function Rooms() {
     const navigate = useNavigate();
 
     const fetchRooms = useCallback(() => {
-        let url = "http://127.0.0.1:8000/api/v2/rooms/all_rooms";
+        let url = "https://ve1.po2014.fvds.ru:8000/api/v2/rooms/all_rooms";
 
         axios.get(url, {
             headers: { 'accept': 'application/json' }
@@ -35,7 +35,7 @@ export default function Rooms() {
         const token = localStorage.getItem('access_token');
         if (token) {
             try {
-                const response = await axios.post('http://127.0.0.1:8000/api/v2/youtube_room/create_room', {}, {
+                const response = await axios.post('https://ve1.po2014.fvds.ru:8000/api/v2/youtube_room/create_room', {}, {
                     headers: {
                         'accept': 'application/json',
                         'Authorization': `Bearer ${token}`

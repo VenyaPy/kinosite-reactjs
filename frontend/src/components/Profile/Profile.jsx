@@ -35,7 +35,7 @@ export default function Profile({ closeModal }) {
         async function fetchUserData() {
             const token = localStorage.getItem('access_token');
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/v2/users/profile', {
+                const response = await axios.get('https://ve1.po2014.fvds.ru:8000/api/v2/users/profile', {
                     headers: {
                         'accept': 'application/json',
                         'Authorization': `Bearer ${token}`
@@ -62,7 +62,7 @@ export default function Profile({ closeModal }) {
         async function fetchUserHistory() {
             if (userId) {
                 try {
-                    const response = await axios.get(`http://127.0.0.1:8000/api/v2/history/get_history`, {
+                    const response = await axios.get(`https://ve1.po2014.fvds.ru:8000/api/v2/history/get_history`, {
                         params: { user_id: userId },
                         headers: { 'accept': 'application/json' }
                     });

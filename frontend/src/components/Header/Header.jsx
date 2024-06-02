@@ -42,7 +42,7 @@ export default function Header() {
     }, [authStatus]);
 
     const fetchUserProfile = (token) => {
-        axios.get('http://127.0.0.1:8000/api/v2/users/profile', {
+        axios.get('https://ve1.po2014.fvds.ru:8000/api/v2/users/profile', {
             headers: {
                 'accept': 'application/json',
                 'Authorization': `Bearer ${token}`

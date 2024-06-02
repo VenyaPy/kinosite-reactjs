@@ -11,7 +11,7 @@ export default function Login({ toggleForm, setAuthStatus, fetchUserProfile }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/v2/auth/login', {
+            const response = await axios.post('https://ve1.po2014.fvds.ru:8000/api/v2/auth/login', {
                 username,
                 password
             }, {
