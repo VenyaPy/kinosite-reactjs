@@ -258,8 +258,8 @@ export default function Player() {
                 <div className="movie-details">
                     <img src={movie.poster.previewUrl} alt={movie.name} />
                     <div>
-                        <h2>{movie.name}</h2>
-                        <p>{movie.description}</p>
+                        <h2 className="p-h2">{movie.name}</h2>
+                        <p className="p-m">{movie.description}</p>
                         <p className="p-m"><strong>Рейтинг:</strong> Кинопоиск - {movie.rating.kp}, IMDb - {movie.rating.imdb}</p>
                         {movie.movieLength && <p className="p-m"><strong>Длина:</strong> {movie.movieLength} минут</p>}
                         <p className="p-m"><strong>Жанр:</strong> {movie.genres.map(genre => genre.name).join(', ')}</p>
