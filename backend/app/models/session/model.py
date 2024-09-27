@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from backend.app.database.database import Base
-
+from dao.dao import Base
 
 class Session(Base):
     __tablename__ = "sessions"

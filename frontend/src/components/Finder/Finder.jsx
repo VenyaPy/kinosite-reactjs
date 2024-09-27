@@ -4,10 +4,12 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Loading from "../Loading/Loading.jsx";
 
+
 function Finder() {
     const navigate = useNavigate();
     const [query, setQuery] = useState('');
     const [movies, setMovies] = useState([]);
+    const [suggestions, setSuggestions] = useState([]);
     const [isModalOpen, setModalOpen] = useState(false);
     const [isLoading, setLoading] = useState(false);
 
@@ -23,14 +25,33 @@ function Finder() {
         };
     }, [isModalOpen]);
 
+    useEffect(() => {
+        const fetchSuggestions = async () => {
+            if (query.length < 2) {
+                setSuggestions([]); // Очищаем предложения, если меньше 2 символов
+                return;
+            }
+            try {
+                const response = await axios.post(`/api/v2/search/get_reference/${query}`);
+                const names = response.data.map(item => item.name); // Извлекаем только имена
+                setSuggestions(names);
+            } catch (error) {
+                console.error('Error fetching suggestions:', error);
+            }
+        };
+
+        fetchSuggestions();
+    }, [query]);
+
     const handleSearch = async () => {
         if (!query) return;
         try {
             setLoading(true);
-            const response = await axios.get(`https://ve1.po2014.fvds.ru:8000/api/v2/search/${query}/`);
+            const response = await axios.get(`/api/v2/search/${query}/`);
             const filteredMovies = response.data.filter(movie => movie.poster);
             setMovies(filteredMovies);
             setModalOpen(true);
+            setSuggestions([]); // Очищаем предложения при запуске поиска
         } catch (error) {
             console.error('Error searching movies:', error);
             setMovies([]);
@@ -52,6 +73,13 @@ function Finder() {
         closeModal();
     };
 
+    const handleSuggestionChange = (suggestion) => {
+        setQuery(suggestion); // Устанавливаем выбранное предложение в input
+        setSuggestions([]); // Очищаем предложения
+        handleSearch(); // Запускаем поиск
+    };
+
+
     return (
         <>
             <div className="search-finder-unique">
@@ -66,6 +94,20 @@ function Finder() {
                 <button className="search-button-finder-unique" onClick={handleSearch}>
                     <i className="fa fa-search"></i>
                 </button>
+                {suggestions.length > 0 && (
+                    <div className="suggestions-container" style={{ position: 'absolute', top: '100%', left: '0', width: '100%', maxHeight: '200px', overflowY: 'auto', backgroundColor: 'white', border: '1px solid #ccc', zIndex: 1000 }}>
+                        {suggestions.map((suggestion, index) => (
+                            <div
+                                key={index}
+                                className="suggestion-item"
+                                onClick={() => handleSuggestionChange(suggestion)}
+                                style={{ padding: '8px', cursor: 'pointer', borderBottom: '1px solid #ddd' }}
+                            >
+                                {suggestion}
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
             {isLoading && <div className="loading-unique"><Loading/></div>}
             {isModalOpen && (

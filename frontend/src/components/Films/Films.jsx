@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Loading from "../Loading/Loading.jsx";
 import './Films.css'
 
+
 export default function Films() {
     const apiKey = import.meta.env.VITE_API_KEY;
     const navigate = useNavigate();
@@ -39,7 +40,7 @@ export default function Films() {
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
             `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=250&type=movie` :
-            `https://ve1.po2014.fvds.ru:8000/api/v2/main`;
+            `/api/v2/main`;
 
         if (year) url += `&year=${year}`;
         if (rating) url += `&rating.imdb=${rating}`;

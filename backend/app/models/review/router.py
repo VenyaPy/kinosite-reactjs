@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
-from backend.app.models.review.dao import ReviewDAO
-from backend.app.models.review.schemas import Review
+from models.review.dao import ReviewDAO
+from models.review.schemas import Review
 
 review_router = APIRouter(
     tags=["Оценки фильмов"],

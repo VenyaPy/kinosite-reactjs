@@ -2,11 +2,11 @@ from fastapi import APIRouter, HTTPException, Depends, Query
 from starlette import status
 from typing import List
 
-from backend.app.apiconnect.apivb import KinopoiskCategory
-from backend.app.exceptions import UserNotAuth
-from backend.app.models.category.schemas import Category
-from backend.app.models.users.model import Users
-from backend.app.models.users.dependencies import get_current_user
+from apiconnect.apivb import KinopoiskCategory
+from exceptions import UserNotAuth
+from models.category.schemas import Category
+from models.users.model import Users
+from models.users.dependencies import get_current_user
 
 
 category_router = APIRouter(

@@ -5,6 +5,9 @@ import axios from 'axios';
 import Register from '../Register/Register.jsx';
 import Login from '../Login/Login.jsx';
 import Profile from '../Profile/Profile.jsx'; // Импортируем компонент Profile
+import userImage from '../../assets/user.png'; // Исправленный путь
+import preImage from '../../assets/preIcon.png';
+
 
 export default function Header() {
     const navigate = useNavigate();
@@ -42,7 +45,7 @@ export default function Header() {
     }, [authStatus]);
 
     const fetchUserProfile = (token) => {
-        axios.get('https://ve1.po2014.fvds.ru:8000/api/v2/users/profile', {
+        axios.get('/api/v2/users/profile', {
             headers: {
                 'accept': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -91,7 +94,7 @@ export default function Header() {
                 <div className="login" onClick={handleLoginClick}>
                     <img
                         className={authStatus ? "image-user" : "image-login"}
-                        src={authStatus ? "https://i.ibb.co/J3ThqY7/user.png" : "https://i.ibb.co/tBHSRDw/icons8-login-64.png"}
+                        src={authStatus ? userImage : preImage} // Используем локальные изображения
                         alt={authStatus ? "profile" : "login"}
                     />
                     {authStatus && <span className="auth-text">{username}</span>}

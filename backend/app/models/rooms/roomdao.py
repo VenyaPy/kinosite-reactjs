@@ -1,5 +1,5 @@
-from backend.app.dao.dao import BaseDAO
-from backend.app.models.rooms.model import Rooms
+from dao.dao import BaseDAO
+from models.rooms.model import Rooms
 
 
 class RoomDAO(BaseDAO):

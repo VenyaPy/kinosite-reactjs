@@ -8,7 +8,7 @@ export default function AdminYt() {
 
     useEffect(() => {
         const fetchYtRooms = () => {
-            let url = "https://ve1.po2014.fvds.ru:8000/api/v2/admin/get_all_yt_rooms";
+            let url = "/api/v2/admin/get_all_yt_rooms";
 
             axios.get(url, {
                 headers: { 'accept': 'application/json' }
@@ -23,7 +23,7 @@ export default function AdminYt() {
     }, []);
 
     const deleteYtRoom = (id) => {
-        let url = `https://ve1.po2014.fvds.ru:8000/api/v2/admin/delete_yt_room?room=${id}`;
+        let url = `/api/v2/admin/delete_yt_room?room=${id}`;
 
         axios.delete(url, {
             headers: { 'accept': 'application/json' }

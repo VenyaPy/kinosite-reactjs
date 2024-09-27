@@ -1,9 +1,9 @@
 from uuid import uuid4
 from fastapi import APIRouter, Depends
 
-from backend.app.models.users.dependencies import get_current_user
-from backend.app.models.users.model import Users
-from backend.app.models.youtube.dao import YouTubeDAO
+from models.users.dependencies import get_current_user
+from models.users.model import Users
+from models.youtube.dao import YouTubeDAO
 
 youtube_router = APIRouter(
     prefix="/youtube_room",

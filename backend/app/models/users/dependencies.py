@@ -1,14 +1,14 @@
 from fastapi import Depends, Request, HTTPException, status, Header
 from jose import ExpiredSignatureError, JWTError, jwt
 
-from backend.app.exceptions import IncorrectEmailOrPasswordException, TokenExpiredException, TokenAbsentException
-from backend.app.config import AuthJWT
+from exceptions import IncorrectEmailOrPasswordException, TokenExpiredException, TokenAbsentException
+from config import AuthJWT
 from typing import Optional
 import logging
 logger = logging.getLogger(__name__)
 
 
-from backend.app.models.users.security import UserDAO
+from models.users.security import UserDAO
 
 
 def get_token(request: Request, authorization: Optional[str] = Header(None)):

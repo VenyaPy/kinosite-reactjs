@@ -3,7 +3,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 import asyncio
 
 # Local SQLite URL configuration
-DATABASE_URL = "sqlite+aiosqlite:///backend/app/database/kinobase.db.db"
+DATABASE_URL = "postgresql+asyncpg://postgres:postgres@db:5432/movie_db"
 
 
 # Create an asynchronous engine

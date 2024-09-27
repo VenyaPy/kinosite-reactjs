@@ -8,7 +8,7 @@ export default function AdminUsers() {
 
     useEffect(() => {
         const fetchUsers = () => {
-            let url = 'https://ve1.po2014.fvds.ru:8000/api/v2/admin/get_all_users';
+            let url = '/api/v2/admin/get_all_users';
 
             axios.get(url, {
                 headers: { 'accept': 'application/json' }
@@ -23,7 +23,7 @@ export default function AdminUsers() {
     }, []);
 
     const deleteUser = (id) => {
-        let url = `https://ve1.po2014.fvds.ru:8000/api/v2/admin/delete_user?id=${id}`;
+        let url = `/api/v2/admin/delete_user?id=${id}`;
 
         axios.delete(url, {
             headers: { 'accept': 'application/json' }

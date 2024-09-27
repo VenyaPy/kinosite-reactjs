@@ -33,7 +33,7 @@ export default function SharedPlayer() {
             const token = localStorage.getItem('access_token');
             if (token) {
                 try {
-                    const response = await axios.get('https://ve1.po2014.fvds.ru:8000/api/v2/users/profile', {
+                    const response = await axios.get('/api/v2/users/profile', {
                         headers: {
                             'accept': 'application/json',
                             'Authorization': `Bearer ${token}`
@@ -59,7 +59,7 @@ export default function SharedPlayer() {
                 const token = localStorage.getItem('access_token');
                 if (token) {
                     try {
-                        await axios.post(`https://ve1.po2014.fvds.ru:8000/api/v2/room/join_room/${roomId}`, {}, {
+                        await axios.post(`/api/v2/room/join_room/${roomId}`, {}, {
                             headers: {
                                 'accept': 'application/json',
                                 'Authorization': `Bearer ${token}`
@@ -74,7 +74,7 @@ export default function SharedPlayer() {
             const fetchRoomData = async () => {
                 setIsLoading(true);
                 try {
-                    const roomResponse = await axios.get(`https://ve1.po2014.fvds.ru:8000/api/v2/room/${roomId}`, {
+                    const roomResponse = await axios.get(`/api/v2/room/${roomId}`, {
                         headers: { 'accept': 'application/json' }
                     });
                     const movieId = roomResponse.data.movieId;
@@ -181,7 +181,7 @@ export default function SharedPlayer() {
 
     useEffect(() => {
         if (isAuthenticated) {
-            const ws = new WebSocket(`wss://ve1.po2014.fvds.ru:8000/ws/${roomId}`);
+            const ws = new WebSocket(`wss://${window.location.host}/ws/${roomId}`);
             wsRef.current = ws;
 
             ws.onopen = () => {

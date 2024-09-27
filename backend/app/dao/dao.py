@@ -10,7 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import declarative_base
 
 
-DATABASE_URL = "sqlite+aiosqlite:////home/venya/PycharmProjects/kinosite-react/backend/app/database/kinobase.db"
+DATABASE_URL = "postgresql+asyncpg://postgres:postgres@db:5432/movie_db"
 
 
 engine = create_async_engine(DATABASE_URL, echo=True)

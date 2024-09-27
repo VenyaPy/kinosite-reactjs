@@ -1,8 +1,12 @@
+from celery.bin.result import result
 from fastapi import APIRouter, HTTPException, status, Depends
 from typing import List
 
-from backend.app.models.search.schemas import Movie
-from backend.app.apiconnect.apivb import MovieSearch
+from starlette.responses import JSONResponse
+
+from models.search.manticore_search import search_engine
+from models.search.schemas import Movie
+from apiconnect.apivb import MovieSearch
 
 
 
@@ -27,3 +31,21 @@ async def search_film(
     return movies
 
 
+@router_search.post(path="/get_reference/{query}", response_class=JSONResponse)
+async def get_reference(query: str):
+
+    if query:
+        search_method = await search_engine.search(query)
+    else:
+        search_method = await search_engine.get_all_results(query)
+
+    results = [{
+        "id": res.id or "",
+        "name": res.name or "",
+        "name_en": res.name_en or ""
+    } for res in search_method]
+
+    print(results)
+
+
+    return results

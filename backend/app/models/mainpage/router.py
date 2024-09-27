@@ -1,10 +1,10 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi_cache.decorator import cache
 
-from backend.app.apiconnect.apivb import KinopoiskCategory
-from backend.app.models.mainpage.schemas import PopularFilms
-from backend.app.models.users.model import Users
-from backend.app.models.users.dependencies import get_current_user
+from apiconnect.apivb import KinopoiskCategory
+from models.mainpage.schemas import PopularFilms
+from models.users.model import Users
+from models.users.dependencies import get_current_user
 
 from typing import List
 

@@ -32,7 +32,7 @@ export default function Player() {
 
     const submitRating = async (movieId, score) => {
         try {
-            const response = await axios.post(`https://ve1.po2014.fvds.ru:8000/api/v2/review`, null, {
+            const response = await axios.post(`/api/v2/review`, null, {
                 params: {
                     movie_id: movieId,
                     score: score
@@ -47,7 +47,7 @@ export default function Player() {
 
     const fetchRatingCounts = async (movieId) => {
         try {
-            const response = await axios.get(`https://ve1.po2014.fvds.ru:8000/api/v2/get_review`, {
+            const response = await axios.get(`/api/v2/get_review`, {
                 params: { movie_id: movieId }
             });
             if (response.data && response.data.movie_id) {
@@ -104,7 +104,7 @@ export default function Player() {
     };
 
     const fetchUserProfile = (token) => {
-        axios.get('https://ve1.po2014.fvds.ru:8000/api/v2/users/profile', {
+        axios.get('/api/v2/users/profile', {
             headers: {
                 'accept': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -146,7 +146,7 @@ export default function Player() {
     }, [movieId, apiKey, userId]);
 
     const sendMovieToHistory = (userId, movie) => {
-        axios.post(`https://ve1.po2014.fvds.ru:8000/api/v2/history/move_history`, null, {
+        axios.post(`/api/v2/history/move_history`, null, {
             params: {
                 id_user: userId,
                 id_film: movie.id,
@@ -210,7 +210,7 @@ export default function Player() {
         setTimeout(() => {
             const token = localStorage.getItem('access_token');
             if (token) {
-                axios.post('https://ve1.po2014.fvds.ru:8000/room/create_room', { movieId }, {
+                axios.post('/room/create_room', { movieId }, {
                     headers: {
                         'accept': 'application/json',
                         'Authorization': `Bearer ${token}`

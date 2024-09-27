@@ -1,5 +1,5 @@
-from backend.app.dao.dao import BaseDAO
-from backend.app.models.youtube.model import YouTubeRooms
+from dao.dao import BaseDAO
+from models.youtube.model import YouTubeRooms
 
 
 class YouTubeDAO(BaseDAO):

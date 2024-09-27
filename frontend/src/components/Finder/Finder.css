@@ -18,6 +18,41 @@
     margin-bottom: 20px;
 }
 
+/* Стили для выпадающего меню предложений */
+
+.suggestions-container {
+    position: absolute; /* Позиционирование относительно родительского контейнера */
+    top: 100%; /* Снизу от поля ввода */
+    left: 0;
+    width: 94%; /* Учитываем отступ в 3% с каждой стороны, чтобы избежать переполнения */
+    max-height: 150px; /* Ограничиваем максимальную высоту */
+    overflow-y: auto; /* Добавляем прокрутку при необходимости */
+    background-color: #444 !important; /* Более светлый фон, соответствующий полю ввода */
+    border: 1px solid #333 !important; /* Граница вокруг меню */
+    border-radius: 25px; /* Скругление углов */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* Более заметная тень для глубины */
+    z-index: 1000; /* Обеспечиваем, что меню будет над другими элементами */
+    margin: 1% 0; /* Отступ 3% с обеих сторон */
+}
+
+
+.suggestion-item {
+    font-size: 16px;
+    padding: 10px; /* Отступы для каждого элемента предложения */
+    cursor: pointer; /* Курсор в виде руки при наведении */
+    transition: background-color 0.2s; /* Плавный переход фона при наведении */
+    color: #ffffff; /* Цвет текста, чтобы он соответствовал полю ввода */
+}
+
+.suggestion-item:hover {
+    background-color: #555; /* Цвет фона при наведении, согласуется с фоном поля ввода */
+}
+
+element.style {
+    background-color: #333;
+}
+
+
 .search-input-finder-unique {
     border: none;
     background: #444;
@@ -101,9 +136,16 @@
     position: absolute;
     top: 10px;
     right: 20px;
-    font-size: 24px;
+    font-size: 24px; /* Увеличиваем размер шрифта */
     cursor: pointer;
-    color: #fff;
+    color: #fff; /* Цвет шрифта */
+    background: transparent; /* Прозрачный фон */
+    border: none; /* Без рамки */
+    transition: color 0.3s; /* Плавный переход цвета */
+}
+
+.close-modal-unique:hover {
+    color: #f00; /* Цвет при наведении */
 }
 
 .movies-list-unique {

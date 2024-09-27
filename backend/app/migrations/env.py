@@ -8,7 +8,17 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from backend.app.database.database import Base, DATABASE_URL
+from dao.dao import Base, DATABASE_URL
+from models.rooms.model import Rooms
+from models.users.model import Users
+from models.youtube.model import YouTubeRooms
+from models.session.model import Session, SessionUser
+from models.review.model import Reviews
+from models.history.model import MovieHistory
+
+
+
+
 
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 

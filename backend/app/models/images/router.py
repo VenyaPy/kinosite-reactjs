@@ -1,12 +1,12 @@
 from fastapi import APIRouter, HTTPException, status, Depends, UploadFile, File, Response
 
-from backend.app.exceptions import UserNotAuth, IncorrectPassword, PasswordError
-from backend.app.models.users.model import Users
-from backend.app.models.users.dao import UserDAO
-from backend.app.models.users.dependencies import get_current_user
-from backend.app.models.users.schemas import PasswordChangeRequest
-from backend.app.models.users.security import verify_password, get_password_hash
-from backend.app.tasks.tasks import process_pic
+from exceptions import UserNotAuth, IncorrectPassword, PasswordError
+from models.users.model import Users
+from models.users.dao import UserDAO
+from models.users.dependencies import get_current_user
+from models.users.schemas import PasswordChangeRequest
+from models.users.security import verify_password, get_password_hash
+from tasks.tasks import process_pic
 
 import uuid
 import aiofiles

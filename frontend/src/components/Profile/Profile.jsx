@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Loading from "../Loading/Loading.jsx";
 import './Profile.css';
+import userImage from '../../assets/user.png'; // Исправленный путь
+
+
 
 // eslint-disable-next-line react/prop-types
 export default function Profile({ closeModal }) {
@@ -102,7 +105,7 @@ export default function Profile({ closeModal }) {
                     <div className="modal-content-unique">
                         <span className="close-modal-unique" onClick={handleClose}>&times;</span>
                         <div className="profile-content">
-                            <img src="https://i.ibb.co/J3ThqY7/user.png" alt="User" className="profile-image" />
+                            <img src={userImage} alt="User" className="profile-image"/>
                             <h1>Профиль</h1>
                             <div className="disk">
                                 <p><strong>Никнейм:</strong> {userData.username}</p>

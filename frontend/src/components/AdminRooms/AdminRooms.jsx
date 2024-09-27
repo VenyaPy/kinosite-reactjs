@@ -8,7 +8,7 @@ export default function AdminRooms() {
 
     useEffect(() => {
         const fetchRooms = () => {
-            let url = 'https://ve1.po2014.fvds.ru:8000/api/v2/admin/get_all_rooms';
+            let url = '/api/v2/admin/get_all_rooms';
 
             axios.get(url, {
                 headers: { 'accept': 'application/json' }
@@ -24,7 +24,7 @@ export default function AdminRooms() {
     }, []);
 
     const deleteRooms = (id) => {
-        let url = `https://ve1.po2014.fvds.ru:8000/api/v2/admin/delete_room?id=${id}`;
+        let url = `/api/v2/admin/delete_room?id=${id}`;
 
         axios.delete(url, {
             headers: { 'accept': 'application/json' }

@@ -1,5 +1,5 @@
-from backend.app.dao.dao import BaseDAO
-from backend.app.models.users.model import Users
+from dao.dao import BaseDAO
+from models.users.model import Users
 
 
 class UserDAO(BaseDAO):

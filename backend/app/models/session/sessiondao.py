@@ -1,5 +1,5 @@
-from backend.app.dao.dao import BaseDAO
-from backend.app.models.session.model import Session  # Импортируйте вашу модель Session
+from dao.dao import BaseDAO
+from models.session.model import Session  # Импортируйте вашу модель Session
 
 
 class SessionDAO(BaseDAO):

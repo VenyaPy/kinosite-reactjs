@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = ""
+authors = ["venya2001 <ve.po2014@yandex.ru>"]
+license = "MIT"
+readme = ""
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = {extras = ["all"], version = "^0.110.1"}
+redis = "^5.0.3"
+uvicorn = "^0.21.0"
+cryptography = "^42.0.5"
+ecdsa = "^0.18.0"
+flower = "^2.0.1"
+fastapi-cache2 = "^0.2.1"
+pillow = "^10.3.0"
+requests = "^2.31.0"
+sqladmin = "^0.16.1"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.29"}
+alembic = "^1.13.1"
+aiohttp = "^3.9.3"
+celery = "^5.3.6"
+aiofiles = "^23.2.1"
+asyncpg = "^0.29.0"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = "^1.7.4"
+aiofile = "^3.8.8"
+aiosqlite = "^0.20.0"
+socketio = "^0.2.1"
+python-socketio = {extras = ["client"], version = "^5.11.2"}
+aiortc = "^1.8.0"
+pandas = "^2.2.3"
+psycopg2-binary = "^2.9.9"
+manticoresearch = "^4.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

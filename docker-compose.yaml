@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: postgres_movie
+    image: postgres:13
+    environment:
+      POSTGRES_DB: movie_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dev
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: always
+    ports:
+      - "3000:80"
+    networks:
+      - dev
+
+  nginx:
+    restart: always
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - dev
+
+  db_populator:
+    container_name: db_populator
+    restart: always
+    build:
+      context: ./script
+    depends_on:
+      - db
+    volumes:
+      - ./script/populate_db.py:/populate_db.py
+      - ./script/movie.db:/movie.db
+    networks:
+      - dev
+    environment:
+      - SQLITE_DB_PATH=/movie.db
+    command: ["python", "/populate_db.py"]
+
+  manticore:
+    container_name: manticores
+    image: manticoresearch/manticore:6.3.2
+    depends_on:
+      - db_populator
+    environment:
+      - CREATE_PLAIN_TABLES=1
+      - EXTRA=1
+    restart: always
+    ports:
+      - "9306:9306"
+      - "9308:9308"
+    volumes:
+      - './script/manticore/data:/var/lib/manticore'
+      - './script/manticore/logs:/var/log/manticore'
+      - './script/manticore/conf.d:/etc/manticoresearch/conf.d'
+      - './script/manticore/manticore.conf:/etc/manticoresearch/manticore.conf'
+    networks:
+      - dev
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    restart: always
+    networks:
+      - dev
+    depends_on:
+      - db
+
+networks:
+  dev:
+
+volumes:
+  postgres_data:

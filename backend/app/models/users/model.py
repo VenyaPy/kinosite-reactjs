@@ -1,4 +1,4 @@
-from backend.app.database.database import Base
+from dao.dao import Base
 from sqlalchemy import Column, Integer, String, DateTime
 from datetime import datetime
 

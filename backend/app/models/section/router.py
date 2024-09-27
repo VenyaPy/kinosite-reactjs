@@ -3,11 +3,11 @@ from fastapi_cache import FastAPICache
 from fastapi_cache.decorator import cache
 from starlette import status
 
-from backend.app.apiconnect.apivb import KinopoiskCategory
-from backend.app.exceptions import UserNotAuth
-from backend.app.models.section.schemas import Selection
-from backend.app.models.users.model import Users
-from backend.app.models.users.dependencies import get_current_user
+from apiconnect.apivb import KinopoiskCategory
+from exceptions import UserNotAuth
+from models.section.schemas import Selection
+from models.users.model import Users
+from models.users.dependencies import get_current_user
 
 from typing import List
 

@@ -13,20 +13,20 @@ from starlette.middleware.cors import CORSMiddleware
 from redis import asyncio as aioredis
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
-from backend.app.models.admin.router import admin_router
-from backend.app.models.rooms.roomdao import RoomDAO
-from backend.app.models.users.dependencies import get_current_user
-from backend.app.models.users.model import Users
-from backend.app.models.users.router import router_auth
-from backend.app.models.search.router import router_search
-from backend.app.models.images.router import router_user
-from backend.app.models.mainpage.router import main_router
-from backend.app.models.section.router import section_router
-from backend.app.models.category.router import category_router
-from backend.app.models.rooms.router import room_router, rooms_router
-from backend.app.models.history.router import history_router
-from backend.app.models.youtube.router import youtube_router
-from backend.app.models.review.router import review_router
+from models.admin.router import admin_router
+from models.rooms.roomdao import RoomDAO
+from models.users.dependencies import get_current_user
+from models.users.model import Users
+from models.users.router import router_auth
+from models.search.router import router_search
+from models.images.router import router_user
+from models.mainpage.router import main_router
+from models.section.router import section_router
+from models.category.router import category_router
+from models.rooms.router import room_router, rooms_router
+from models.history.router import history_router
+from models.youtube.router import youtube_router
+from models.review.router import review_router
 
 app = FastAPI(
     title="Совместный просмотр фильмов",
@@ -178,4 +178,4 @@ async def youtube_websocket_endpoint(websocket: WebSocket, youtube_room_id: str)
 
 
 if __name__ == "__main__":
-    uvicorn.run("backend.app.main:app", reload=True)
+    uvicorn.run("main:app", reload=True)

@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Response
 
-from backend.app.exceptions import (IncorrectEmailOrPasswordException,
+from exceptions import (IncorrectEmailOrPasswordException,
                                     UserAlreadyExistsException)
-from backend.app.models.users.schemas import SUserReg, SUserAuth
-from backend.app.models.users.dao import UserDAO
-from backend.app.models.users.security import get_password_hash, authenticate_user, create_access_token
+from models.users.schemas import SUserReg, SUserAuth
+from models.users.dao import UserDAO
+from models.users.security import get_password_hash, authenticate_user, create_access_token
 
 
 router_auth = APIRouter(

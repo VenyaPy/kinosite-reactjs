@@ -2,10 +2,10 @@ from datetime import datetime, timedelta, timezone
 from jose import jwt
 from passlib.context import CryptContext
 
-from backend.app.exceptions import IncorrectPasswordOrLogin, OnlyForAdmins
-from backend.app.config import AuthJWT
+from exceptions import IncorrectPasswordOrLogin, OnlyForAdmins
+from config import AuthJWT
 
-from backend.app.models.users.dao import UserDAO
+from models.users.dao import UserDAO
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

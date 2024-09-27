@@ -28,7 +28,7 @@ export default function Youtube() {
             const token = localStorage.getItem('access_token');
             if (token) {
                 try {
-                    const response = await axios.get('https://ve1.po2014.fvds.ru:8000/api/v2/users/profile', {
+                    const response = await axios.get('/api/v2/users/profile', {
                         headers: {
                             'accept': 'application/json',
                             'Authorization': `Bearer ${token}`
@@ -52,7 +52,7 @@ export default function Youtube() {
     useEffect(() => {
         if (isAuthenticated) {
             console.log("Connecting to WebSocket...");
-            const ws = new WebSocket(`wss://ve1.po2014.fvds.ru:8000/ws/yt/${roomId}`);
+            const ws = new WebSocket(`wss://${window.location.host}/ws/yt/${roomId}`);
             wsRef.current = ws;
 
             ws.onopen = () => {

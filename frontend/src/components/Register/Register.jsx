@@ -13,7 +13,7 @@ export default function Register({ toggleForm }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('https://ve1.po2014.fvds.ru:8000/api/v2/auth/register', {
+            const response = await axios.post('/api/v2/auth/register', {
                 username,
                 password,
                 email

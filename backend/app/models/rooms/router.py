@@ -5,12 +5,12 @@ from fastapi import WebSocket, APIRouter, Depends
 
 from starlette.websockets import WebSocketDisconnect
 
-from backend.app.apiconnect.apivb import MovieSearch, KinopoiskId
-from backend.app.models.rooms.roomdao import RoomDAO
-from backend.app.models.rooms.schema import CreateRoomRequest
-from backend.app.models.users.dao import UserDAO
-from backend.app.models.users.dependencies import get_current_user
-from backend.app.models.users.model import Users
+from apiconnect.apivb import MovieSearch, KinopoiskId
+from models.rooms.roomdao import RoomDAO
+from models.rooms.schema import CreateRoomRequest
+from models.users.dao import UserDAO
+from models.users.dependencies import get_current_user
+from models.users.model import Users
 
 from typing import List
 

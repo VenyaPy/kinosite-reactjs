@@ -2,9 +2,9 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 
-from backend.app.models.history.dao import MovieDAO
-from backend.app.models.history.model import MovieHistory
-from backend.app.models.history.schema import MovieHistoryResponse
+from models.history.dao import MovieDAO
+from models.history.model import MovieHistory
+from models.history.schema import MovieHistoryResponse
 
 
 history_router = APIRouter(

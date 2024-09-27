@@ -2,6 +2,8 @@ import "./Main.css"
 import Popular from "../Popular/Popular.jsx";
 import Finder from "../Finder/Finder.jsx";
 import { motion } from "framer-motion";
+import mainImage from '../../assets/main.jpg'; // Исправленный путь
+
 
 export default function Main() {
     return (
@@ -14,7 +16,7 @@ export default function Main() {
         >
             <div className="search-container">
                 <div className="image-container-g">
-                    <img className="image-ge" src="https://i.ibb.co/S38d90S/6666666-2.jpg" alt="some" />
+                    <img className="image-ge" src={mainImage} alt="Main" /> {/* Используем импортированное изображение */}
                     <Finder />
                 </div>
                 <div className="popular-films">

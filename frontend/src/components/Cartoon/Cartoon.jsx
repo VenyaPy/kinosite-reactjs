@@ -36,7 +36,7 @@ export default function Cartoon() {
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
             `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=200&type=cartoon` :
-            `https://ve1.po2014.fvds.ru:8000/api/v2/carcoon`;
+            `/api/v2/carcoon`;
 
         if (year) url += `&year=${year}`;
         if (rating) url += `&rating.kp=${rating}`;

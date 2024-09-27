@@ -1,6 +1,6 @@
 import logging
 import re
-from backend.app.config import APIConfig
+from config import APIConfig
 import aiohttp
 
 

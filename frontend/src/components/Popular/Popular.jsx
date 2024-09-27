@@ -21,7 +21,7 @@ export default function Popular() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch('https://ve1.po2014.fvds.ru:8000/api/v2/movies')
+    fetch('/api/v2/movies')
       .then(response => response.json())
       .then(data => {
         const selectedFilms = data.slice(5, 120);

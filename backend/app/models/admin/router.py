@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from starlette import status
 
-from backend.app.models.rooms.roomdao import RoomDAO
-from backend.app.models.users.dao import UserDAO
-from backend.app.models.youtube.dao import YouTubeDAO
+from models.rooms.roomdao import RoomDAO
+from models.users.dao import UserDAO
+from models.youtube.dao import YouTubeDAO
 
 admin_router = APIRouter(
     prefix='/admin',
