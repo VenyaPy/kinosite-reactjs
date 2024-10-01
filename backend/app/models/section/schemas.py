@@ -8,5 +8,5 @@ class Selection(BaseModel):
     shortDescription: str | None = Field(default="Описание не найдено")
     description: str | None
     year: int | None
-    poster: HttpUrl | None | dict
+    poster: str | None | dict
     watch_url: HttpUrl | None

@@ -137,7 +137,7 @@ export default function UniqueSeries() {
                             {series.map(seria => (
                                 seria.poster && (
                                     <div onClick={() => handleSeriesClick(seria.id)} key={seria.id} className="unique-series">
-                                        <img src={seria.poster} alt={seria.name} className="unique-series-poster"/>
+                                        <img src={`/api/v2/images/photo_${seria.id}.jpeg`} alt={seria.name} className="unique-series-poster"/>
                                         <div className="unique-series-overlay">
                                             <i className="fa-solid fa-play unique-play-icon"></i>
                                             <div className="unique-series-info">

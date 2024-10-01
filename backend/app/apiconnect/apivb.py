@@ -81,12 +81,14 @@ class KinopoiskCategory:
                 data['watch_url'] = f'https://kinowild.ru/player?{data["id"]}'
                 data['id'] = f"{data['id']}"
                 data['poster'] = data['poster']['previewUrl'] if isinstance(data['poster'], dict) else data['poster']
+                data['length'] = data['movieLength'] if data['movieLength'] else data['seriesLength']
             return data
         else:
             for film in films_data:
                 film['id'] = str(film['id'])
                 film['watch_url'] = f'https://kinowild.ru/player?{film["id"]}'
                 film['poster'] = film.get('poster', {}).get('previewUrl', None)
+                film['length'] = film['movieLength'] if film['movieLength'] else film['seriesLength']
 
         return films_data
 

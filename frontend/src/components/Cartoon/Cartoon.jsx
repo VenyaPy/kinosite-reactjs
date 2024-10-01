@@ -138,7 +138,7 @@ export default function Cartoon() {
                             {movies.map(movie => (
                                 movie.poster && (
                                     <div onClick={() => handleMovieClick(movie.id)} key={movie.id} className="unique-cartoon">
-                                        <img src={movie.poster} alt={movie.name} className="unique-cartoon-poster"/>
+                                        <img src={`/api/v2/images/photo_${movie.id}.jpeg`} alt={movie.name} className="unique-cartoon-poster"/>
                                         <div className="unique-cartoon-overlay">
                                             <i className="fa-solid fa-play unique-play-icon"></i>
                                             <div className="unique-cartoon-info">

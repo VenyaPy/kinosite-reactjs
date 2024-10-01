@@ -13,6 +13,7 @@ function Anime() {
     const [rating, setRating] = useState('');
     const [isFiltered, setIsFiltered] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [missingPostersCount, setMissingPostersCount] = useState(0);
 
     const years = Array.from({ length: 45 }, (_, i) => 2024 - i);
     const ratings = ["1-2", "3-4", "5-7", "7-8", "9-10"];
@@ -51,8 +52,11 @@ function Anime() {
                     watch_url: `https://kinowild.ru/player?${anime.id}`
                 })) :
                 data;
-            shuffleArray(results);
-            setSeries(results.filter(anime => anime.name && anime.poster && (anime.shortDescription || anime.description)));
+
+            const validSeries = results.filter(anime => anime.name && anime.poster && (anime.shortDescription || anime.description));
+            setMissingPostersCount(results.length - validSeries.length);
+            shuffleArray(validSeries);
+            setSeries(validSeries);
             setIsLoading(false);
         })
         .catch(error => {
@@ -66,7 +70,7 @@ function Anime() {
     }, [fetchSeries]);
 
     useEffect(() => {
-        window.scrollTo(0, 0); // Прокрутка страницы к началу при загрузке компонента
+        window.scrollTo(0, 0);
     }, []);
 
     const handleMovieClick = (id) => {
@@ -107,24 +111,25 @@ function Anime() {
                     </div>
                     <div className="unique-popular-anime">
                         <h2>{isFiltered ? "Аниме по вашим критериям" : "Популярные аниме"}</h2>
+                        {missingPostersCount > 0 && (
+                            <p>{missingPostersCount} аниме не имеют доступных постеров.</p>
+                        )}
                     </div>
                     {series.length === 0 ? (
                         <div className="no-movies">Нет аниме для отображения</div>
                     ) : (
                         <div className="unique-anime-section">
                             {series.map(anime => (
-                                anime.poster && (
-                                    <div onClick={() => handleMovieClick(anime.id)} key={anime.id} className="unique-anime">
-                                        <img src={anime.poster} alt={anime.name} className="unique-anime-poster"/>
-                                        <div className="unique-anime-overlay">
-                                            <i className="fa-solid fa-play unique-play-icon"></i>
-                                            <div className="unique-anime-info">
-                                                <div className="unique-anime-title">{anime.name}</div>
-                                                <div className="unique-anime-description">{anime.shortDescription || anime.description}</div>
-                                            </div>
+                                <div onClick={() => handleMovieClick(anime.id)} key={anime.id} className="unique-anime">
+                                    <img src={`/api/v2/images/photo_${anime.id}.jpeg`} alt={anime.name} className="unique-anime-poster" />
+                                    <div className="unique-anime-overlay">
+                                        <i className="fa-solid fa-play unique-play-icon"></i>
+                                        <div className="unique-anime-info">
+                                            <div className="unique-anime-title">{anime.name}</div>
+                                            <div className="unique-anime-description">{anime.shortDescription || anime.description}</div>
                                         </div>
                                     </div>
-                                )
+                                </div>
                             ))}
                         </div>
                     )}

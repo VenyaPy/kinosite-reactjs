@@ -4,13 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Loading from "../Loading/Loading.jsx";
 
-
 export default function Popular() {
   const navigate = useNavigate();
   const [films, setFilms] = useState([]);
   const scrollContainer = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
-
 
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -24,7 +22,8 @@ export default function Popular() {
     fetch('/api/v2/movies')
       .then(response => response.json())
       .then(data => {
-        const selectedFilms = data.slice(5, 120);
+        const selectedFilms = data.filter(film => film.poster) // Отбираем только фильмы с постерами
+                                   .slice(5, 120);
         shuffleArray(selectedFilms);
         setFilms(selectedFilms);
       })
@@ -50,7 +49,7 @@ export default function Popular() {
     navigate(`/player/${filmId}`); // Используем navigate для перехода
   };
 
-    return (
+  return (
     <div className="films-wrapper">
       <div id="films-container" ref={scrollContainer} className='films-container'>
         {isLoading ? (
@@ -68,7 +67,11 @@ export default function Popular() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                <img src={film.poster} alt={film.name} />
+                <img src={`/api/v2/images/photo_${film.id}.jpeg`} // Используем film.id вместо movie.id
+                  alt={film.name}
+                  onLoad={() => console.log(`Изображение для фильма с id ${film.id} успешно загружено`)}
+                  onError={() => console.error(`Ошибка загрузки изображения для фильма с id ${film.id}`)}
+                />
                 <h3>{film.name}</h3>
                 <p>{film.description || "Описание отсутствует"}</p>
               </motion.div>

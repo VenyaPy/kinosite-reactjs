@@ -19,9 +19,11 @@ services:
   frontend:
     build:
       context: ./frontend
-    restart: always
+    volumes:
+      - ./backend/app/photos:/usr/share/nginx/html/photos
     ports:
       - "3000:80"
+    restart: always
     networks:
       - dev
 
@@ -31,11 +33,15 @@ services:
       context: ./frontend
     ports:
       - "80:80"
+      - "443:443"  # Добавляем порт 443 для HTTPS
     depends_on:
       - backend
       - frontend
     networks:
       - dev
+    volumes:
+      - ./backend/app/photos:/usr/share/nginx/html/photos
+      - /etc/letsencrypt/live/kinowild.ru:/etc/letsencrypt/live/kinowild.ru:ro  # Монтируем сертификаты SSL в контейнер Nginx
 
   db_populator:
     container_name: db_populator
@@ -76,6 +82,8 @@ services:
   backend:
     build:
       context: ./backend
+    volumes:
+      - ./backend/app/photos:/photos
     ports:
       - "8000:8000"
     restart: always

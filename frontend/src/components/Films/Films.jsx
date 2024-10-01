@@ -24,6 +24,7 @@ export default function Films() {
     const countries = ["США", "СССР", "Великобритания", "Франция", "Германия", "Италия", "Канада", "Австралия", "Индия", "Япония", "Южная Корея", "Испания", "Россия", "Китай", "Швеция", "Бразилия"];
     const studios = ["Netflix", "HBO", "Disney+", "KION", "Paramount+", "Premier", "Amazon Prime Video"];
 
+
     const shuffle = (array) => {
         let currentIndex = array.length, randomIndex;
         while (currentIndex !== 0) {
@@ -40,7 +41,7 @@ export default function Films() {
         setIsFiltered(filtersApplied);
         let url = filtersApplied ?
             `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=250&type=movie` :
-            `/api/v2/main`;
+            `/api/v2/movies`;
 
         if (year) url += `&year=${year}`;
         if (rating) url += `&rating.imdb=${rating}`;
@@ -136,9 +137,10 @@ export default function Films() {
                             {movies.map(movie => (
                                 movie.poster && (
                                     <div onClick={() => handleMovieClick(movie.id)} key={movie.id} className="unique-movie">
-                                        <img src={movie.poster} alt={movie.name} className="unique-movie-poster"/>
+                                        <img src={`/api/v2/images/photo_${movie.id}`} alt={movie.name}
+                                             className="unique-movie-poster"/>
                                         <div className="unique-movie-overlay">
-                                            <i className="fa-solid fa-play unique-play-icon"></i>
+                                        <i className="fa-solid fa-play unique-play-icon"></i>
                                             <div className="unique-movie-info">
                                                 <div className="unique-movie-title">{movie.name}</div>
                                                 <div className="unique-movie-description">{movie.shortDescription || movie.description}</div>
