@@ -45,7 +45,7 @@ services:
 
   db_populator:
     container_name: db_populator
-    restart: always
+    restart: on-failure
     build:
       context: ./script
     depends_on:
